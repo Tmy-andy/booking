@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Booking - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            border: 1px solid transparent;
+            background: transparent;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border-color: #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .room-selection {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .room-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .room-info {
+            flex: 1;
+        }
+
+        .room-title {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .room-details {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .room-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .services-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-name {
+            font-weight: 500;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .service-price {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .service-checkbox {
+            margin-left: 12px;
+        }
+
+        .price-summary {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .price-row.total {
+            font-weight: 600;
+            font-size: 16px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 8px;
+        }
+
+        .status-select {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .status-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .status-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .status-option:hover {
+            background: #e2e8f0;
+        }
+
+        .status-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .timeline-entry {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .timeline-action {
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding-top: 24px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item active" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-rules"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="all-bookings.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Bookings
+            </a>
+            <div>
+                <h1 class="page-title">Edit Booking</h1>
+                <div class="breadcrumb">Bookings / All Bookings / Edit</div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn btn-secondary" onclick="cancelChanges()">
+                Cancel
+            </button>
+            <button class="btn btn-success" onclick="saveBooking()">
+                <i class="fas fa-save"></i>
+                Save Changes
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="form-container">
+            <form id="editBookingForm">
+                <div class="form-grid">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Booking Information -->
+                        <div class="card">
+                            <h3 class="card-title">Booking Information</h3>
+                            
+                            <div class="form-section">
+                                <div class="section-title">Dates & Occupancy</div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Check-in Date</label>
+                                        <input type="date" class="form-input" value="2024-12-25" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Check-out Date</label>
+                                        <input type="date" class="form-input" value="2024-12-28" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Adults</label>
+                                        <select class="form-select">
+                                            <option value="1">1 Adult</option>
+                                            <option value="2" selected>2 Adults</option>
+                                            <option value="3">3 Adults</option>
+                                            <option value="4">4 Adults</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Children</label>
+                                        <select class="form-select">
+                                            <option value="0" selected>0 Children</option>
+                                            <option value="1">1 Child</option>
+                                            <option value="2">2 Children</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Room Assignment -->
+                            <div class="form-section">
+                                <div class="section-title">Room Assignment</div>
+                                <div class="room-selection">
+                                    <div class="room-header">
+                                        <div class="room-info">
+                                            <div class="room-title">Room 201 - Deluxe Ocean Suite</div>
+                                            <div class="room-details">King Bed • Ocean View • 35m²</div>
+                                        </div>
+                                        <div class="room-actions">
+                                            <button type="button" class="btn btn-small btn-secondary">
+                                                <i class="fas fa-exchange-alt"></i>
+                                                Change Room
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Room Rate</label>
+                                            <input type="text" class="form-input" value="$200.00 per night" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Total Nights</label>
+                                            <input type="text" class="form-input" value="3 nights" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Guest Information -->
+                        <div class="card">
+                            <h3 class="card-title">Guest Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">First Name *</label>
+                                    <input type="text" class="form-input" value="Emily" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Last Name *</label>
+                                    <input type="text" class="form-input" value="Chen" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Email *</label>
+                                    <input type="email" class="form-input" value="emily.chen@email.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone *</label>
+                                    <input type="tel" class="form-input" value="+1 555 123 4567" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Country</label>
+                                    <select class="form-select">
+                                        <option value="">Select Country</option>
+                                        <option value="US" selected>United States</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="GB">United Kingdom</option>
+                                        <option value="DE">Germany</option>
+                                        <option value="FR">France</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-input" value="123 Main Street">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">City</label>
+                                    <input type="text" class="form-input" value="San Francisco">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Postal Code</label>
+                                    <input type="text" class="form-input" value="94102">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Special Requests</label>
+                                <textarea class="form-textarea" rows="3" placeholder="Any special requests or notes...">Late check-in, Ocean view room preferred</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Additional Services -->
+                        <div class="card">
+                            <h3 class="card-title">Additional Services</h3>
+                            <div class="services-list">
+                                <div class="service-item">
+                                    <div class="service-info">
+                                        <div class="service-name">Airport Transfer</div>
+                                        <div class="service-price">$50.00 per trip</div>
+                                    </div>
+                                    <input type="checkbox" class="service-checkbox" checked>
+                                </div>
+                                <div class="service-item">
+                                    <div class="service-info">
+                                        <div class="service-name">Breakfast</div>
+                                        <div class="service-price">$30.00 per person/day</div>
+                                    </div>
+                                    <input type="checkbox" class="service-checkbox" checked>
+                                </div>
+                                <div class="service-item">
+                                    <div class="service-info">
+                                        <div class="service-name">Late Check-out</div>
+                                        <div class="service-price">$25.00 per room</div>
+                                    </div>
+                                    <input type="checkbox" class="service-checkbox" checked>
+                                </div>
+                                <div class="service-item">
+                                    <div class="service-info">
+                                        <div class="service-name">Spa Package</div>
+                                        <div class="service-price">$120.00 per person</div>
+                                    </div>
+                                    <input type="checkbox" class="service-checkbox">
+                                </div>
+                                <div class="service-item">
+                                    <div class="service-info">
+                                        <div class="service-name">Room Service</div>
+                                        <div class="service-price">$15.00 per order</div>
+                                    </div>
+                                    <input type="checkbox" class="service-checkbox">
+                                </div>
+                                <div class="service-item">
+                                    <div class="service-info">
+                                        <div class="service-name">Laundry Service</div>
+                                        <div class="service-price">$20.00 per load</div>
+                                    </div>
+                                    <input type="checkbox" class="service-checkbox">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div>
+                        <!-- Booking Status -->
+                        <div class="card">
+                            <h3 class="card-title">Booking Status</h3>
+                            <div class="status-select">
+                                <div class="status-options">
+                                    <label class="status-option">
+                                        <input type="radio" name="status" value="confirmed" checked>
+                                        <span>Confirmed</span>
+                                    </label>
+                                    <label class="status-option">
+                                        <input type="radio" name="status" value="pending">
+                                        <span>Pending</span>
+                                    </label>
+                                    <label class="status-option">
+                                        <input type="radio" name="status" value="cancelled">
+                                        <span>Cancelled</span>
+                                    </label>
+                                    <label class="status-option">
+                                        <input type="radio" name="status" value="checked-in">
+                                        <span>Checked In</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Payment Status</label>
+                                <select class="form-select">
+                                    <option value="paid" selected>Paid</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="partial">Partially Paid</option>
+                                    <option value="refunded">Refunded</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Price Summary -->
+                        <div class="card">
+                            <h3 class="card-title">Price Summary</h3>
+                            <div class="price-summary">
+                                <div class="price-row">
+                                    <span>Room (3 nights × $200)</span>
+                                    <span>$600.00</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Airport Transfer</span>
+                                    <span>$50.00</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Breakfast (2 guests × 3 days)</span>
+                                    <span>$180.00</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Late Check-out</span>
+                                    <span>$25.00</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Subtotal</span>
+                                    <span>$855.00</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Taxes & Fees (5%)</span>
+                                    <span>$42.75</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Discount</span>
+                                    <span>-$47.75</span>
+                                </div>
+                                <div class="price-row total">
+                                    <span>Total Amount</span>
+                                    <span>$850.00</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" style="width: 100%; margin-top: 12px;" onclick="recalculatePrice()">
+                                <i class="fas fa-calculator"></i>
+                                Recalculate Price
+                            </button>
+                        </div>
+
+                        <!-- Coupons & Discounts -->
+                        <div class="card">
+                            <h3 class="card-title">Coupons & Discounts</h3>
+                            <div class="form-group">
+                                <label class="form-label">Applied Coupon</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="text" class="form-input" value="SUMMER2024" placeholder="Enter coupon code">
+                                    <button type="button" class="btn btn-secondary">Apply</button>
+                                </div>
+                                <small style="color: #10b981; margin-top: 4px; display: block;">
+                                    <i class="fas fa-check"></i>
+                                    10% discount applied (-$47.75)
+                                </small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Manual Discount</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="number" class="form-input" placeholder="0.00">
+                                    <select class="form-select" style="max-width: 80px;">
+                                        <option value="amount">$</option>
+                                        <option value="percent">%</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Booking Timeline -->
+                        <div class="card">
+                            <h3 class="card-title">Recent Activity</h3>
+                            <div class="timeline-entry">
+                                <div class="timeline-date">Dec 20, 2024 - 2:30 PM</div>
+                                <div class="timeline-action">Booking created and confirmed</div>
+                            </div>
+                            <div class="timeline-entry">
+                                <div class="timeline-date">Dec 20, 2024 - 2:35 PM</div>
+                                <div class="timeline-action">Payment processed ($850.00)</div>
+                            </div>
+                            <div class="timeline-entry">
+                                <div class="timeline-date">Dec 22, 2024 - 10:15 AM</div>
+                                <div class="timeline-action">Room assigned (Room 201)</div>
+                            </div>
+                            <div class="timeline-entry">
+                                <div class="timeline-date">Just now</div>
+                                <div class="timeline-action">Booking being modified</div>
+                            </div>
+                        </div>
+
+                        <!-- Internal Notes -->
+                        <div class="card">
+                            <h3 class="card-title">Internal Notes</h3>
+                            <div class="form-group">
+                                <textarea class="form-textarea" rows="4" placeholder="Add internal notes...">Guest requested ocean view room. Assigned Room 201.
+VIP guest - ensure room is ready 2 hours early.</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="cancelChanges()">
+                        Cancel Changes
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="saveAsDraft()">
+                        <i class="fas fa-save"></i>
+                        Save as Draft
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i>
+                        Update Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Get booking ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get('id') || 'BK001';
+
+        // Form handling
+        document.getElementById('editBookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveBooking();
+        });
+
+        // Service checkbox handling
+        document.querySelectorAll('.service-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updatePriceSummary();
+            });
+        });
+
+        // Date validation
+        document.querySelectorAll('input[type="date"]').forEach(input => {
+            input.addEventListener('change', function() {
+                validateDates();
+                updatePriceSummary();
+            });
+        });
+
+        // Functions
+        function saveBooking() {
+            if (validateForm()) {
+                showNotification('Booking updated successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = `booking-details.html?id=${bookingId}`;
+                }, 1500);
+            }
+        }
+
+        function saveAsDraft() {
+            showNotification('Changes saved as draft', 'info');
+        }
+
+        function cancelChanges() {
+            if (confirm('Are you sure you want to discard all changes?')) {
+                window.location.href = `booking-details.html?id=${bookingId}`;
+            }
+        }
+
+        function recalculatePrice() {
+            updatePriceSummary();
+            showNotification('Price recalculated', 'info');
+        }
+
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#ef4444';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e2e8f0';
+                }
+            });
+
+            if (!isValid) {
+                showNotification('Please fill in all required fields', 'error');
+            }
+
+            return isValid;
+        }
+
+        function validateDates() {
+            const checkinDate = new Date(document.querySelector('input[type="date"]:first-of-type').value);
+            const checkoutDate = new Date(document.querySelector('input[type="date"]:nth-of-type(2)').value);
+            
+            if (checkoutDate <= checkinDate) {
+                showNotification('Check-out date must be after check-in date', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function updatePriceSummary() {
+            // Calculate selected services
+            let servicesTotal = 0;
+            const checkboxes = document.querySelectorAll('.service-checkbox:checked');
+            
+            checkboxes.forEach(checkbox => {
+                const serviceItem = checkbox.closest('.service-item');
+                const priceText = serviceItem.querySelector('.service-price').textContent;
+                const price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+                
+                // Apply multipliers based on service type
+                const serviceName = serviceItem.querySelector('.service-name').textContent;
+                if (serviceName.includes('Breakfast')) {
+                    servicesTotal += price * 2 * 3; // 2 guests × 3 days
+                } else {
+                    servicesTotal += price;
+                }
+            });
+
+            // Update price display (simplified calculation)
+            const roomTotal = 600.00; // 3 nights × $200
+            const subtotal = roomTotal + servicesTotal;
+            const taxes = subtotal * 0.05;
+            const discount = subtotal * 0.10; // 10% discount
+            const total = subtotal + taxes - discount;
+
+            // Update DOM elements would go here
+            console.log('Updated total:', total);
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                padding: 12px 20px;
+                border-radius: 8px;
+                color: white;
+                z-index: 1001;
+                font-weight: 500;
+                max-width: 400px;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            
+            switch(type) {
+                case 'success':
+                    notification.style.background = '#10b981';
+                    break;
+                case 'error':
+                    notification.style.background = '#ef4444';
+                    break;
+                case 'warning':
+                    notification.style.background = '#f59e0b';
+                    break;
+                default:
+                    notification.style.background = '#3b82f6';
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // Initialize
+        updatePriceSummary();
+        console.log('Edit Booking page initialized');
+    </script>
+</body>
+</html>

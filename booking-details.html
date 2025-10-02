@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            border: 1px solid transparent;
+            background: transparent;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border-color: #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .booking-header {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .booking-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .booking-id {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .booking-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-confirmed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-checked-in {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .booking-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .guest-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            margin-right: 16px;
+        }
+
+        .guest-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .guest-details h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .guest-details p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .room-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .room-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .room-type {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .price-breakdown {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .price-row.total {
+            font-weight: 600;
+            font-size: 16px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 8px;
+        }
+
+        .timeline {
+            margin-top: 24px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .timeline-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3b82f6;
+            margin-right: 12px;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-time {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .timeline-event {
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-meta {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item active" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-rules"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="all-bookings.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Bookings
+            </a>
+            <div>
+                <h1 class="page-title">Booking Details</h1>
+                <div class="breadcrumb">Bookings / All Bookings / Details</div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn btn-secondary" onclick="printBooking()">
+                <i class="fas fa-print"></i>
+                Print
+            </button>
+            <button class="btn btn-primary" onclick="editBooking()">
+                <i class="fas fa-edit"></i>
+                Edit Booking
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Booking Header -->
+        <div class="booking-header">
+            <div class="booking-header-top">
+                <div class="booking-id">#BK001</div>
+                <div class="booking-status status-confirmed">Confirmed</div>
+            </div>
+            <div class="booking-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Check-in</div>
+                    <div class="meta-value">Dec 25, 2024</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Check-out</div>
+                    <div class="meta-value">Dec 28, 2024</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Duration</div>
+                    <div class="meta-value">3 nights</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Total Amount</div>
+                    <div class="meta-value">$850.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="details-grid">
+            <!-- Left Column -->
+            <div>
+                <!-- Guest Information -->
+                <div class="card">
+                    <h3 class="card-title">Guest Information</h3>
+                    <div class="guest-info">
+                        <div class="guest-avatar">EC</div>
+                        <div class="guest-details">
+                            <h3>Emily Chen</h3>
+                            <p>emily.chen@email.com</p>
+                            <p>+1 555 123 4567</p>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Country</span>
+                        <span class="detail-value">United States</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Address</span>
+                        <span class="detail-value">123 Main Street, San Francisco, CA 94102</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Special Requests</span>
+                        <span class="detail-value">Late check-in, Ocean view room preferred</span>
+                    </div>
+                </div>
+
+                <!-- Room Details -->
+                <div class="card">
+                    <h3 class="card-title">Room Details</h3>
+                    <div class="room-card">
+                        <div class="room-header">
+                            <div class="room-number">Room 201</div>
+                            <div class="room-type">Deluxe Ocean Suite</div>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Adults</span>
+                            <span class="detail-value">2</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Children</span>
+                            <span class="detail-value">0</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Bed Type</span>
+                            <span class="detail-value">King Bed</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">View</span>
+                            <span class="detail-value">Ocean View</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services -->
+                <div class="card">
+                    <h3 class="card-title">Additional Services</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Airport Transfer</span>
+                        <span class="detail-value">$50.00</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Breakfast (2 persons × 3 days)</span>
+                        <span class="detail-value">$180.00</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Late Check-out</span>
+                        <span class="detail-value">$25.00</span>
+                    </div>
+                </div>
+
+                <!-- Booking Timeline -->
+                <div class="card">
+                    <h3 class="card-title">Booking Timeline</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-time">Dec 20, 2024 - 2:30 PM</div>
+                                <div class="timeline-event">Booking created and confirmed</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-time">Dec 20, 2024 - 2:35 PM</div>
+                                <div class="timeline-event">Payment processed ($850.00)</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-time">Dec 20, 2024 - 2:36 PM</div>
+                                <div class="timeline-event">Confirmation email sent</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-time">Dec 22, 2024 - 10:15 AM</div>
+                                <div class="timeline-event">Room assigned (Room 201)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div>
+                <!-- Payment Summary -->
+                <div class="card">
+                    <h3 class="card-title">Payment Summary</h3>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Room (3 nights × $200)</span>
+                            <span>$600.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Airport Transfer</span>
+                            <span>$50.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Breakfast</span>
+                            <span>$180.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Late Check-out</span>
+                            <span>$25.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Taxes & Fees</span>
+                            <span>$45.00</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Total Amount</span>
+                            <span>$850.00</span>
+                        </div>
+                    </div>
+                    <div class="detail-row" style="margin-top: 16px;">
+                        <span class="detail-label">Payment Status</span>
+                        <span class="detail-value" style="color: #10b981;">Paid</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Method</span>
+                        <span class="detail-value">Credit Card (**** 4567)</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Transaction ID</span>
+                        <span class="detail-value">TXN123456789</span>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <h3 class="card-title">Quick Actions</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="btn btn-primary" onclick="checkInGuest()">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Check-in Guest
+                        </button>
+                        <button class="btn btn-secondary" onclick="sendConfirmation()">
+                            <i class="fas fa-envelope"></i>
+                            Resend Confirmation
+                        </button>
+                        <button class="btn btn-warning" onclick="modifyBooking()">
+                            <i class="fas fa-edit"></i>
+                            Modify Booking
+                        </button>
+                        <button class="btn btn-danger" onclick="cancelBooking()">
+                            <i class="fas fa-ban"></i>
+                            Cancel Booking
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="card">
+                    <h3 class="card-title">Internal Notes</h3>
+                    <div style="margin-bottom: 12px;">
+                        <small style="color: #64748b;">Dec 20, 2024 - Staff</small>
+                        <p style="margin: 4px 0;">Guest requested ocean view room. Assigned Room 201.</p>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <small style="color: #64748b;">Dec 22, 2024 - Manager</small>
+                        <p style="margin: 4px 0;">VIP guest - ensure room is ready 2 hours early.</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="addNote()" style="width: 100%;">
+                        <i class="fas fa-plus"></i>
+                        Add Note
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Print Modal -->
+    <div class="modal" id="printModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Chọn loại hóa đơn</h3>
+                <button class="close-btn" onclick="closeModal('printModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="printInvoice('regular')" style="justify-content: center; padding: 16px;">
+                    <i class="fas fa-file-invoice"></i>
+                    Hóa đơn thường
+                </button>
+                <button class="btn btn-danger" onclick="printInvoice('vat')" style="justify-content: center; padding: 16px;">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Hóa đơn đỏ (VAT)
+                </button>
+            </div>
+            <div style="margin-top: 16px;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('printModal')" style="width: 100%;">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Note Modal -->
+    <div class="modal" id="addNoteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Internal Note</h3>
+                <button class="close-btn" onclick="closeModal('addNoteModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="noteForm">
+                <div class="form-group">
+                    <label class="form-label">Note</label>
+                    <textarea class="form-textarea" rows="4" placeholder="Enter your note here..." required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addNoteModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cancel Booking Modal -->
+    <div class="modal" id="cancelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Cancel Booking</h3>
+                <button class="close-btn" onclick="closeModal('cancelModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="cancelForm">
+                <div class="form-group">
+                    <label class="form-label">Cancellation Reason</label>
+                    <select class="form-select" required>
+                        <option value="">Select reason</option>
+                        <option value="guest-request">Guest Request</option>
+                        <option value="no-show">No Show</option>
+                        <option value="payment-failed">Payment Failed</option>
+                        <option value="overbooking">Overbooking</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Additional Notes</label>
+                    <textarea class="form-textarea" rows="3" placeholder="Optional notes about the cancellation..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" />
+                        <span>Process refund if applicable</span>
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('cancelModal')">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get booking ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get('id');
+        
+        if (bookingId) {
+            document.querySelector('.booking-id').textContent = `#${bookingId}`;
+        }
+
+        // Modal functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Action functions
+        function editBooking() {
+            const bookingId = document.querySelector('.booking-id').textContent.replace('#', '');
+            window.location.href = `edit-booking.html?id=${bookingId}`;
+        }
+
+        function printBooking() {
+            document.getElementById('printModal').classList.add('show');
+        }
+
+        function checkInGuest() {
+            if (confirm('Check-in this guest now?')) {
+                showNotification('Guest checked in successfully!', 'success');
+                // Update status
+                const statusElement = document.querySelector('.booking-status');
+                statusElement.textContent = 'Checked In';
+                statusElement.className = 'booking-status status-checked-in';
+            }
+        }
+
+        function sendConfirmation() {
+            if (confirm('Send confirmation email to guest?')) {
+                showNotification('Confirmation email sent successfully!', 'success');
+            }
+        }
+
+        function modifyBooking() {
+            editBooking();
+        }
+
+        function cancelBooking() {
+            document.getElementById('cancelModal').classList.add('show');
+        }
+
+        function addNote() {
+            document.getElementById('addNoteModal').classList.add('show');
+        }
+
+        // Print invoice function
+        function printInvoice(type) {
+            closeModal('printModal');
+            
+            // Get booking data
+            const bookingId = document.querySelector('.booking-id').textContent;
+            const status = document.querySelector('.booking-status').textContent;
+            const checkIn = document.querySelectorAll('.meta-value')[0].textContent;
+            const checkOut = document.querySelectorAll('.meta-value')[1].textContent;
+            const duration = document.querySelectorAll('.meta-value')[2].textContent;
+            const total = document.querySelectorAll('.meta-value')[3].textContent;
+            
+            // Guest info
+            const guestName = document.querySelector('.guest-details h3').textContent;
+            const guestEmail = document.querySelector('.guest-details p:nth-child(2)').textContent;
+            const guestPhone = document.querySelector('.guest-details p:nth-child(3)').textContent;
+            const guestAddress = document.querySelectorAll('.detail-value')[1].textContent;
+            
+            // Room info
+            const roomNumber = document.querySelector('.room-number').textContent;
+            const roomType = document.querySelector('.room-type').textContent;
+            
+            // Create print window
+            const printWindow = window.open('', '_blank');
+            
+            // Generate invoice HTML based on type
+            const invoiceHTML = generateInvoiceHTML(type, {
+                bookingId,
+                status,
+                checkIn,
+                checkOut,
+                duration,
+                total,
+                guestName,
+                guestEmail,
+                guestPhone,
+                guestAddress,
+                roomNumber,
+                roomType
+            });
+            
+            printWindow.document.write(invoiceHTML);
+            printWindow.document.close();
+            
+            // Wait for content to load then print
+            setTimeout(() => {
+                printWindow.print();
+            }, 250);
+        }
+
+        function generateInvoiceHTML(type, data) {
+            const isVAT = type === 'vat';
+            const invoiceTitle = isVAT ? 'HÓA ĐƠN GIÁ TRỊ GIA TĂNG' : 'HÓA ĐƠN XÁC NHẬN';
+            const invoiceColor = isVAT ? '#ef4444' : '#3b82f6';
+            const currentDate = new Date().toLocaleDateString('vi-VN');
+            
+            return `
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${invoiceTitle} - ${data.bookingId}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 40px;
+            background: white;
+            color: #1e293b;
+        }
+        
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border: 2px solid ${invoiceColor};
+        }
+        
+        .invoice-header {
+            background: ${invoiceColor};
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .invoice-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .invoice-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .company-info {
+            padding: 30px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: ${invoiceColor};
+            margin-bottom: 10px;
+        }
+        
+        .company-details {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        .invoice-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+            background: #f8fafc;
+        }
+        
+        .info-section h3 {
+            font-size: 14px;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .info-label {
+            color: #64748b;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .customer-info {
+            padding: 30px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .customer-info h3 {
+            font-size: 16px;
+            color: #0f172a;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .customer-details {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #475569;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+        
+        .items-table thead {
+            background: ${invoiceColor};
+            color: white;
+        }
+        
+        .items-table th {
+            padding: 15px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .items-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+        
+        .items-table tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .total-section {
+            padding: 0 30px 30px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+        
+        .total-row.subtotal {
+            border-top: 1px solid #e2e8f0;
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+        
+        .total-row.grand-total {
+            border-top: 3px solid ${invoiceColor};
+            margin-top: 15px;
+            padding-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: ${invoiceColor};
+        }
+        
+        .payment-info {
+            padding: 30px;
+            background: #f8fafc;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .payment-info h3 {
+            font-size: 16px;
+            color: #0f172a;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .payment-status {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: #dcfce7;
+            color: #166534;
+            margin-bottom: 15px;
+        }
+        
+        .vat-info {
+            padding: 30px;
+            background: #fef3c7;
+            border-top: 2px solid #f59e0b;
+        }
+        
+        .vat-info h3 {
+            font-size: 16px;
+            color: #92400e;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .invoice-footer {
+            padding: 30px;
+            text-align: center;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .signature-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .signature-box {
+            padding: 20px;
+        }
+        
+        .signature-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 60px;
+        }
+        
+        .signature-name {
+            font-size: 14px;
+            color: #64748b;
+            font-style: italic;
+        }
+        
+        .invoice-notes {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+            }
+            
+            .invoice-container {
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <div class="invoice-title">${invoiceTitle}</div>
+            <div class="invoice-subtitle">${isVAT ? 'Liên 2: Giao khách hàng' : 'Xác nhận đặt phòng và thanh toán'}</div>
+        </div>
+        
+        <div class="company-info">
+            <div class="company-name">DEMO LINK HOTEL</div>
+            <div class="company-details">
+                <div><strong>Địa chỉ:</strong> 123 Beach Road, Vung Tau City, Vietnam</div>
+                <div><strong>Điện thoại:</strong> +84 254 123 4567</div>
+                <div><strong>Email:</strong> info@demolinkhotel.com</div>
+                ${isVAT ? '<div><strong>Mã số thuế:</strong> 0123456789</div>' : ''}
+            </div>
+        </div>
+        
+        <div class="invoice-info">
+            <div class="info-section">
+                <h3>Thông tin hóa đơn</h3>
+                <div class="info-row">
+                    <span class="info-label">Số hóa đơn:</span>
+                    <span class="info-value">${data.bookingId}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ngày xuất:</span>
+                    <span class="info-value">${currentDate}</span>
+                </div>
+                ${isVAT ? `<div class="info-row">
+                    <span class="info-label">Ký hiệu:</span>
+                    <span class="info-value">1C24TAA</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Số:</span>
+                    <span class="info-value">0000123</span>
+                </div>` : ''}
+            </div>
+            
+            <div class="info-section">
+                <h3>Thông tin lưu trú</h3>
+                <div class="info-row">
+                    <span class="info-label">Nhận phòng:</span>
+                    <span class="info-value">${data.checkIn}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Trả phòng:</span>
+                    <span class="info-value">${data.checkOut}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Thời gian:</span>
+                    <span class="info-value">${data.duration}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="customer-info">
+            <h3>Thông tin khách hàng</h3>
+            <div class="customer-details">
+                <div><strong>Họ và tên:</strong> ${data.guestName}</div>
+                <div><strong>Điện thoại:</strong> ${data.guestPhone}</div>
+                <div><strong>Email:</strong> ${data.guestEmail}</div>
+                <div><strong>Địa chỉ:</strong> ${data.guestAddress}</div>
+                ${isVAT ? '<div><strong>Mã số thuế:</strong> ___________________________</div>' : ''}
+            </div>
+        </div>
+        
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mô tả dịch vụ</th>
+                    <th class="text-center">Số lượng</th>
+                    <th class="text-right">Đơn giá</th>
+                    <th class="text-right">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>
+                        <strong>${data.roomType}</strong><br>
+                        <small style="color: #64748b;">Phòng ${data.roomNumber}</small>
+                    </td>
+                    <td class="text-center">3 đêm</td>
+                    <td class="text-right">$200.00</td>
+                    <td class="text-right">$600.00</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Đưa đón sân bay</td>
+                    <td class="text-center">1</td>
+                    <td class="text-right">$50.00</td>
+                    <td class="text-right">$50.00</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Ăn sáng (2 người × 3 ngày)</td>
+                    <td class="text-center">6</td>
+                    <td class="text-right">$30.00</td>
+                    <td class="text-right">$180.00</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Trả phòng muộn</td>
+                    <td class="text-center">1</td>
+                    <td class="text-right">$25.00</td>
+                    <td class="text-right">$25.00</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="total-section">
+            <div class="total-row subtotal">
+                <span>Tổng tiền dịch vụ:</span>
+                <span>$855.00</span>
+            </div>
+            ${isVAT ? `
+            <div class="total-row">
+                <span>Thuế VAT (10%):</span>
+                <span>$85.50</span>
+            </div>
+            <div class="total-row">
+                <span>Thuế & phí khác:</span>
+                <span>$45.00</span>
+            </div>
+            ` : `
+            <div class="total-row">
+                <span>Thuế & phí:</span>
+                <span>$45.00</span>
+            </div>
+            `}
+            <div class="total-row grand-total">
+                <span>TỔNG CỘNG:</span>
+                <span>${data.total}</span>
+            </div>
+            ${isVAT ? `<div style="margin-top: 10px; font-size: 13px; color: #64748b; font-style: italic;">
+                Bằng chữ: Tám trăm năm mươi đô la Mỹ
+            </div>` : ''}
+        </div>
+        
+        <div class="payment-info">
+            <h3>Thông tin thanh toán</h3>
+            <div class="payment-status">ĐÃ THANH TOÁN</div>
+            <div class="info-row">
+                <span class="info-label">Phương thức:</span>
+                <span class="info-value">Thẻ tín dụng (**** 4567)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Mã giao dịch:</span>
+                <span class="info-value">TXN123456789</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Ngày thanh toán:</span>
+                <span class="info-value">Dec 20, 2024</span>
+            </div>
+        </div>
+        
+        ${isVAT ? `
+        <div class="vat-info">
+            <h3>⚠️ Lưu ý quan trọng về hóa đơn VAT</h3>
+            <div style="font-size: 13px; color: #92400e; line-height: 1.6;">
+                <p>• Hóa đơn này chỉ có giá trị khi có đầy đủ chữ ký và dấu của đơn vị.</p>
+                <p>• Vui lòng kiểm tra kỹ thông tin trên hóa đơn.</p>
+                <p>• Mọi thắc mắc xin liên hệ bộ phận kế toán: accounting@demolinkhotel.com</p>
+            </div>
+        </div>
+        ` : ''}
+        
+        <div class="invoice-footer">
+            <div class="signature-section">
+                <div class="signature-box">
+                    <div class="signature-title">Người mua hàng</div>
+                    <div class="signature-name">(Ký, ghi rõ họ tên)</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-title">Người bán hàng</div>
+                    <div class="signature-name">(Ký, đóng dấu)</div>
+                </div>
+            </div>
+            
+            <div class="invoice-notes">
+                <strong>Ghi chú:</strong><br>
+                • Hóa đơn này được tạo tự động từ hệ thống quản lý khách sạn.<br>
+                • Vui lòng giữ hóa đơn này để đối chiếu và khiếu nại nếu cần.<br>
+                • Mọi thắc mắc xin liên hệ: +84 254 123 4567 hoặc info@demolinkhotel.com
+            </div>
+            
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8;">
+                Cảm ơn quý khách đã sử dụng dịch vụ của Demo Link Hotel!
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+            `;
+        }
+
+        // Form submissions
+        document.getElementById('noteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const noteText = this.querySelector('textarea').value;
+            if (noteText.trim()) {
+                addNoteToList(noteText);
+                showNotification('Note added successfully!', 'success');
+                closeModal('addNoteModal');
+                this.reset();
+            }
+        });
+
+        document.getElementById('cancelForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Booking cancelled successfully!', 'success');
+            closeModal('cancelModal');
+            
+            // Update status
+            const statusElement = document.querySelector('.booking-status');
+            statusElement.textContent = 'Cancelled';
+            statusElement.className = 'booking-status status-cancelled';
+        });
+
+        // Helper functions
+        function addNoteToList(noteText) {
+            const notesContainer = document.querySelector('.card:last-child');
+            const noteElement = document.createElement('div');
+            noteElement.style.marginBottom = '12px';
+            noteElement.innerHTML = `
+                <small style="color: #64748b;">${new Date().toLocaleDateString()} - Staff</small>
+                <p style="margin: 4px 0;">${noteText}</p>
+            `;
+            
+            const addButton = notesContainer.querySelector('button');
+            notesContainer.insertBefore(noteElement, addButton);
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                padding: 12px 20px;
+                border-radius: 8px;
+                color: white;
+                z-index: 1001;
+                font-weight: 500;
+                max-width: 400px;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            
+            switch(type) {
+                case 'success':
+                    notification.style.background = '#10b981';
+                    break;
+                case 'error':
+                    notification.style.background = '#ef4444';
+                    break;
+                case 'warning':
+                    notification.style.background = '#f59e0b';
+                    break;
+                default:
+                    notification.style.background = '#3b82f6';
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.style.transform = 'translateX(0)', 100);
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+
+        console.log('Booking Details page initialized');
+    </script>
+</body>
+</html>

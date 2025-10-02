@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rates & Pricing - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .overview-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .card-change {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-change.positive {
+            color: #059669;
+        }
+
+        .filters-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .filters-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            font-size: 14px;
+        }
+
+        .rate-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .rate-details p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .room-type-badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .price-display {
+            text-align: right;
+        }
+
+        .price-main {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .price-sub {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .season-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .season-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-inactive {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-view {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .btn-edit {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-copy {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fed7aa;
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .close-btn:hover {
+            color: #0f172a;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            font-family: inherit;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .season-price-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .season-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .season-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .remove-season-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .remove-season-btn:hover {
+            background: #fecaca;
+        }
+
+        .variable-pricing-section {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .variable-pricing-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .variable-price-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: end;
+        }
+
+        .add-price-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .add-price-btn:hover {
+            background: #059669;
+        }
+
+        .add-season-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .add-season-btn:hover {
+            background: #059669;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html"> 
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item active" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-gavel"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="page-title">Rates & Pricing Management</h1>
+            <div class="breadcrumb">Room Management / Rates & Pricing</div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-primary" onclick="openRateModal()">
+                <i class="fas fa-plus"></i>
+                Add New Rate
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Overview Cards -->
+        <section class="overview-cards">
+            <div class="overview-card">
+                <div class="card-header">
+                    <div class="card-title">Total Rate Plans</div>
+                    <div class="card-icon" style="background: #3b82f6;">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                </div>
+                <div class="card-value">15</div>
+                <div class="card-change">
+                    <i class="fas fa-layer-group"></i>
+                    Active pricing plans
+                </div>
+            </div>
+
+            <div class="overview-card">
+                <div class="card-header">
+                    <div class="card-title">Average Rate</div>
+                    <div class="card-icon" style="background: #10b981;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="card-value">$165</div>
+                <div class="card-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    +8% vs last month
+                </div>
+            </div>
+
+            <div class="overview-card">
+                <div class="card-header">
+                    <div class="card-title">Seasonal Rates</div>
+                    <div class="card-icon" style="background: #f59e0b;">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <div class="card-value">8</div>
+                <div class="card-change">
+                    <i class="fas fa-snowflake"></i>
+                    Active seasons
+                </div>
+            </div>
+
+            <div class="overview-card">
+                <div class="card-header">
+                    <div class="card-title">Revenue Impact</div>
+                    <div class="card-icon" style="background: #6366f1;">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+                <div class="card-value">+12%</div>
+                <div class="card-change positive">
+                    <i class="fas fa-trending-up"></i>
+                    Revenue optimization
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="filters-row">
+                <div class="search-box">
+                    <input type="text" placeholder="Search rates by name or room type...">
+                </div>
+                <select class="filter-select">
+                    <option>All Room Types</option>
+                    <option>Deluxe Suite</option>
+                    <option>Superior Ocean</option>
+                    <option>Standard Room</option>
+                </select>
+                <select class="filter-select">
+                    <option>All Seasons</option>
+                    <option>Peak Season</option>
+                    <option>High Season</option>
+                    <option>Low Season</option>
+                    <option>Regular Season</option>
+                </select>
+                <select class="filter-select">
+                    <option>All Status</option>
+                    <option>Active</option>
+                    <option>Inactive</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Rates Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">Rate Plans</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rate Name</th>
+                        <th>Room Type</th>
+                        <th>Season</th>
+                        <th>Base Price</th>
+                        <th>Extra Adult</th>
+                        <th>Extra Child</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="rate-details">
+                                <h4>Deluxe Peak Rate</h4>
+                                <p>Peak season pricing</p>
+                            </div>
+                        </td>
+                        <td><span class="room-type-badge">Deluxe Ocean Suite</span></td>
+                        <td>
+                            <div class="season-info">
+                                <div class="season-dot" style="background: #ef4444;"></div>
+                                Peak Season
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-display">
+                                <div class="price-main">$350</div>
+                                <div class="price-sub">per night</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-display">
+                                <div class="price-main">$50</div>
+                                <div class="price-sub">per person</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-display">
+                                <div class="price-main">$25</div>
+                                <div class="price-sub">per child</div>
+                            </div>
+                        </td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-view" onclick="viewRate('deluxe-peak')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-small btn-edit" onclick="editRate('deluxe-peak')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-copy" onclick="duplicateRate('deluxe-peak')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="rate-details">
+                                <h4>Superior Regular Rate</h4>
+                                <p>Standard pricing</p>
+                            </div>
+                        </td>
+                        <td><span class="room-type-badge">Superior Ocean View</span></td>
+                        <td>
+                            <div class="season-info">
+                                <div class="season-dot" style="background: #3b82f6;"></div>
+                                Regular Season
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-display">
+                                <div class="price-main">$180</div>
+                                <div class="price-sub">per night</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-display">
+                                <div class="price-main">$30</div>
+                                <div class="price-sub">per person</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-display">
+                                <div class="price-main">$15</div>
+                                <div class="price-sub">per child</div>
+                            </div>
+                        </td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-view" onclick="viewRate('superior-regular')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-small btn-edit" onclick="editRate('superior-regular')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-copy" onclick="duplicateRate('superior-regular')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="rate-details">
+                                <h4>Standard Low Season</h4>
+                                <p>Budget-friendly rates</p>
+                            </div>
+                        </td>
+                        <td><span class="room-type-badge">Standard Room</span></td>
+                        <td>
+                            <div class="season-info">
+                                <div class="season-dot" style="background: #10b981;"></div>
+                                Low Season
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-display">
+                                <div class="price-main">$90</div>
+                                <div class="price-sub">per night</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-display">
+                                <div class="price-main">$20</div>
+                                <div class="price-sub">per person</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-display">
+                                <div class="price-main">$10</div>
+                                <div class="price-sub">per child</div>
+                            </div>
+                        </td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-view" onclick="viewRate('standard-low')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-small btn-edit" onclick="editRate('standard-low')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-copy" onclick="duplicateRate('standard-low')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Add/Edit Rate Modal -->
+    <div class="modal" id="rateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Rate</h3>
+                <button class="close-btn" onclick="closeRateModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="rateForm">
+                <div class="form-grid">
+                    <div>
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Basic Information</h4>
+                            <div class="form-group">
+                                <label class="form-label tooltip">
+                                    Rate Name *
+                                    <span class="tooltiptext">Enter a descriptive name for this rate plan (e.g., "Deluxe Peak Rate", "Weekend Special")</span>
+                                </label>
+                                <input type="text" class="form-input" placeholder="e.g., Deluxe Peak Rate" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label tooltip">
+                                    Description
+                                    <span class="tooltiptext">Provide additional details about this rate plan for internal reference</span>
+                                </label>
+                                <textarea class="form-textarea" placeholder="Describe this rate plan..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label tooltip">
+                                    Room Type *
+                                    <span class="tooltiptext">Select the room type this rate applies to</span>
+                                </label>
+                                <select class="form-select" required>
+                                    <option value="">Select Room Type</option>
+                                    <option value="deluxe-suite">Deluxe Ocean Suite</option>
+                                    <option value="superior-ocean">Superior Ocean View</option>
+                                    <option value="standard-room">Standard Room</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Season Pricing -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Season Pricing</h4>
+                            <div id="season-pricing-container">
+                                <!-- Season 1 -->
+                                <div class="season-price-card" data-season-id="1">
+                                    <div class="season-card-header">
+                                        <span class="season-card-title">Season 1</span>
+                                        <button type="button" class="remove-season-btn" onclick="removeSeason(1)" style="display: none;">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Season *
+                                        </label>
+                                        <select class="form-select" required>
+                                            <option value="">Select Season</option>
+                                            <option value="peak">Peak Season</option>
+                                            <option value="high">High Season</option>
+                                            <option value="regular">Regular Season</option>
+                                            <option value="low">Low Season</option>
+                                        </select>
+                                        <div class="helper-text">Choose the season when this pricing applies</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Repeat Pattern
+                                        </label>
+                                        <select class="form-select">
+                                            <option value="none">Does not repeat</option>
+                                            <option value="annually">Annually</option>
+                                        </select>
+                                        <div class="helper-text">Set if this season repeats annually or is a one-time pricing</div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                Nights
+                                            </label>
+                                            <input type="number" class="form-input" value="1" min="1">
+                                            <div class="helper-text">Minimum number of nights for this rate (default: 1)</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                Base Occupancy
+                                            </label>
+                                            <input type="number" class="form-input" value="2" min="1">
+                                            <div class="helper-text">Number of guests included in base price</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                Price per Night *
+                                            </label>
+                                            <input type="number" class="form-input" placeholder="0.00" step="0.01" required>
+                                            <div class="helper-text">Base price per night for the base occupancy</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                Price per Extra Adult
+                                            </label>
+                                            <input type="number" class="form-input" placeholder="0.00" step="0.01">
+                                            <div class="helper-text">Additional cost per adult beyond base occupancy</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Price per Extra Child
+                                        </label>
+                                        <input type="number" class="form-input" placeholder="0.00" step="0.01">
+                                        <div class="helper-text">Additional cost per child beyond base occupancy</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="display: flex; align-items: center; cursor: pointer;">
+                                            <input type="checkbox" style="margin-right: 8px;" onchange="toggleVariablePricing(1, this.checked)">
+                                            <span class="tooltip" style="display: inline;">
+                                                Enable variable pricing
+                                            </span>
+                                        </label>
+                                        <div class="helper-text">Set different prices based on number of nights booked (e.g., discounts for longer stays)</div>
+                                    </div>
+
+                                    <div id="variable-pricing-1" style="display: none;">
+                                        <div class="variable-pricing-section">
+                                            <div class="variable-pricing-header">Variable Pricing by Nights</div>
+                                            <div id="variable-prices-1">
+                                                <div class="variable-price-row">
+                                                    <div class="form-group" style="margin: 0;">
+                                                        <label class="form-label" style="font-size: 12px;">Nights</label>
+                                                        <input type="number" class="form-input" placeholder="3" min="2" style="padding: 8px;">
+                                                    </div>
+                                                    <div class="form-group" style="margin: 0;">
+                                                        <label class="form-label" style="font-size: 12px;">Price per Night</label>
+                                                        <input type="number" class="form-input" placeholder="0.00" step="0.01" style="padding: 8px;">
+                                                    </div>
+                                                    <button type="button" class="btn-small btn-delete" style="align-self: flex-end; margin-bottom: 0;">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="add-price-btn" onclick="addVariablePrice(1)">
+                                                <i class="fas fa-plus"></i>
+                                                Add Night Range
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="add-season-btn" onclick="addNewSeason()">
+                                <i class="fas fa-plus"></i>
+                                Add New Season Price
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div>
+                        <!-- Status & Publish -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Status & Publish</h4>
+                            <div class="form-group">
+                                <label class="form-label tooltip">
+                                    Status
+                                    <span class="tooltiptext">Set rate as Active (visible to customers) or Inactive</span>
+                                </label>
+                                <select class="form-select">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label tooltip">
+                                    Effective From
+                                    <span class="tooltiptext">Start date when this rate becomes available</span>
+                                </label>
+                                <input type="date" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label tooltip">
+                                    Effective Until
+                                    <span class="tooltiptext">End date when this rate expires (leave blank for no expiration)</span>
+                                </label>
+                                <input type="date" class="form-input">
+                            </div>
+                        </div>
+
+                        <!-- Rate Order -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Display Order</h4>
+                            <div class="form-group">
+                                <label class="form-label tooltip">
+                                    Order Priority
+                                    <span class="tooltiptext">Lower numbers display first in listings (0 = highest priority)</span>
+                                </label>
+                                <input type="number" class="form-input" value="0" min="0">
+                            </div>
+                        </div>
+
+                        <!-- Preview -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Rate Preview</h4>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+                                <div style="margin-bottom: 12px;">
+                                    <strong>Sample Calculation:</strong>
+                                </div>
+                                <div style="font-size: 13px; color: #64748b;">
+                                    <div>2 Adults, 1 Child × 3 nights</div>
+                                    <div>Base: $180 × 3 = $540</div>
+                                    <div>Extra Child: $15 × 3 = $45</div>
+                                    <div style="border-top: 1px solid #e2e8f0; margin-top: 8px; padding-top: 8px; font-weight: 600; color: #0f172a;">
+                                        Total: $585
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeRateModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Rate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Rate Modal -->
+    <div class="modal" id="viewRateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Rate Plan Details</h3>
+                <button class="close-btn" onclick="closeViewRateModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="form-grid">
+                <div>
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h4 class="form-section-title">Basic Information</h4>
+                        <div class="form-group">
+                            <label class="form-label">Rate Name</label>
+                            <div style="padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                                <strong id="view-rate-name">Deluxe Peak Rate</strong>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <div style="padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; min-height: 80px;">
+                                <span id="view-rate-description">Peak season pricing for our premium deluxe ocean suites</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Room Type</label>
+                            <div style="padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                                <span class="room-type-badge" id="view-room-type">Deluxe Ocean Suite</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Season Pricing Details -->
+                    <div class="form-section">
+                        <h4 class="form-section-title">Pricing Details</h4>
+                        <div id="view-season-pricing-container">
+                            <!-- Season 1 -->
+                            <div class="season-price-card">
+                                <div class="season-card-header">
+                                    <span class="season-card-title">
+                                        <div class="season-info">
+                                            <div class="season-dot" style="background: #ef4444;"></div>
+                                            Peak Season
+                                        </div>
+                                    </span>
+                                </div>
+                                
+                                <div style="display: grid; gap: 12px; margin-top: 12px;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div>
+                                            <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Repeat Pattern</div>
+                                            <div style="font-size: 14px; font-weight: 500;">Annually</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Minimum Nights</div>
+                                            <div style="font-size: 14px; font-weight: 500;">1 night</div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div>
+                                            <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Base Occupancy</div>
+                                            <div style="font-size: 14px; font-weight: 500;">2 guests</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Base Price / Night</div>
+                                            <div style="font-size: 18px; font-weight: 700; color: #0f172a;">$350</div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div>
+                                            <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Extra Adult</div>
+                                            <div style="font-size: 16px; font-weight: 600; color: #0f172a;">$50 <span style="font-size: 12px; font-weight: 400; color: #64748b;">per person</span></div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Extra Child</div>
+                                            <div style="font-size: 16px; font-weight: 600; color: #0f172a;">$25 <span style="font-size: 12px; font-weight: 400; color: #64748b;">per child</span></div>
+                                        </div>
+                                    </div>
+
+                                    <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; padding: 12px; margin-top: 8px;">
+                                        <div style="font-size: 12px; font-weight: 600; color: #92400e; margin-bottom: 8px;">
+                                            <i class="fas fa-calculator"></i> Sample Calculation
+                                        </div>
+                                        <div style="font-size: 13px; color: #78350f;">
+                                            <div style="margin-bottom: 4px;">2 Adults + 1 Child × 3 nights</div>
+                                            <div style="margin-bottom: 4px;">Base: $350 × 3 = $1,050</div>
+                                            <div style="margin-bottom: 4px;">Extra Child: $25 × 3 = $75</div>
+                                            <div style="border-top: 1px solid #fde68a; margin-top: 8px; padding-top: 8px; font-weight: 600; color: #78350f;">
+                                                Total: $1,125
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div>
+                    <!-- Status & Dates -->
+                    <div class="form-section">
+                        <h4 class="form-section-title">Status & Validity</h4>
+                        <div class="form-group">
+                            <label class="form-label">Current Status</label>
+                            <div style="padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                                <span class="status-badge status-active">Active</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Effective From</label>
+                            <div style="padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                                December 15, 2024
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Effective Until</label>
+                            <div style="padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                                February 28, 2025
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Display Order -->
+                    <div class="form-section">
+                        <h4 class="form-section-title">Display Settings</h4>
+                        <div class="form-group">
+                            <label class="form-label">Order Priority</label>
+                            <div style="padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                                <strong>1</strong> <span style="color: #64748b; font-size: 12px;">(Higher priority)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="form-section">
+                        <h4 class="form-section-title">Quick Stats</h4>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+                            <div style="display: grid; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                    <span style="font-size: 13px; color: #64748b;">Total Bookings</span>
+                                    <span style="font-size: 16px; font-weight: 600; color: #0f172a;">127</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                    <span style="font-size: 13px; color: #64748b;">Revenue Generated</span>
+                                    <span style="font-size: 16px; font-weight: 600; color: #10b981;">$44,450</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 13px; color: #64748b;">Avg. Stay Duration</span>
+                                    <span style="font-size: 16px; font-weight: 600; color: #0f172a;">2.8 nights</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-section">
+                        <h4 class="form-section-title">Actions</h4>
+                        <div style="display: grid; gap: 8px;">
+                            <button class="btn-primary" onclick="closeViewRateModal(); editRate('deluxe-peak');" style="width: 100%; justify-content: center;">
+                                <i class="fas fa-edit"></i>
+                                Edit This Rate
+                            </button>
+                            <button class="btn-primary" onclick="closeViewRateModal(); duplicateRate('deluxe-peak');" style="width: 100%; justify-content: center; background: #f59e0b;">
+                                <i class="fas fa-copy"></i>
+                                Duplicate Rate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeViewRateModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Rate Modal -->
+    <div class="modal" id="rateModal">
+
+    <script>
+        let seasonCount = 1;
+
+        // Sample data for rates (in real app, this would come from server)
+        const ratesData = {
+            'deluxe-peak': {
+                name: 'Deluxe Peak Rate',
+                description: 'Peak season pricing for our premium deluxe ocean suites',
+                roomType: 'Deluxe Ocean Suite',
+                season: 'Peak Season',
+                seasonColor: '#ef4444',
+                repeatPattern: 'Annually',
+                nights: 1,
+                baseOccupancy: 2,
+                basePrice: 350,
+                extraAdult: 50,
+                extraChild: 25,
+                status: 'Active',
+                effectiveFrom: 'December 15, 2024',
+                effectiveUntil: 'February 28, 2025',
+                orderPriority: 1,
+                totalBookings: 127,
+                revenue: 44450,
+                avgStay: 2.8
+            },
+            'superior-regular': {
+                name: 'Superior Regular Rate',
+                description: 'Standard pricing for superior ocean view rooms',
+                roomType: 'Superior Ocean View',
+                season: 'Regular Season',
+                seasonColor: '#3b82f6',
+                repeatPattern: 'Annually',
+                nights: 1,
+                baseOccupancy: 2,
+                basePrice: 180,
+                extraAdult: 30,
+                extraChild: 15,
+                status: 'Active',
+                effectiveFrom: 'January 1, 2024',
+                effectiveUntil: 'December 31, 2025',
+                orderPriority: 2,
+                totalBookings: 98,
+                revenue: 17640,
+                avgStay: 2.1
+            },
+            'standard-low': {
+                name: 'Standard Low Season',
+                description: 'Budget-friendly rates for standard rooms during low season',
+                roomType: 'Standard Room',
+                season: 'Low Season',
+                seasonColor: '#10b981',
+                repeatPattern: 'Annually',
+                nights: 1,
+                baseOccupancy: 2,
+                basePrice: 90,
+                extraAdult: 20,
+                extraChild: 10,
+                status: 'Active',
+                effectiveFrom: 'March 1, 2024',
+                effectiveUntil: 'May 31, 2025',
+                orderPriority: 3,
+                totalBookings: 156,
+                revenue: 14040,
+                avgStay: 1.8
+            }
+        };
+
+        // Modal functions for view
+        function openViewRateModal() {
+            document.getElementById('viewRateModal').classList.add('show');
+        }
+
+        function closeViewRateModal() {
+            document.getElementById('viewRateModal').classList.remove('show');
+        }
+
+        function openRateModal() {
+            document.getElementById('rateModal').classList.add('show');
+        }
+
+        function closeRateModal() {
+            document.getElementById('rateModal').classList.remove('show');
+        }
+
+        // Rate management functions
+        function viewRate(rateId) {
+            const rate = ratesData[rateId];
+            if (!rate) {
+                alert('Rate not found');
+                return;
+            }
+
+            // Update modal content with rate data
+            const rateNameEl = document.getElementById('view-rate-name');
+            const rateDescEl = document.getElementById('view-rate-description');
+            const roomTypeEl = document.getElementById('view-room-type');
+            
+            if (rateNameEl) rateNameEl.textContent = rate.name;
+            if (rateDescEl) rateDescEl.textContent = rate.description;
+            if (roomTypeEl) roomTypeEl.textContent = rate.roomType;
+
+            // Update season pricing container
+            const seasonContainer = document.getElementById('view-season-pricing-container');
+            if (seasonContainer) {
+                seasonContainer.innerHTML = `
+                    <div class="season-price-card">
+                        <div class="season-card-header">
+                            <span class="season-card-title">
+                                <div class="season-info">
+                                    <div class="season-dot" style="background: ${rate.seasonColor};"></div>
+                                    ${rate.season}
+                                </div>
+                            </span>
+                        </div>
+                        
+                        <div style="display: grid; gap: 12px; margin-top: 12px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div>
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Repeat Pattern</div>
+                                    <div style="font-size: 14px; font-weight: 500;">${rate.repeatPattern}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Minimum Nights</div>
+                                    <div style="font-size: 14px; font-weight: 500;">${rate.nights} night${rate.nights > 1 ? 's' : ''}</div>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div>
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Base Occupancy</div>
+                                    <div style="font-size: 14px; font-weight: 500;">${rate.baseOccupancy} guests</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Base Price / Night</div>
+                                    <div style="font-size: 18px; font-weight: 700; color: #0f172a;">${rate.basePrice}</div>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div>
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Extra Adult</div>
+                                    <div style="font-size: 16px; font-weight: 600; color: #0f172a;">${rate.extraAdult} <span style="font-size: 12px; font-weight: 400; color: #64748b;">per person</span></div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Extra Child</div>
+                                    <div style="font-size: 16px; font-weight: 600; color: #0f172a;">${rate.extraChild} <span style="font-size: 12px; font-weight: 400; color: #64748b;">per child</span></div>
+                                </div>
+                            </div>
+
+                            <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; padding: 12px; margin-top: 8px;">
+                                <div style="font-size: 12px; font-weight: 600; color: #92400e; margin-bottom: 8px;">
+                                    <i class="fas fa-calculator"></i> Sample Calculation
+                                </div>
+                                <div style="font-size: 13px; color: #78350f;">
+                                    <div style="margin-bottom: 4px;">2 Adults + 1 Child × 3 nights</div>
+                                    <div style="margin-bottom: 4px;">Base: ${rate.basePrice} × 3 = ${(rate.basePrice * 3).toLocaleString()}</div>
+                                    <div style="margin-bottom: 4px;">Extra Child: ${rate.extraChild} × 3 = ${(rate.extraChild * 3).toLocaleString()}</div>
+                                    <div style="border-top: 1px solid #fde68a; margin-top: 8px; padding-top: 8px; font-weight: 600; color: #78350f;">
+                                        Total: ${((rate.basePrice * 3) + (rate.extraChild * 3)).toLocaleString()}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Update status and dates in sidebar - Use more specific selectors
+            const viewModal = document.getElementById('viewRateModal');
+            if (viewModal) {
+                const statusBadge = viewModal.querySelector('.status-badge');
+                if (statusBadge) {
+                    statusBadge.textContent = rate.status;
+                    statusBadge.className = `status-badge status-${rate.status.toLowerCase()}`;
+                }
+
+                // Update effective dates - need better selectors
+                const formGroups = viewModal.querySelectorAll('.form-section:first-child .form-group');
+                if (formGroups.length >= 3) {
+                    const effectiveFromDiv = formGroups[1].querySelector('div:last-child');
+                    const effectiveUntilDiv = formGroups[2].querySelector('div:last-child');
+                    if (effectiveFromDiv) effectiveFromDiv.textContent = rate.effectiveFrom;
+                    if (effectiveUntilDiv) effectiveUntilDiv.textContent = rate.effectiveUntil;
+                }
+
+                // Update order priority
+                const displaySection = viewModal.querySelectorAll('.form-section')[1];
+                if (displaySection) {
+                    const orderDiv = displaySection.querySelector('.form-group > div');
+                    if (orderDiv) {
+                        orderDiv.innerHTML = `<strong>${rate.orderPriority}</strong> <span style="color: #64748b; font-size: 12px;">(${rate.orderPriority <= 3 ? 'Higher' : 'Lower'} priority)</span>`;
+                    }
+                }
+
+                // Update quick stats
+                const statsSection = viewModal.querySelectorAll('.form-section')[2];
+                if (statsSection) {
+                    const statsContainer = statsSection.querySelector('div[style*="background: #f8fafc"]');
+                    if (statsContainer) {
+                        statsContainer.innerHTML = `
+                            <div style="display: grid; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                    <span style="font-size: 13px; color: #64748b;">Total Bookings</span>
+                                    <span style="font-size: 16px; font-weight: 600; color: #0f172a;">${rate.totalBookings}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                    <span style="font-size: 13px; color: #64748b;">Revenue Generated</span>
+                                    <span style="font-size: 16px; font-weight: 600; color: #10b981;">${rate.revenue.toLocaleString()}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 13px; color: #64748b;">Avg. Stay Duration</span>
+                                    <span style="font-size: 16px; font-weight: 600; color: #0f172a;">${rate.avgStay} nights</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+                // Update action buttons
+                const actionSection = viewModal.querySelectorAll('.form-section')[3];
+                if (actionSection) {
+                    const actionButtons = actionSection.querySelector('div[style*="display: grid"]');
+                    if (actionButtons) {
+                        actionButtons.innerHTML = `
+                            <button class="btn-primary" onclick="closeViewRateModal(); editRate('${rateId}');" style="width: 100%; justify-content: center;">
+                                <i class="fas fa-edit"></i>
+                                Edit This Rate
+                            </button>
+                            <button class="btn-primary" onclick="closeViewRateModal(); duplicateRate('${rateId}');" style="width: 100%; justify-content: center; background: #f59e0b;">
+                                <i class="fas fa-copy"></i>
+                                Duplicate Rate
+                            </button>
+                        `;
+                    }
+                }
+            }
+
+            openViewRateModal();
+        }
+
+        function editRate(rateId) {
+            document.getElementById('rateModal').classList.add('show');
+            document.querySelector('.modal-title').textContent = `Edit Rate: ${rateId}`;
+        }
+
+        function duplicateRate(rateId) {
+            if (confirm(`Create a copy of rate: ${rateId}?`)) {
+                alert(`Rate ${rateId} duplicated successfully!`);
+            }
+        }
+
+        function deleteRate(rateId) {
+            if (confirm(`Are you sure you want to delete rate: ${rateId}?`)) {
+                alert(`Rate ${rateId} deleted successfully!`);
+            }
+        }
+
+        // Add new season
+        function addNewSeason() {
+            seasonCount++;
+            const container = document.getElementById('season-pricing-container');
+            const newSeason = document.createElement('div');
+            newSeason.className = 'season-price-card';
+            newSeason.setAttribute('data-season-id', seasonCount);
+            newSeason.innerHTML = `
+                <div class="season-card-header">
+                    <span class="season-card-title">Season ${seasonCount}</span>
+                    <button type="button" class="remove-season-btn" onclick="removeSeason(${seasonCount})">
+                        <i class="fas fa-trash"></i>
+                        Delete
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        Season *
+                    </label>
+                    <select class="form-select" required>
+                        <option value="">Select Season</option>
+                        <option value="peak">Peak Season</option>
+                        <option value="high">High Season</option>
+                        <option value="regular">Regular Season</option>
+                        <option value="low">Low Season</option>
+                    </select>
+                    <div class="helper-text">Choose the season when this pricing applies</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Repeat Pattern
+                    </label>
+                    <select class="form-select">
+                        <option value="none">Does not repeat</option>
+                        <option value="annually">Annually</option>
+                    </select>
+                    <div class="helper-text">Set if this season repeats annually or is a one-time pricing</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nights
+                        </label>
+                        <input type="number" class="form-input" value="1" min="1">
+                        <div class="helper-text">Minimum number of nights for this rate (default: 1)</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            Base Occupancy
+                        </label>
+                        <input type="number" class="form-input" value="2" min="1">
+                        <div class="helper-text">Number of guests included in base price</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Price per Night *
+                        </label>
+                        <input type="number" class="form-input" placeholder="0.00" step="0.01" required>
+                        <div class="helper-text">Base price per night for the base occupancy</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            Price per Extra Adult
+                        </label>
+                        <input type="number" class="form-input" placeholder="0.00" step="0.01">
+                        <div class="helper-text">Additional cost per adult beyond base occupancy</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Price per Extra Child
+                    </label>
+                    <input type="number" class="form-input" placeholder="0.00" step="0.01">
+                    <div class="helper-text">Additional cost per child beyond base occupancy</div>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" style="margin-right: 8px;" onchange="toggleVariablePricing(${seasonCount}, this.checked)">
+                        <span class="tooltip" style="display: inline;">
+                            Enable variable pricing
+                        </span>
+                    </label>
+                    <div class="helper-text">Set different prices based on number of nights booked (e.g., discounts for longer stays)</div>
+                </div>
+
+                <div id="variable-pricing-${seasonCount}" style="display: none;">
+                    <div class="variable-pricing-section">
+                        <div class="variable-pricing-header">Variable Pricing by Nights</div>
+                        <div id="variable-prices-${seasonCount}">
+                            <div class="variable-price-row">
+                                <div class="form-group" style="margin: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Nights</label>
+                                    <input type="number" class="form-input" placeholder="3" min="2" style="padding: 8px;">
+                                </div>
+                                <div class="form-group" style="margin: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Price per Night</label>
+                                    <input type="number" class="form-input" placeholder="0.00" step="0.01" style="padding: 8px;">
+                                </div>
+                                <button type="button" class="btn-small btn-delete" style="align-self: flex-end; margin-bottom: 0;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="button" class="add-price-btn" onclick="addVariablePrice(${seasonCount})">
+                            <i class="fas fa-plus"></i>
+                            Add Night Range
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newSeason);
+            updateSeasonButtons();
+        }
+
+        // Remove season
+        function removeSeason(seasonId) {
+            const seasonCard = document.querySelector(`[data-season-id="${seasonId}"]`);
+            if (seasonCard) {
+                seasonCard.remove();
+                updateSeasonButtons();
+            }
+        }
+
+        // Update season delete buttons visibility
+        function updateSeasonButtons() {
+            const seasons = document.querySelectorAll('.season-price-card');
+            seasons.forEach((season, index) => {
+                const deleteBtn = season.querySelector('.remove-season-btn');
+                if (deleteBtn) {
+                    deleteBtn.style.display = seasons.length > 1 ? 'flex' : 'none';
+                }
+            });
+        }
+
+        // Toggle variable pricing
+        function toggleVariablePricing(seasonId, checked) {
+            const container = document.getElementById(`variable-pricing-${seasonId}`);
+            if (container) {
+                container.style.display = checked ? 'block' : 'none';
+            }
+        }
+
+        // Add variable price row
+        function addVariablePrice(seasonId) {
+            const container = document.getElementById(`variable-prices-${seasonId}`);
+            const newRow = document.createElement('div');
+            newRow.className = 'variable-price-row';
+            newRow.innerHTML = `
+                <div class="form-group" style="margin: 0;">
+                    <label class="form-label" style="font-size: 12px;">Nights</label>
+                    <input type="number" class="form-input" placeholder="3" min="2" style="padding: 8px;">
+                </div>
+                <div class="form-group" style="margin: 0;">
+                    <label class="form-label" style="font-size: 12px;">Price per Night</label>
+                    <input type="number" class="form-input" placeholder="0.00" step="0.01" style="padding: 8px;">
+                </div>
+                <button type="button" class="btn-small btn-delete" onclick="this.parentElement.remove()" style="align-self: flex-end; margin-bottom: 0;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        // Form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const rateForm = document.getElementById('rateForm');
+            const rateModal = document.getElementById('rateModal');
+            const viewRateModal = document.getElementById('viewRateModal');
+
+            if (rateForm) {
+                rateForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Rate saved successfully!');
+                    closeRateModal();
+                });
+            }
+
+            // Close modal when clicking outside
+            if (rateModal) {
+                rateModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeRateModal();
+                    }
+                });
+            }
+
+            if (viewRateModal) {
+                viewRateModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeViewRateModal();
+                    }
+                });
+            }
+
+            // Initialize
+            updateSeasonButtons();
+        });
+    </script>
+</body>
+</html>

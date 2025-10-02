@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housekeeping - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .housekeeping-filters {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            font-size: 14px;
+        }
+
+        .room-number {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 16px;
+        }
+
+        .room-type {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-dirty {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .status-cleaning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-clean {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-maintenance {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .status-occupied {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .priority-badge {
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-high {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .priority-low {
+            background: #f0f9ff;
+            color: #0369a1;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .btn-warning {
+            background: #fefbf3;
+            color: #92400e;
+            border: 1px solid #fed7aa;
+        }
+
+        .btn-info {
+            background: #f0f9ff;
+            color: #0369a1;
+            border: 1px solid #7dd3fc;
+        }
+
+        .btn-view {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .staff-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .staff-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .staff-name {
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .time-info {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .close-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-assign {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .task-details {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .task-details h4 {
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .task-details p {
+            margin-bottom: 8px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .task-details p strong {
+            color: #0f172a;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .housekeeping-filters {
+                flex-direction: column;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+
+            <div class="nav-section">           
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item active">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-rules"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="page-title">Housekeeping</h1>
+            <div class="breadcrumb">Operations / Housekeeping</div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-primary" onclick="openTaskModal()">
+                <i class="fas fa-plus"></i>
+                Assign Task
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Housekeeping Filters -->
+        <div class="housekeeping-filters">
+            <div class="search-box">
+                <input type="text" placeholder="Search by room number or staff...">
+            </div>
+            <select class="filter-select">
+                <option>All Status</option>
+                <option>Dirty</option>
+                <option>Cleaning</option>
+                <option>Clean</option>
+                <option>Maintenance</option>
+                <option>Occupied</option>
+            </select>
+            <select class="filter-select">
+                <option>All Priorities</option>
+                <option>High Priority</option>
+                <option>Medium Priority</option>
+                <option>Low Priority</option>
+            </select>
+            <select class="filter-select">
+                <option>All Staff</option>
+                <option>Maria Santos</option>
+                <option>Jennifer Kim</option>
+                <option>Ana Rodriguez</option>
+                <option>Lisa Chen</option>
+            </select>
+        </div>
+
+        <!-- Housekeeping Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">Room Status & Tasks</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Room</th>
+                        <th>Current Status</th>
+                        <th>Priority</th>
+                        <th>Assigned Staff</th>
+                        <th>Estimated Time</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="room-number">201</div>
+                            <div class="room-type">Deluxe Room</div>
+                        </td>
+                        <td><span class="status-badge status-dirty">Dirty</span></td>
+                        <td><span class="priority-badge priority-high">High</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div class="staff-avatar">MS</div>
+                                <div>
+                                    <div class="staff-name">Maria Santos</div>
+                                    <div class="time-info">Started 30 min ago</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>45 min</td>
+                        <td>10:30 AM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-success" onclick="markAsClean('201')">
+                                    <i class="fas fa-check"></i>
+                                    Clean
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewRoomDetails('201')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="room-number">305</div>
+                            <div class="room-type">Suite</div>
+                        </td>
+                        <td><span class="status-badge status-cleaning">Cleaning</span></td>
+                        <td><span class="priority-badge priority-medium">Medium</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div class="staff-avatar">JK</div>
+                                <div>
+                                    <div class="staff-name">Jennifer Kim</div>
+                                    <div class="time-info">Started 15 min ago</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>60 min</td>
+                        <td>10:45 AM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-success" onclick="markAsClean('305')">
+                                    <i class="fas fa-check"></i>
+                                    Clean
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewRoomDetails('305')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="room-number">108</div>
+                            <div class="room-type">Standard Room</div>
+                        </td>
+                        <td><span class="status-badge status-clean">Clean</span></td>
+                        <td><span class="priority-badge priority-low">Low</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div class="staff-avatar">AR</div>
+                                <div>
+                                    <div class="staff-name">Ana Rodriguez</div>
+                                    <div class="time-info">Completed 1 hour ago</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>30 min</td>
+                        <td>9:30 AM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <span style="color: #64748b; font-size: 12px;">Ready</span>
+                                <button class="btn-small btn-view" onclick="viewRoomDetails('108')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="room-number">412</div>
+                            <div class="room-type">Deluxe Room</div>
+                        </td>
+                        <td><span class="status-badge status-maintenance">Maintenance</span></td>
+                        <td><span class="priority-badge priority-high">High</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div class="staff-avatar">LC</div>
+                                <div>
+                                    <div class="staff-name">Lisa Chen</div>
+                                    <div class="time-info">Waiting for maintenance</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>N/A</td>
+                        <td>8:00 AM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-warning" onclick="reportIssue('412')">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Report
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewRoomDetails('412')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="room-number">203</div>
+                            <div class="room-type">Standard Room</div>
+                        </td>
+                        <td><span class="status-badge status-occupied">Occupied</span></td>
+                        <td><span class="priority-badge priority-low">Low</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #64748b;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="staff-name">Guest Present</div>
+                                    <div class="time-info">Check-out: 11:00 AM</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>
+                            <div class="action-buttons">
+                                <span style="color: #64748b; font-size: 12px;">Waiting</span>
+                                <button class="btn-small btn-view" onclick="viewRoomDetails('203')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="room-number">156</div>
+                            <div class="room-type">Standard Room</div>
+                        </td>
+                        <td><span class="status-badge status-dirty">Dirty</span></td>
+                        <td><span class="priority-badge priority-medium">Medium</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #64748b; border: 1px solid #e2e8f0; border-radius: 50%;">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div>
+                                    <div class="staff-name">Unassigned</div>
+                                    <div class="time-info">Awaiting assignment</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>30 min</td>
+                        <td>11:00 AM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-info" onclick="assignTask('156')">
+                                    <i class="fas fa-user-plus"></i>
+                                    Assign
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewRoomDetails('156')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Assign Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Assign Housekeeping Task</h3>
+                <button class="close-btn" onclick="closeModal('taskModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="taskAssignmentForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Room Number</label>
+                        <input type="text" class="form-input" id="roomNumber" placeholder="e.g., 201" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Room Type</label>
+                        <select class="form-select" id="roomType" required>
+                            <option value="">Select room type</option>
+                            <option value="standard">Standard Room</option>
+                            <option value="deluxe">Deluxe Room</option>
+                            <option value="suite">Suite</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Task Type</label>
+                        <select class="form-select" id="taskType" required>
+                            <option value="">Select task</option>
+                            <option value="cleaning">Regular Cleaning</option>
+                            <option value="deep-clean">Deep Cleaning</option>
+                            <option value="maintenance">Maintenance Check</option>
+                            <option value="inspection">Room Inspection</option>
+                            <option value="setup">Room Setup</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" id="priority" required>
+                            <option value="low">Low Priority</option>
+                            <option value="medium" selected>Medium Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Assign to Staff</label>
+                    <select class="form-select" id="assignedStaff" required>
+                        <option value="">Select staff member</option>
+                        <option value="maria-santos">Maria Santos</option>
+                        <option value="jennifer-kim">Jennifer Kim</option>
+                        <option value="ana-rodriguez">Ana Rodriguez</option>
+                        <option value="lisa-chen">Lisa Chen</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Estimated Time (minutes)</label>
+                        <input type="number" class="form-input" id="estimatedTime" placeholder="30" min="15" max="180" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Due Time</label>
+                        <input type="time" class="form-input" id="dueTime">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Special Instructions</label>
+                    <textarea class="form-input" id="instructions" rows="3" placeholder="Any special requirements or notes..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('taskModal')">Cancel</button>
+                    <button type="submit" class="btn-assign">Assign Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Room Details Modal -->
+    <div class="modal" id="roomDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Room Details</h3>
+                <button class="close-btn" onclick="closeModal('roomDetailsModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="task-details">
+                <h4>Room Information</h4>
+                <p><strong>Room:</strong> <span id="detailRoomNumber">201</span></p>
+                <p><strong>Type:</strong> <span id="detailRoomType">Deluxe Room</span></p>
+                <p><strong>Current Status:</strong> <span id="detailStatus">Dirty</span></p>
+                <p><strong>Priority:</strong> <span id="detailPriority">High</span></p>
+                <p><strong>Last Guest Check-out:</strong> <span id="detailCheckout">Dec 25, 2024 10:00 AM</span></p>
+                <p><strong>Next Guest Check-in:</strong> <span id="detailCheckin">Dec 25, 2024 3:00 PM</span></p>
+            </div>
+
+            <div class="task-details">
+                <h4>Current Task</h4>
+                <p><strong>Assigned to:</strong> <span id="detailStaff">Maria Santos</span></p>
+                <p><strong>Task Started:</strong> <span id="detailStartTime">10:30 AM</span></p>
+                <p><strong>Estimated Completion:</strong> <span id="detailEstimated">11:15 AM</span></p>
+                <p><strong>Special Instructions:</strong> <span id="detailInstructions">Deep clean bathroom, replace all linens</span></p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Task Notes</label>
+                <textarea class="form-input" rows="3" placeholder="Add notes about room condition, issues found, etc..."></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal('roomDetailsModal')">Close</button>
+                <button type="button" class="btn-assign" onclick="updateTaskStatus()">Update Status</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openTaskModal(roomNumber = '') {
+            if (roomNumber) {
+                document.getElementById('roomNumber').value = roomNumber;
+            }
+            document.getElementById('taskModal').classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Housekeeping functions
+        function assignTask(roomNumber) {
+            openTaskModal(roomNumber);
+        }
+
+        function markAsClean(roomNumber) {
+            if (confirm(`Mark room ${roomNumber} as clean?`)) {
+                alert(`Room ${roomNumber} marked as clean!`);
+                location.reload();
+            }
+        }
+
+        function reportIssue(roomNumber) {
+            if (confirm(`Report maintenance issue for room ${roomNumber}?`)) {
+                alert(`Maintenance request submitted for room ${roomNumber}!`);
+                // Redirect to maintenance page or show maintenance modal
+            }
+        }
+
+        function viewRoomDetails(roomNumber) {
+            // Load room details data here
+            document.getElementById('roomDetailsModal').classList.add('show');
+        }
+
+        function updateTaskStatus() {
+            alert('Task status updated successfully!');
+            closeModal('roomDetailsModal');
+            location.reload();
+        }
+
+        // Form submissions
+        document.getElementById('taskAssignmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const roomNumber = document.getElementById('roomNumber').value;
+            const staff = document.getElementById('assignedStaff').selectedOptions[0].text;
+            
+            alert(`Task assigned to ${staff} for room ${roomNumber}!`);
+            closeModal('taskModal');
+            location.reload();
+        });
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-box input');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const selectedValue = this.value.toLowerCase();
+                const rows = document.querySelectorAll('tbody tr');
+                
+                if (this.selectedIndex === 0) {
+                    rows.forEach(row => row.style.display = '');
+                } else {
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(selectedValue) ? '' : 'none';
+                    });
+                }
+            });
+        });
+
+        // Auto-update estimated time based on task type
+        document.getElementById('taskType').addEventListener('change', function() {
+            const estimatedTimeInput = document.getElementById('estimatedTime');
+            const taskType = this.value;
+            
+            const timeEstimates = {
+                'cleaning': 30,
+                'deep-clean': 60,
+                'maintenance': 45,
+                'inspection': 15,
+                'setup': 20
+            };
+            
+            if (timeEstimates[taskType]) {
+                estimatedTimeInput.value = timeEstimates[taskType];
+            }
+        });
+
+        console.log('Housekeeping page initialized');
+    </script>
+</body>
+</html>

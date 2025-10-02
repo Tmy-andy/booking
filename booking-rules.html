@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Booking Rules - Hotel CRM</title>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+        <script src="script.js" defer></script>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .rules-container {
+            display: grid;
+            gap: 24px;
+        }
+
+        .rule-section {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .rule-section-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rule-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rule-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .rule-section-content {
+            padding: 24px;
+        }
+
+        .rule-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .rule-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .rule-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .rule-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .rule-item-description {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .rule-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-edit:hover {
+            background: #dbeafe;
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .btn-delete:hover {
+            background: #fee2e2;
+        }
+
+        .rule-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .rule-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rule-detail-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .rule-detail-value {
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #cbd5e1;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #374151;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .close-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-height: 80px;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: #f8fafc;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: #374151;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-save {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-save:hover {
+            background: #059669;
+        }
+
+        .conditional-fields {
+            display: none;
+        }
+
+        .conditional-fields.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .close-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: #f8fafc;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: #374151;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .conditional-fields {
+            display: none;
+        }
+
+        .conditional-fields.show {
+            display: block;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-save {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-save:hover {
+            background: #059669;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    </head>
+    <body>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-hotel"></i>
+                    </div>
+                    <div class="logo-text">Hotel CRM</div>
+                </div>
+            </div>
+
+            <div class="property-selector">
+                <div class="property-label">Current Property</div>
+                <div class="property-name">Demo Link Hotel</div>
+            </div>
+
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a class="nav-item" href="index.html">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Booking Management</div>
+                    <a class="nav-item" href="all-bookings.html">
+                        <i class="fas fa-calendar-check"></i>
+                        All Bookings
+                    </a>
+                    <a class="nav-item" href="payment.html">
+                        <i class="fas fa-credit-card"></i>
+                        Payment History
+                    </a>
+                    <a class="nav-item" href="calendar.html">
+                        <i class="fas fa-calendar"></i>
+                        Calendar View
+                    </a>
+                    <a class="nav-item" href="customer.html">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                    <a class="nav-item" href="coupons.html">
+                        <i class="fas fa-tags"></i>
+                        Coupons
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Room Management</div>
+                    <a class="nav-item" href="room-types.html">
+                        <i class="fas fa-door-open"></i>
+                        Room Types
+                    </a>
+                    <a class="nav-item" href="rooms.html">
+                        <i class="fas fa-bed"></i>
+                        Rooms
+                    </a>
+                    <a class="nav-item" href="rate-pricing.html">
+                        <i class="fas fa-dollar-sign"></i>
+                        Rates & Pricing
+                    </a>
+                    <a class="nav-item" href="seasons.html">
+                        <i class="fas fa-calendar-plus"></i>
+                        Seasons
+                    </a>
+                    <a class="nav-item" href="services.html">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Operations</div>
+                    <a href="checkin.html" class="nav-item">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Check-in
+                    </a>
+                    <a href="checkout.html" class="nav-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Check-out
+                    </a>
+                    <a href="housekeeping.html" class="nav-item">
+                        <i class="fas fa-broom"></i>
+                        Housekeeping
+                    </a>
+                    <a href="maintenance.html" class="nav-item">
+                        <i class="fas fa-tools"></i>
+                        Maintenance
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports</div>
+                    <a href="analytics.html" class="nav-item">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </a>
+                    <a href="revenue.html" class="nav-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        Revenue
+                    </a>
+                    <a href="reports.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        Reports
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a class="nav-item active" href="booking-rules.html">
+                        <i class="fas fa-gavel"></i>
+                        Booking Rules
+                    </a>
+                    <a class="nav-item" href="taxes-fees.html">
+                        <i class="fas fa-percentage"></i>
+                        Taxes & Fees
+                    </a>
+                    <a class="nav-item" href="settings.html">
+                        <i class="fas fa-cog"></i>
+                        General Settings
+                    </a>
+                    <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="page-title">Booking Rules</h1>
+                <div class="breadcrumb">Settings / Booking Rules</div>
+            </div>
+
+            <div class="header-right">
+                <button class="btn-primary" onclick="openRuleModal()">
+                    <i class="fas fa-plus"></i>
+                    Add Rule
+                </button>
+                <button class="btn-success" onclick="saveAllChanges()">
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="rules-container">
+                <!-- Check-in Days -->
+                <div class="rule-section">
+                    <div class="rule-section-header">
+                        <div class="rule-section-title">
+                            <div class="rule-icon" style="background: #3b82f6;">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            Check-in Days
+                        </div>
+                        <button class="btn-primary btn-small"
+                            onclick="openRuleModal('check-in-days')">
+                            <i class="fas fa-plus"></i>
+                            Add Rule
+                        </button>
+                    </div>
+                    <div class="rule-section-content">
+                        <div class="rule-item">
+                            <div class="rule-item-header">
+                                <div>
+                                    <div class="rule-item-title">Weekday
+                                        Check-in Restriction</div>
+                                    <div class="rule-item-description">No
+                                        check-in on Mondays and Tuesdays for
+                                        Deluxe Suites</div>
+                                </div>
+                                <div class="rule-actions">
+                                    <button class="btn-small btn-edit"
+                                        onclick="openEditRuleModal('checkin-1')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete"
+                                        onclick="deleteRule('checkin-1')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="rule-details">
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Restricted
+                                        Days</div>
+                                    <div class="rule-detail-value">Monday,
+                                        Tuesday</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Room
+                                        Types</div>
+                                    <div class="rule-detail-value">Deluxe
+                                        Suite</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Holiday
+                                        Restriction</div>
+                                    <div class="rule-detail-value">Yes</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Check-out Days -->
+                <div class="rule-section">
+                    <div class="rule-section-header">
+                        <div class="rule-section-title">
+                            <div class="rule-icon" style="background: #10b981;">
+                                <i class="fas fa-calendar-times"></i>
+                            </div>
+                            Check-out Days
+                        </div>
+                        <button class="btn-primary btn-small"
+                            onclick="openRuleModal('check-out-days')">
+                            <i class="fas fa-plus"></i>
+                            Add Rule
+                        </button>
+                    </div>
+                    <div class="rule-section-content">
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <h3>No Check-out Restrictions</h3>
+                            <p>No check-out day restrictions have been
+                                configured yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Minimum Stay -->
+                <div class="rule-section">
+                    <div class="rule-section-header">
+                        <div class="rule-section-title">
+                            <div class="rule-icon" style="background: #f59e0b;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            Minimum Stay
+                        </div>
+                        <button class="btn-primary btn-small"
+                            onclick="openRuleModal('minimum-stay')">
+                            <i class="fas fa-plus"></i>
+                            Add Rule
+                        </button>
+                    </div>
+                    <div class="rule-section-content">
+                        <div class="rule-item">
+                            <div class="rule-item-header">
+                                <div>
+                                    <div class="rule-item-title">Weekend Minimum
+                                        Stay</div>
+                                    <div class="rule-item-description">Minimum 2
+                                        nights stay required for weekend
+                                        bookings</div>
+                                </div>
+                                <div class="rule-actions">
+                                    <button class="btn-small btn-edit"
+                                        onclick="openEditRuleModal('min-stay-1')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete"
+                                        onclick="deleteRule('min-stay-1')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="rule-details">
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Minimum
+                                        Nights</div>
+                                    <div class="rule-detail-value">2</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Applied
+                                        Days</div>
+                                    <div class="rule-detail-value">Friday,
+                                        Saturday, Sunday</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Room
+                                        Types</div>
+                                    <div class="rule-detail-value">All Room
+                                        Types</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maximum Stay -->
+                <div class="rule-section">
+                    <div class="rule-section-header">
+                        <div class="rule-section-title">
+                            <div class="rule-icon" style="background: #ef4444;">
+                                <i class="fas fa-hourglass-end"></i>
+                            </div>
+                            Maximum Stay
+                        </div>
+                        <button class="btn-primary btn-small"
+                            onclick="openRuleModal('maximum-stay')">
+                            <i class="fas fa-plus"></i>
+                            Add Rule
+                        </button>
+                    </div>
+                    <div class="rule-section-content">
+                        <div class="empty-state">
+                            <i class="fas fa-hourglass-end"></i>
+                            <h3>No Maximum Stay Limits</h3>
+                            <p>No maximum stay restrictions have been configured
+                                yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Block Accommodation -->
+                <div class="rule-section">
+                    <div class="rule-section-header">
+                        <div class="rule-section-title">
+                            <div class="rule-icon" style="background: #8b5cf6;">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            Block Accommodation
+                        </div>
+                        <button class="btn-primary btn-small"
+                            onclick="openRuleModal('block-accommodation')">
+                            <i class="fas fa-plus"></i>
+                            Add Rule
+                        </button>
+                    </div>
+                    <div class="rule-section-content">
+                        <div class="rule-item">
+                            <div class="rule-item-header">
+                                <div>
+                                    <div class="rule-item-title">Maintenance
+                                        Block - Room 101</div>
+                                    <div class="rule-item-description">Room
+                                        blocked for maintenance and renovation
+                                        work</div>
+                                </div>
+                                <div class="rule-actions">
+                                    <button class="btn-small btn-edit"
+                                        onclick="openEditRuleModal('block-1')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete"
+                                        onclick="deleteRule('block-1')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="rule-details">
+                                <div class="rule-detail">
+                                    <div
+                                        class="rule-detail-label">Accommodation</div>
+                                    <div class="rule-detail-value">Deluxe Suite
+                                        - Room 101</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Date
+                                        Range</div>
+                                    <div class="rule-detail-value">Dec 25, 2024
+                                        - Jan 2, 2025</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div
+                                        class="rule-detail-label">Restrictions</div>
+                                    <div class="rule-detail-value">No check-in,
+                                        No stay-in</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Reason</div>
+                                    <div class="rule-detail-value">Maintenance
+                                        work scheduled</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advance Reservation -->
+                <div class="rule-section">
+                    <div class="rule-section-header">
+                        <div class="rule-section-title">
+                            <div class="rule-icon" style="background: #06b6d4;">
+                                <i class="fas fa-calendar-plus"></i>
+                            </div>
+                            Advance Reservation
+                        </div>
+                        <button class="btn-primary btn-small"
+                            onclick="openRuleModal('advance-reservation')">
+                            <i class="fas fa-plus"></i>
+                            Add Rule
+                        </button>
+                    </div>
+                    <div class="rule-section-content">
+                        <div class="rule-item">
+                            <div class="rule-item-header">
+                                <div>
+                                    <div class="rule-item-title">Standard
+                                        Advance Booking</div>
+                                    <div class="rule-item-description">Standard
+                                        advance booking requirements for all
+                                        room types</div>
+                                </div>
+                                <div class="rule-actions">
+                                    <button class="btn-small btn-edit"
+                                        onclick="openEditRuleModal('advance-1')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete"
+                                        onclick="deleteRule('advance-1')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="rule-details">
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Minimum
+                                        Advance</div>
+                                    <div class="rule-detail-value">1 day</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Maximum
+                                        Advance</div>
+                                    <div class="rule-detail-value">365
+                                        days</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Room
+                                        Types</div>
+                                    <div class="rule-detail-value">All Room
+                                        Types</div>
+                                </div>
+                                <div class="rule-detail">
+                                    <div class="rule-detail-label">Applied
+                                        Days</div>
+                                    <div class="rule-detail-value">All
+                                        Days</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Booking Buffer -->
+                <div class="rule-section">
+                    <div class="rule-section-header">
+                        <div class="rule-section-title">
+                            <div class="rule-icon" style="background: #84cc16;">
+                                <i class="fas fa-pause-circle"></i>
+                            </div>
+                            Booking Buffer
+                        </div>
+                        <button class="btn-primary btn-small"
+                            onclick="openRuleModal('booking-buffer')">
+                            <i class="fas fa-plus"></i>
+                            Add Rule
+                        </button>
+                    </div>
+                    <div class="rule-section-content">
+                        <div class="empty-state">
+                            <i class="fas fa-pause-circle"></i>
+                            <h3>No Booking Buffer Rules</h3>
+                            <p>No booking buffer rules have been configured
+                                yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Rule Modal -->
+        <div class="modal" id="ruleModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add New Booking Rule</h3>
+                    <button class="close-btn" onclick="closeRuleModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form id="ruleForm">
+                    <div class="form-group">
+                        <label class="form-label">Rule Type *</label>
+                        <select class="form-select" id="ruleType" required>
+                            <option value>Select rule type</option>
+                            <option value="check-in-days">Check-in Days</option>
+                            <option value="check-out-days">Check-out
+                                Days</option>
+                            <option value="minimum-stay">Minimum Stay</option>
+                            <option value="maximum-stay">Maximum Stay</option>
+                            <option value="block-accommodation">Block
+                                Accommodation</option>
+                            <option value="advance-reservation">Advance
+                                Reservation</option>
+                            <option value="booking-buffer">Booking
+                                Buffer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Rule Name *</label>
+                        <input type="text" class="form-input" id="ruleName"
+                            placeholder="Enter descriptive rule name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Room Types</label>
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="all-rooms"
+                                    value="all">
+                                <label for="all-rooms">All Room Types</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="deluxe"
+                                    value="deluxe">
+                                <label for="deluxe">Deluxe Suite</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="superior"
+                                    value="superior">
+                                <label for="superior">Superior Ocean</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="standard"
+                                    value="standard">
+                                <label for="standard">Standard Room</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Days selection for check-in/out, minimum/maximum stay -->
+                    <div class="form-group conditional-fields" id="daysGroup">
+                        <label class="form-label">Applicable Days</label>
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="monday"
+                                    value="monday">
+                                <label for="monday">Monday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tuesday"
+                                    value="tuesday">
+                                <label for="tuesday">Tuesday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="wednesday"
+                                    value="wednesday">
+                                <label for="wednesday">Wednesday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="thursday"
+                                    value="thursday">
+                                <label for="thursday">Thursday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="friday"
+                                    value="friday">
+                                <label for="friday">Friday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="saturday"
+                                    value="saturday">
+                                <label for="saturday">Saturday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sunday"
+                                    value="sunday">
+                                <label for="sunday">Sunday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="holiday"
+                                    value="holiday">
+                                <label for="holiday">Holiday</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Number of nights for minimum/maximum stay -->
+                    <div class="form-group conditional-fields" id="nightsGroup">
+                        <label class="form-label">Number of Nights *</label>
+                        <input type="number" class="form-input"
+                            id="nightsNumber" min="1"
+                            placeholder="Enter number of nights">
+                    </div>
+
+                    <!-- Date range for blocking accommodation -->
+                    <div class="conditional-fields" id="dateRangeGroup">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">From Date *</label>
+                                <input type="date" class="form-input"
+                                    id="fromDate">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">To Date *</label>
+                                <input type="date" class="form-input"
+                                    id="toDate">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specific room selection for blocking -->
+                    <div class="form-group conditional-fields"
+                        id="roomSelectionGroup">
+                        <label class="form-label">Specific Accommodation</label>
+                        <select class="form-select" id="specificRoom">
+                            <option value>Select specific room
+                                (optional)</option>
+                            <option value="room-101">Deluxe Suite - Room
+                                101</option>
+                            <option value="room-102">Superior Ocean - Room
+                                102</option>
+                            <option value="room-103">Standard Room - Room
+                                103</option>
+                            <option value="room-201">Deluxe Suite - Room
+                                201</option>
+                            <option value="room-202">Superior Ocean - Room
+                                202</option>
+                        </select>
+                    </div>
+
+                    <!-- Restrictions for blocking -->
+                    <div class="form-group conditional-fields"
+                        id="restrictionsGroup">
+                        <label class="form-label">Restrictions</label>
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="no-checkin"
+                                    value="no-checkin">
+                                <label for="no-checkin">No Check-in</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="no-checkout"
+                                    value="no-checkout">
+                                <label for="no-checkout">No Check-out</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="no-stayin"
+                                    value="no-stayin">
+                                <label for="no-stayin">No Stay-in</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advance reservation settings -->
+                    <div class="conditional-fields" id="advanceGroup">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Minimum Days
+                                    Before</label>
+                                <input type="number" class="form-input"
+                                    id="minAdvance" min="0" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Maximum Days
+                                    Before</label>
+                                <input type="number" class="form-input"
+                                    id="maxAdvance" min="1" placeholder="365">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Booking buffer settings -->
+                    <div class="form-group conditional-fields" id="bufferGroup">
+                        <label class="form-label">Buffer Days *</label>
+                        <input type="number" class="form-input" id="bufferDays"
+                            min="1" placeholder="Enter number of buffer days">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Comment / Reason</label>
+                        <textarea class="form-textarea" id="ruleComment"
+                            placeholder="Optional comment or description for this rule..."></textarea>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel"
+                            onclick="closeRuleModal()">Cancel</button>
+                        <button type="submit" class="btn-save">Save
+                            Rule</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Booking Rules Edit Modal -->
+        <div class="modal" id="editRuleModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Booking Rule</h3>
+                    <button class="close-btn" onclick="closeEditRuleModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form id="editRuleForm">
+                    <div class="form-group">
+                        <label class="form-label">Rule Type *</label>
+                        <select class="form-select" id="editRuleType" required>
+                            <option value>Select rule type</option>
+                            <option value="check-in-days">Check-in Days</option>
+                            <option value="check-out-days">Check-out
+                                Days</option>
+                            <option value="minimum-stay">Minimum Stay</option>
+                            <option value="maximum-stay">Maximum Stay</option>
+                            <option value="block-accommodation">Block
+                                Accommodation</option>
+                            <option value="advance-reservation">Advance
+                                Reservation</option>
+                            <option value="booking-buffer">Booking
+                                Buffer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Rule Name *</label>
+                        <input type="text" class="form-input" id="editRuleName"
+                            placeholder="Enter descriptive rule name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Room Types</label>
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-all-rooms"
+                                    value="all">
+                                <label for="edit-all-rooms">All Room
+                                    Types</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-deluxe"
+                                    value="deluxe">
+                                <label for="edit-deluxe">Deluxe Suite</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-superior"
+                                    value="superior">
+                                <label for="edit-superior">Superior
+                                    Ocean</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-standard"
+                                    value="standard">
+                                <label for="edit-standard">Standard Room</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Days selection for check-in/out, minimum/maximum stay -->
+                    <div class="form-group conditional-fields"
+                        id="editDaysGroup">
+                        <label class="form-label">Applicable Days</label>
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-monday"
+                                    value="monday">
+                                <label for="edit-monday">Monday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-tuesday"
+                                    value="tuesday">
+                                <label for="edit-tuesday">Tuesday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-wednesday"
+                                    value="wednesday">
+                                <label for="edit-wednesday">Wednesday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-thursday"
+                                    value="thursday">
+                                <label for="edit-thursday">Thursday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-friday"
+                                    value="friday">
+                                <label for="edit-friday">Friday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-saturday"
+                                    value="saturday">
+                                <label for="edit-saturday">Saturday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-sunday"
+                                    value="sunday">
+                                <label for="edit-sunday">Sunday</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-holiday"
+                                    value="holiday">
+                                <label for="edit-holiday">Holiday</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Number of nights for minimum/maximum stay -->
+                    <div class="form-group conditional-fields"
+                        id="editNightsGroup">
+                        <label class="form-label">Number of Nights *</label>
+                        <input type="number" class="form-input"
+                            id="editNightsNumber" min="1"
+                            placeholder="Enter number of nights">
+                    </div>
+
+                    <!-- Date range for blocking accommodation -->
+                    <div class="conditional-fields" id="editDateRangeGroup">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">From Date *</label>
+                                <input type="date" class="form-input"
+                                    id="editFromDate">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">To Date *</label>
+                                <input type="date" class="form-input"
+                                    id="editToDate">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specific room selection for blocking -->
+                    <div class="form-group conditional-fields"
+                        id="editRoomSelectionGroup">
+                        <label class="form-label">Specific Accommodation</label>
+                        <select class="form-select" id="editSpecificRoom">
+                            <option value>Select specific room
+                                (optional)</option>
+                            <option value="room-101">Deluxe Suite - Room
+                                101</option>
+                            <option value="room-102">Superior Ocean - Room
+                                102</option>
+                            <option value="room-103">Standard Room - Room
+                                103</option>
+                            <option value="room-201">Deluxe Suite - Room
+                                201</option>
+                            <option value="room-202">Superior Ocean - Room
+                                202</option>
+                        </select>
+                    </div>
+
+                    <!-- Restrictions for blocking -->
+                    <div class="form-group conditional-fields"
+                        id="editRestrictionsGroup">
+                        <label class="form-label">Restrictions</label>
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-no-checkin"
+                                    value="no-checkin">
+                                <label for="edit-no-checkin">No Check-in</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-no-checkout"
+                                    value="no-checkout">
+                                <label for="edit-no-checkout">No
+                                    Check-out</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="edit-no-stayin"
+                                    value="no-stayin">
+                                <label for="edit-no-stayin">No Stay-in</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advance reservation settings -->
+                    <div class="conditional-fields" id="editAdvanceGroup">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Minimum Days
+                                    Before</label>
+                                <input type="number" class="form-input"
+                                    id="editMinAdvance" min="0" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Maximum Days
+                                    Before</label>
+                                <input type="number" class="form-input"
+                                    id="editMaxAdvance" min="1"
+                                    placeholder="365">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Booking buffer settings -->
+                    <div class="form-group conditional-fields"
+                        id="editBufferGroup">
+                        <label class="form-label">Buffer Days *</label>
+                        <input type="number" class="form-input"
+                            id="editBufferDays" min="1"
+                            placeholder="Enter number of buffer days">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Comment / Reason</label>
+                        <textarea class="form-input" id="editRuleComment"
+                            rows="3"
+                            placeholder="Optional comment or description for this rule..."></textarea>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel"
+                            onclick="closeEditRuleModal()">Cancel</button>
+                        <button type="submit" class="btn-save">Update
+                            Rule</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <script>
+        function closeEditRuleModal() {
+            document.getElementById('editRuleModal').classList.remove('show');
+        }
+
+        function openEditRuleModal(ruleId, ruleData) {
+            // Populate form with existing rule data
+            if (ruleData) {
+                document.getElementById('editRuleType').value = ruleData.type || '';
+                document.getElementById('editRuleName').value = ruleData.name || '';
+                document.getElementById('editRuleComment').value = ruleData.comment || '';
+                
+                // Show appropriate fields based on rule type
+                toggleEditFormFields();
+                
+                // Populate other fields based on rule type
+                if (ruleData.nights) {
+                    document.getElementById('editNightsNumber').value = ruleData.nights;
+                }
+                if (ruleData.fromDate) {
+                    document.getElementById('editFromDate').value = ruleData.fromDate;
+                }
+                if (ruleData.toDate) {
+                    document.getElementById('editToDate').value = ruleData.toDate;
+                }
+            }
+            
+            document.getElementById('editRuleModal').classList.add('show');
+        }
+
+        function toggleEditFormFields() {
+            const ruleType = document.getElementById('editRuleType').value;
+            const allFields = document.querySelectorAll('#editRuleModal .conditional-fields');
+            
+            // Hide all conditional fields
+            allFields.forEach(field => field.classList.remove('show'));
+            
+            // Show relevant fields based on rule type
+            switch(ruleType) {
+                case 'check-in-days':
+                case 'check-out-days':
+                    document.getElementById('editDaysGroup').classList.add('show');
+                    break;
+                case 'minimum-stay':
+                case 'maximum-stay':
+                    document.getElementById('editDaysGroup').classList.add('show');
+                    document.getElementById('editNightsGroup').classList.add('show');
+                    break;
+                case 'block-accommodation':
+                    document.getElementById('editDateRangeGroup').classList.add('show');
+                    document.getElementById('editRoomSelectionGroup').classList.add('show');
+                    document.getElementById('editRestrictionsGroup').classList.add('show');
+                    break;
+                case 'advance-reservation':
+                    document.getElementById('editDaysGroup').classList.add('show');
+                    document.getElementById('editAdvanceGroup').classList.add('show');
+                    break;
+                case 'booking-buffer':
+                    document.getElementById('editDaysGroup').classList.add('show');
+                    document.getElementById('editBufferGroup').classList.add('show');
+                    break;
+            }
+        }
+
+        // Event listeners
+        document.getElementById('editRuleType').addEventListener('change', toggleEditFormFields);
+
+        document.getElementById('editRuleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const ruleType = document.getElementById('editRuleType').value;
+            const ruleName = document.getElementById('editRuleName').value;
+            
+            if (!ruleType || !ruleName) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            alert(`Rule "${ruleName}" has been updated successfully!`);
+            closeEditRuleModal();
+        });
+
+        // All rooms checkbox functionality
+        document.getElementById('edit-all-rooms').addEventListener('change', function() {
+            const roomCheckboxes = document.querySelectorAll('#edit-deluxe, #edit-superior, #edit-standard');
+            roomCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+                checkbox.disabled = this.checked;
+            });
+        });
+
+        // Individual room checkbox functionality
+        document.querySelectorAll('#edit-deluxe, #edit-superior, #edit-standard').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allRoomsCheckbox = document.getElementById('edit-all-rooms');
+                const individualCheckboxes = document.querySelectorAll('#edit-deluxe, #edit-superior, #edit-standard');
+                const checkedIndividual = Array.from(individualCheckboxes).filter(cb => cb.checked);
+                
+                if (checkedIndividual.length === 0) {
+                    allRoomsCheckbox.checked = false;
+                } else if (checkedIndividual.length === individualCheckboxes.length) {
+                    allRoomsCheckbox.checked = true;
+                    individualCheckboxes.forEach(cb => cb.disabled = true);
+                }
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('editRuleModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditRuleModal();
+            }
+        });
+        </script>
+
+        <script>
+        // Modal functions
+        function openRuleModal(ruleType = '') {
+            document.getElementById('ruleModal').classList.add('show');
+            if (ruleType) {
+                document.getElementById('ruleType').value = ruleType;
+                updateModalTitle(ruleType);
+                toggleFormFields();
+            }
+        }
+
+        function closeRuleModal() {
+            document.getElementById('ruleModal').classList.remove('show');
+            document.getElementById('ruleForm').reset();
+            hideAllConditionalFields();
+            document.querySelector('.modal-title').textContent = 'Add New Booking Rule';
+        }
+
+        function updateModalTitle(ruleType) {
+            const titles = {
+                'check-in-days': 'Add Check-in Days Rule',
+                'check-out-days': 'Add Check-out Days Rule', 
+                'minimum-stay': 'Add Minimum Stay Rule',
+                'maximum-stay': 'Add Maximum Stay Rule',
+                'block-accommodation': 'Add Block Accommodation Rule',
+                'advance-reservation': 'Add Advance Reservation Rule',
+                'booking-buffer': 'Add Booking Buffer Rule'
+            };
+            document.querySelector('.modal-title').textContent = titles[ruleType] || 'Add New Booking Rule';
+        }
+
+        function toggleFormFields() {
+            const ruleType = document.getElementById('ruleType').value;
+            hideAllConditionalFields();
+
+            switch(ruleType) {
+                case 'check-in-days':
+                case 'check-out-days':
+                    showFields(['daysGroup']);
+                    break;
+                case 'minimum-stay':
+                case 'maximum-stay':
+                    showFields(['daysGroup', 'nightsGroup']);
+                    break;
+                case 'block-accommodation':
+                    showFields(['dateRangeGroup', 'roomSelectionGroup', 'restrictionsGroup']);
+                    break;
+                case 'advance-reservation':
+                    showFields(['daysGroup', 'advanceGroup']);
+                    break;
+                case 'booking-buffer':
+                    showFields(['daysGroup', 'bufferGroup']);
+                    break;
+            }
+        }
+
+        function showFields(fieldIds) {
+            fieldIds.forEach(id => {
+                const field = document.getElementById(id);
+                if (field) field.classList.add('show');
+            });
+        }
+
+        function hideAllConditionalFields() {
+            const conditionalFields = document.querySelectorAll('.conditional-fields');
+            conditionalFields.forEach(field => {
+                field.classList.remove('show');
+            });
+        }
+
+        // function editRule(ruleId) {
+        //     alert(`Opening edit dialog for rule: ${ruleId}`);
+        //     // In a real implementation, this would populate the modal with existing rule data
+        // }
+
+        function deleteRule(ruleId) {
+            if (confirm('Are you sure you want to delete this booking rule? This action cannot be undone.')) {
+                alert(`Rule ${ruleId} has been deleted`);
+                // In a real implementation, this would remove the rule from the database
+            }
+        }
+
+        function saveAllChanges() {
+            if (confirm('Save all booking rule changes?')) {
+                alert('All booking rules have been saved successfully!');
+                // In a real implementation, this would save all pending changes
+            }
+        }
+
+        // Event listeners
+        document.getElementById('ruleType').addEventListener('change', function() {
+            updateModalTitle(this.value);
+            toggleFormFields();
+        });
+
+        document.getElementById('ruleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const ruleType = document.getElementById('ruleType').value;
+            const ruleName = document.getElementById('ruleName').value;
+            
+            if (!ruleType || !ruleName) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            alert(`${ruleName} rule has been saved successfully!`);
+            closeRuleModal();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('ruleModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRuleModal();
+            }
+        });
+
+        // All rooms checkbox functionality
+        document.getElementById('all-rooms').addEventListener('change', function() {
+            const roomCheckboxes = document.querySelectorAll('#deluxe, #superior, #standard');
+            roomCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+                checkbox.disabled = this.checked;
+            });
+        });
+
+        // Individual room checkbox functionality
+        document.querySelectorAll('#deluxe, #superior, #standard').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allRoomsCheckbox = document.getElementById('all-rooms');
+                const individualCheckboxes = document.querySelectorAll('#deluxe, #superior, #standard');
+                const checkedIndividual = Array.from(individualCheckboxes).filter(cb => cb.checked);
+                
+                if (checkedIndividual.length === 0) {
+                    allRoomsCheckbox.checked = false;
+                } else if (checkedIndividual.length === individualCheckboxes.length) {
+                    allRoomsCheckbox.checked = true;
+                    individualCheckboxes.forEach(cb => cb.disabled = true);
+                }
+            });
+        });
+
+        console.log('Booking Rules page initialized successfully');
+    </script>
+    </body>
+</html>

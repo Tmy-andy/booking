@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupons - HotelBooking CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .coupon-filters {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            font-size: 14px;
+        }
+
+        .coupon-code {
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .discount-value {
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .usage-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .usage-bar {
+            width: 60px;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .usage-progress {
+            height: 100%;
+            background: #3b82f6;
+            transition: width 0.3s;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-published {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-draft {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .status-private {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-view {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .btn-edit {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-quick-edit {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 95%;
+            max-width: 900px;
+            max-height: 95vh;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-checkbox-group {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 150px;
+            background: #fafafa;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .form-checkbox:last-child {
+            margin-bottom: 0;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-save-draft {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-publish {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .coupon-filters {
+                flex-direction: column;
+            }
+
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+
+            <div class="nav-section">           
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item active" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+             <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-rules"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="page-title">Coupons</h1>
+            <div class="breadcrumb">Booking Management / Coupons</div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-primary" onclick="openCouponModal()">
+                <i class="fas fa-plus"></i>
+                Add New Coupon
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Coupon Filters -->
+        <div class="coupon-filters">
+            <div class="search-box">
+                <input type="text" placeholder="Search coupons by title or code...">
+            </div>
+            <select class="filter-select">
+                <option>All Status</option>
+                <option>Published</option>
+                <option>Draft</option>
+                <option>Private</option>
+            </select>
+            <select class="filter-select">
+                <option>All Types</option>
+                <option>Accommodation Discount</option>
+                <option>Service Discount</option>
+                <option>Fee Discount</option>
+            </select>
+            <select class="filter-select">
+                <option>All Dates</option>
+                <option>This Month</option>
+                <option>Last Month</option>
+                <option>This Year</option>
+            </select>
+        </div>
+
+        <!-- Coupons Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">Coupon Management</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title / Code</th>
+                        <th>Discount Type</th>
+                        <th>Amount</th>
+                        <th>Uses</th>
+                        <th>Expiration Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div>
+                                <strong>Welcome New Guest</strong><br>
+                                <span class="coupon-code">WELCOME20</span>
+                            </div>
+                        </td>
+                        <td>Accommodation - Percentage</td>
+                        <td><span class="discount-value">20%</span></td>
+                        <td>
+                            <div class="usage-count">
+                                <span>15/100</span>
+                                <div class="usage-bar">
+                                    <div class="usage-progress" style="width: 15%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Jan 31, 2025</td>
+                        <td><span class="status-badge status-published">Published</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-edit" onclick="editCoupon('CPN001')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-quick-edit" onclick="quickEditCoupon('CPN001')">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteCoupon('CPN001')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                <strong>Summer Special</strong><br>
+                                <span class="coupon-code">SUMMER50</span>
+                            </div>
+                        </td>
+                        <td>Accommodation - Fixed</td>
+                        <td><span class="discount-value">$50</span></td>
+                        <td>
+                            <div class="usage-count">
+                                <span>45/50</span>
+                                <div class="usage-bar">
+                                    <div class="usage-progress" style="width: 90%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Aug 31, 2024 (Expired)</td>
+                        <td><span class="status-badge status-published">Published</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-edit" onclick="editCoupon('CPN002')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-quick-edit" onclick="quickEditCoupon('CPN002')">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteCoupon('CPN002')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                <strong>Spa Package Deal</strong><br>
+                                <span class="coupon-code">SPA15</span>
+                            </div>
+                        </td>
+                        <td>Service - Percentage</td>
+                        <td><span class="discount-value">15%</span></td>
+                        <td>
+                            <div class="usage-count">
+                                <span>8/∞</span>
+                                <div class="usage-bar">
+                                    <div class="usage-progress" style="width: 8%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Dec 31, 2024</td>
+                        <td><span class="status-badge status-published">Published</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-edit" onclick="editCoupon('CPN003')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-quick-edit" onclick="quickEditCoupon('CPN003')">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteCoupon('CPN003')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                <strong>New Year Promotion</strong><br>
+                                <span class="coupon-code">NEWYEAR2025</span>
+                            </div>
+                        </td>
+                        <td>Mixed Discount</td>
+                        <td><span class="discount-value">25% + Fee waiver</span></td>
+                        <td>
+                            <div class="usage-count">
+                                <span>0/200</span>
+                                <div class="usage-bar">
+                                    <div class="usage-progress" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Jan 31, 2025</td>
+                        <td><span class="status-badge status-draft">Draft</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-edit" onclick="editCoupon('CPN004')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-quick-edit" onclick="quickEditCoupon('CPN004')">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteCoupon('CPN004')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Coupon Modal -->
+    <div class="modal" id="couponModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Coupon</h3>
+                <button class="close-btn" onclick="closeCouponModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="couponForm">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Mã voucher và mô tả (Description)
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Title (Tên coupon)</label>
+                        <input type="text" class="form-input" id="couponTitle" placeholder="e.g., Welcome New Guest Discount" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Coupon Code (Mã voucher)</label>
+                            <input type="text" class="form-input" id="couponCode" placeholder="e.g., WELCOME20" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Slug</label>
+                            <input type="text" class="form-input" id="couponSlug" placeholder="Auto-generated from title">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description (Mô tả)</label>
+                        <textarea class="form-input" id="description" rows="3" placeholder="Brief description of the coupon..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Conditions -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-list-check"></i>
+                        Conditions (Điều kiện áp dụng)
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Applicable Room Types (Chọn hạng phòng áp dụng)</label>
+                        <div class="form-checkbox-group">
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="room_deluxe" value="deluxe">
+                                <label for="room_deluxe">Deluxe Suite</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="room_superior" value="superior">
+                                <label for="room_superior">Superior Ocean</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="room_standard" value="standard">
+                                <label for="room_standard">Standard Room</label>
+                            </div>
+                        </div>
+                        <div class="help-text">Để trống nếu muốn áp dụng cho tất cả hạng phòng. Giữ Ctrl/Cmd để chọn nhiều phòng.</div>
+                    </div>
+                </div>
+
+                <!-- Accommodation Discount -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-bed"></i>
+                        Accommodation Discount (Giảm giá phòng)
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Type (Kiểu giảm giá)</label>
+                            <select class="form-select" id="accommodationDiscountType">
+                                <option value="none">None (Không áp dụng)</option>
+                                <option value="percentage">Percentage discount on accommodation price</option>
+                                <option value="fixed_total">Fixed discount on accommodation price</option>
+                                <option value="fixed_daily">Fixed discount on daily/nightly price</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount (Mức giảm/Số tiền)</label>
+                            <input type="number" class="form-input" id="accommodationAmount" placeholder="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Discount -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-concierge-bell"></i>
+                        Service Discount (Giảm giá dịch vụ)
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Type (Kiểu giảm giá)</label>
+                            <select class="form-select" id="serviceDiscountType">
+                                <option value="none">None (Không áp dụng)</option>
+                                <option value="percentage">Percentage (Giảm theo %)</option>
+                                <option value="fixed">Fixed (Giảm cố định)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount (Mức giảm/Số tiền)</label>
+                            <input type="number" class="form-input" id="serviceAmount" placeholder="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Services (Dịch vụ được áp dụng giảm giá)</label>
+                        <div class="form-checkbox-group">
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="service_spa" value="spa">
+                                <label for="service_spa">Spa Services</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="service_restaurant" value="restaurant">
+                                <label for="service_restaurant">Restaurant</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="service_laundry" value="laundry">
+                                <label for="service_laundry">Laundry Service</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="service_airport" value="airport">
+                                <label for="service_airport">Airport Transfer</label>
+                            </div>
+                        </div>
+                        <div class="help-text">Thao tác giống với chọn hạng phòng giảm giá</div>
+                    </div>
+                </div>
+
+                <!-- Fee Discount -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Fee Discount (Giảm phí)
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Type (Kiểu giảm giá)</label>
+                            <select class="form-select" id="feeDiscountType">
+                                <option value="none">None (Không áp dụng)</option>
+                                <option value="percentage">Percentage (Giảm theo %)</option>
+                                <option value="fixed">Fixed (Giảm cố định)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount (Mức giảm/Số tiền)</label>
+                            <input type="number" class="form-input" id="feeAmount" placeholder="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Fees (Các loại phí được áp dụng giảm giá)</label>
+                        <div class="form-checkbox-group">
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="fee_service" value="service_fee">
+                                <label for="fee_service">Service Fee</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="fee_cleaning" value="cleaning_fee">
+                                <label for="fee_cleaning">Cleaning Fee</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="fee_resort" value="resort_fee">
+                                <label for="fee_resort">Resort Fee</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="fee_transaction" value="transaction_fee">
+                                <label for="fee_transaction">Transaction Fee</label>
+                            </div>
+                        </div>
+                        <div class="help-text">Các mục chọn và điền tương tự với Service Discount phía trên</div>
+                    </div>
+                </div>
+
+                <!-- Usage Restrictions -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Usage Restrictions (Hạn chế/Điều kiện áp dụng voucher)
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Expiration Date (Ngày hết hạn)</label>
+                            <input type="date" class="form-input" id="expirationDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Usage Limit (Giới hạn số lần sử dụng)</label>
+                            <input type="number" class="form-input" id="usageLimit" placeholder="Leave empty for unlimited" min="1">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Check-in After (Check-in sau ngày)</label>
+                            <input type="date" class="form-input" id="checkinAfter">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Check-out Before (Trả phòng trước ngày)</label>
+                            <input type="date" class="form-input" id="checkoutBefore">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Min days before check-in (Số ngày tối thiểu trước khi nhận phòng)</label>
+                            <input type="number" class="form-input" id="minDaysAdvance" placeholder="0" min="0">
+                            <div class="help-text">Áp dụng cho khuyến mãi đặt sớm</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Max days before check-in (Số ngày tối đa trước khi nhận phòng)</label>
+                            <input type="number" class="form-input" id="maxDaysAdvance" placeholder="Leave empty for no limit" min="1">
+                            <div class="help-text">Áp dụng cho khuyến mãi đặt gấp</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Minimum Days (Số ngày lưu trú tối thiểu)</label>
+                            <input type="number" class="form-input" id="minimumDays" placeholder="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Maximum Days (Số ngày lưu trú tối đa)</label>
+                            <input type="number" class="form-input" id="maximumDays" placeholder="Leave empty for no limit" min="1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Usage Count (Số lần đã sử dụng)</label>
+                        <input type="number" class="form-input" id="usageCount" placeholder="0" min="0" readonly>
+                        <div class="help-text">Chỉ đọc - tự động cập nhật khi có người dùng</div>
+                    </div>
+                </div>
+
+                <!-- Publish Settings -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-globe"></i>
+                        Publish (Cài đặt xuất bản)
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Status (Trạng thái)</label>
+                            <select class="form-select" id="publishStatus">
+                                <option value="draft">Draft (Bản nháp)</option>
+                                <option value="pending">Pending Review (Đang chờ xem xét)</option>
+                                <option value="published">Published (Đã công khai)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Visibility (Hiển thị)</label>
+                            <select class="form-select" id="visibility">
+                                <option value="public">Public (Công khai)</option>
+                                <option value="password">Password Protected (Được bảo vệ bằng mật khẩu)</option>
+                                <option value="private">Private (Riêng tư)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="passwordGroup" style="display: none;">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="couponPassword" placeholder="Enter password">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeCouponModal()">Cancel</button>
+                    <button type="button" class="btn-save-draft" onclick="saveCoupon('draft')">Save Draft</button>
+                    <button type="submit" class="btn-publish" onclick="saveCoupon('publish')">Publish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quick Edit Modal -->
+    <div class="modal" id="quickEditModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Quick Edit Coupon</h3>
+                <button class="close-btn" onclick="closeQuickEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="quickEditForm">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="quickTitle" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Slug</label>
+                    <input type="text" class="form-input" id="quickSlug">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-input" id="quickDate">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="quickPassword" placeholder="Leave empty for no password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="quickStatus">
+                            <option value="published">Published</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeQuickEditModal()">Cancel</button>
+                    <button type="submit" class="btn-publish">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let isEditing = false;
+        let currentCouponId = null;
+
+        // Modal functions
+        function openCouponModal(couponId = null) {
+            isEditing = !!couponId;
+            currentCouponId = couponId;
+            
+            if (isEditing) {
+                document.getElementById('modalTitle').textContent = 'Edit Coupon';
+                loadCouponData(couponId);
+            } else {
+                document.getElementById('modalTitle').textContent = 'Add New Coupon';
+                clearForm();
+            }
+            
+            document.getElementById('couponModal').classList.add('show');
+        }
+
+        function closeCouponModal() {
+            document.getElementById('couponModal').classList.remove('show');
+            clearForm();
+        }
+
+        function openQuickEditModal(couponId) {
+            currentCouponId = couponId;
+            loadQuickEditData(couponId);
+            document.getElementById('quickEditModal').classList.add('show');
+        }
+
+        function closeQuickEditModal() {
+            document.getElementById('quickEditModal').classList.remove('show');
+        }
+
+        function clearForm() {
+            document.getElementById('couponForm').reset();
+            document.getElementById('usageCount').value = '0';
+            document.getElementById('passwordGroup').style.display = 'none';
+        }
+
+        function loadCouponData(couponId) {
+            // Sample coupon data - in real app, this would come from API
+            const couponData = {
+                'CPN001': {
+                    title: 'Welcome New Guest',
+                    code: 'WELCOME20',
+                    slug: 'welcome-new-guest',
+                    description: 'Special discount for first-time guests',
+                    accommodationDiscountType: 'percentage',
+                    accommodationAmount: 20,
+                    serviceDiscountType: 'none',
+                    feeDiscountType: 'none',
+                    expirationDate: '2025-01-31',
+                    usageLimit: 100,
+                    usageCount: 15,
+                    publishStatus: 'published',
+                    visibility: 'public'
+                }
+            };
+
+            const coupon = couponData[couponId];
+            if (coupon) {
+                document.getElementById('couponTitle').value = coupon.title || '';
+                document.getElementById('couponCode').value = coupon.code || '';
+                document.getElementById('couponSlug').value = coupon.slug || '';
+                document.getElementById('description').value = coupon.description || '';
+                document.getElementById('accommodationDiscountType').value = coupon.accommodationDiscountType || 'none';
+                document.getElementById('accommodationAmount').value = coupon.accommodationAmount || '';
+                document.getElementById('serviceDiscountType').value = coupon.serviceDiscountType || 'none';
+                document.getElementById('feeDiscountType').value = coupon.feeDiscountType || 'none';
+                document.getElementById('expirationDate').value = coupon.expirationDate || '';
+                document.getElementById('usageLimit').value = coupon.usageLimit || '';
+                document.getElementById('usageCount').value = coupon.usageCount || '0';
+                document.getElementById('publishStatus').value = coupon.publishStatus || 'draft';
+                document.getElementById('visibility').value = coupon.visibility || 'public';
+            }
+        }
+
+        function loadQuickEditData(couponId) {
+            const couponData = {
+                'CPN001': {
+                    title: 'Welcome New Guest',
+                    slug: 'welcome-new-guest',
+                    date: '2024-12-01',
+                    status: 'published'
+                }
+            };
+
+            const coupon = couponData[couponId];
+            if (coupon) {
+                document.getElementById('quickTitle').value = coupon.title || '';
+                document.getElementById('quickSlug').value = coupon.slug || '';
+                document.getElementById('quickDate').value = coupon.date || '';
+                document.getElementById('quickStatus').value = coupon.status || 'draft';
+            }
+        }
+
+        // Auto-generate slug from title
+        document.getElementById('couponTitle').addEventListener('input', function() {
+            const slug = this.value.toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim();
+            document.getElementById('couponSlug').value = slug;
+        });
+
+        // Show/hide password field based on visibility
+        document.getElementById('visibility').addEventListener('change', function() {
+            const passwordGroup = document.getElementById('passwordGroup');
+            if (this.value === 'password') {
+                passwordGroup.style.display = 'block';
+            } else {
+                passwordGroup.style.display = 'none';
+                document.getElementById('couponPassword').value = '';
+            }
+        });
+
+        // Coupon functions
+        function editCoupon(id) {
+            openCouponModal(id);
+        }
+
+        function quickEditCoupon(id) {
+            openQuickEditModal(id);
+        }
+
+        function deleteCoupon(id) {
+            if (confirm('Are you sure you want to delete this coupon? This action cannot be undone.')) {
+                alert(`Coupon ${id} moved to trash!`);
+            }
+        }
+
+        function saveCoupon(action) {
+            event.preventDefault();
+            
+            if (action === 'draft') {
+                document.getElementById('publishStatus').value = 'draft';
+            } else if (action === 'publish') {
+                document.getElementById('publishStatus').value = 'published';
+            }
+
+            if (isEditing) {
+                alert(`Coupon ${currentCouponId} updated successfully!`);
+            } else {
+                alert('Coupon created successfully!');
+            }
+            
+            closeCouponModal();
+        }
+
+        // Form submissions
+        document.getElementById('couponForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveCoupon('publish');
+        });
+
+        document.getElementById('quickEditForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert(`Quick edit completed for ${currentCouponId}!`);
+            closeQuickEditModal();
+        });
+
+        // Close modals when clicking outside
+        document.getElementById('couponModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCouponModal();
+            }
+        });
+
+        document.getElementById('quickEditModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeQuickEditModal();
+            }
+        });
+
+        // Navigation item functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (!this.classList.contains('active') && !this.getAttribute('href')) {
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const text = this.textContent.trim();
+                    document.querySelector('.page-title').textContent = text;
+                    document.querySelector('.breadcrumb').textContent = 'Dashboard / ' + text;
+                }
+            });
+        });
+
+        // Search and filter functionality
+        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value;
+                if (query.trim()) {
+                    console.log(`Searching coupons for: ${query}`);
+                }
+            }
+        });
+
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const filterValue = this.value;
+                console.log(`Filtering coupons by: ${filterValue}`);
+            });
+        });
+
+        console.log('Coupons page initialized with full functionality');
+    </script>
+</body>
+</html>

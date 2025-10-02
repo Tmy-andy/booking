@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-out - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .checkout-filters {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            font-size: 14px;
+        }
+
+        .guest-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .guest-info strong {
+            font-weight: 500;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .guest-info small {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-checked-in {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .btn-warning {
+            background: #fefbf3;
+            color: #92400e;
+            border: 1px solid #fed7aa;
+        }
+
+        .btn-view {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .close-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-confirm {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .guest-details {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .guest-details h4 {
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .guest-details p {
+            margin-bottom: 8px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .guest-details p strong {
+            color: #0f172a;
+        }
+
+        .bill-summary {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .bill-summary h4 {
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .bill-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .bill-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 16px;
+            padding-top: 12px;
+            margin-top: 8px;
+            border-top: 2px solid #cbd5e1;
+        }
+
+        .additional-charges {
+            background: #fef3c7;
+            border: 1px solid #fed7aa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .additional-charges h4 {
+            color: #92400e;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .charge-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .charge-item input[type="number"] {
+            width: 80px;
+            padding: 4px 8px;
+            border: 1px solid #fed7aa;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .checkout-filters {
+                flex-direction: column;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+
+            <div class="nav-section">           
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item active">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-rules"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="page-title">Check-out</h1>
+            <div class="breadcrumb">Operations / Check-out</div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-primary" onclick="openSearchModal()">
+                <i class="fas fa-search"></i>
+                Find Guest
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Check-out Filters -->
+        <div class="checkout-filters">
+            <div class="search-box">
+                <input type="text" placeholder="Search by room, guest name, or booking ID...">
+            </div>
+            <select class="filter-select">
+                <option>All Status</option>
+                <option>Checked In</option>
+                <option>Pending Check-out</option>
+                <option>Completed</option>
+            </select>
+            <select class="filter-select">
+                <option>All Rooms</option>
+                <option>Deluxe Room</option>
+                <option>Suite</option>
+                <option>Standard Room</option>
+            </select>
+            <input type="date" class="filter-select" value="2024-12-25">
+        </div>
+
+        <!-- Check-out Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">Today's Check-outs</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th>Check-out Time</th>
+                        <th>Stay Duration</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>#BK006</strong></td>
+                        <td>
+                            <div class="guest-info">
+                                <strong>David Brown</strong>
+                                <small>+1 234 567 8904</small>
+                                <small>david.brown@email.com</small>
+                            </div>
+                        </td>
+                        <td>301</td>
+                        <td>11:00</td>
+                        <td>3 nights</td>
+                        <td><strong>$850</strong></td>
+                        <td><span class="status-badge status-checked-in">Checked In</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-success" onclick="processCheckOut('BK2024006')">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Check Out
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewBooking('BK2024006')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#BK007</strong></td>
+                        <td>
+                            <div class="guest-info">
+                                <strong>Lisa Davis</strong>
+                                <small>+1 234 567 8905</small>
+                                <small>lisa.d@email.com</small>
+                            </div>
+                        </td>
+                        <td>401</td>
+                        <td>10:30</td>
+                        <td>4 nights</td>
+                        <td><strong>$1,400</strong></td>
+                        <td><span class="status-badge status-pending">Processing</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-warning" onclick="completeBilling('BK2024007')">
+                                    <i class="fas fa-receipt"></i>
+                                    Complete
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewBooking('BK2024007')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#BK008</strong></td>
+                        <td>
+                            <div class="guest-info">
+                                <strong>Tom Anderson</strong>
+                                <small>+1 234 567 8906</small>
+                                <small>tom.a@email.com</small>
+                            </div>
+                        </td>
+                        <td>203</td>
+                        <td>12:00</td>
+                        <td>2 nights</td>
+                        <td><strong>$380</strong></td>
+                        <td><span class="status-badge status-completed">Completed</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <span style="color: #64748b; font-size: 12px;">Completed</span>
+                                <button class="btn-small btn-view" onclick="viewBooking('BK2024008')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#BK009</strong></td>
+                        <td>
+                            <div class="guest-info">
+                                <strong>Jennifer Wilson</strong>
+                                <small>+1 555 987 6543</small>
+                                <small>j.wilson@email.com</small>
+                            </div>
+                        </td>
+                        <td>205</td>
+                        <td>13:30</td>
+                        <td>1 night</td>
+                        <td><strong>$250</strong></td>
+                        <td><span class="status-badge status-checked-in">Checked In</span></td>
+                        <td>
+                            <div class="action-buttons" >
+                                <button class="btn-small btn-success" onclick="processCheckOut('BK2024009')">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Check Out
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewBooking('BK2024009')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#BK010</strong></td>
+                        <td>
+                            <div class="guest-info">
+                                <strong>Robert Martinez</strong>
+                                <small>+1 415 555 0199</small>
+                                <small>r.martinez@email.com</small>
+                            </div>
+                        </td>
+                        <td>503</td>
+                        <td>14:00</td>
+                        <td>5 nights</td>
+                        <td><strong>$1,750</strong></td>
+                        <td><span class="status-badge status-checked-in">Checked In</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-success" onclick="processCheckOut('BK2024010')">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Check Out
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewBooking('BK2024010')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Search Modal -->
+    <div class="modal" id="searchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Find Guest</h3>
+                <button class="close-btn" onclick="closeModal('searchModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="searchGuestForm">
+                <div class="form-group">
+                    <label class="form-label">Search by</label>
+                    <input type="text" class="form-input" placeholder="Room number, guest name, phone, or booking ID" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Check-out Date</label>
+                        <input type="date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Room Number</label>
+                        <input type="text" class="form-input" placeholder="e.g., 301, 401">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('searchModal')">Cancel</button>
+                    <button type="submit" class="btn-confirm">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Check-out Confirmation Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Check-out Process</h3>
+                <button class="close-btn" onclick="closeModal('checkoutModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="guest-details">
+                <h4>Guest Information</h4>
+                <p><strong>Name:</strong> <span id="guestName">David Brown</span></p>
+                <p><strong>Phone:</strong> <span id="guestPhone">+1 234 567 8904</span></p>
+                <p><strong>Email:</strong> <span id="guestEmail">david.brown@email.com</span></p>
+                <p><strong>Room:</strong> <span id="roomNumber">Deluxe 301</span></p>
+                <p><strong>Stay Duration:</strong> <span id="stayDuration">3 nights</span></p>
+                <p><strong>Check-in:</strong> <span id="checkinDate">Dec 22, 2024</span></p>
+                <p><strong>Check-out:</strong> <span id="checkoutDate">Dec 25, 2024</span></p>
+            </div>
+
+            <div class="bill-summary">
+                <h4>Billing Summary</h4>
+                <div class="bill-item">
+                    <span>Room Charges (3 nights × $250)</span>
+                    <span>$750.00</span>
+                </div>
+                <div class="bill-item">
+                    <span>Service Tax (10%)</span>
+                    <span>$75.00</span>
+                </div>
+                <div class="bill-item">
+                    <span>Resort Fee</span>
+                    <span>$25.00</span>
+                </div>
+                <div class="bill-item">
+                    <span><strong>Total Amount</strong></span>
+                    <span><strong>$850.00</strong></span>
+                </div>
+            </div>
+
+            <div class="additional-charges">
+                <h4>Additional Charges</h4>
+                <div class="charge-item">
+                    <label>Mini Bar:</label>
+                    <input type="number" value="0" min="0" step="0.01" id="minibar">
+                </div>
+                <div class="charge-item">
+                    <label>Room Service:</label>
+                    <input type="number" value="0" min="0" step="0.01" id="roomservice">
+                </div>
+                <div class="charge-item">
+                    <label>Laundry:</label>
+                    <input type="number" value="0" min="0" step="0.01" id="laundry">
+                </div>
+                <div class="charge-item">
+                    <label>Telephone:</label>
+                    <input type="number" value="0" min="0" step="0.01" id="telephone">
+                </div>
+                <div class="charge-item">
+                    <label>Other:</label>
+                    <input type="number" value="0" min="0" step="0.01" id="other">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Payment Method</label>
+                <select class="form-input" id="paymentMethod">
+                    <option value="cash">Cash</option>
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="transfer">Bank Transfer</option>
+                    <option value="paid">Already Paid</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Check-out Notes</label>
+                <textarea class="form-input" rows="3" placeholder="Any damages, feedback, or special notes..."></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal('checkoutModal')">Cancel</button>
+                <button type="button" class="btn-confirm" onclick="confirmCheckOut()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Process Check-out
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openSearchModal() {
+            document.getElementById('searchModal').classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Check-out functions
+        function processCheckOut(bookingId) {
+            document.getElementById('checkoutModal').classList.add('show');
+        }
+
+        function completeBilling(bookingId) {
+            if (confirm('Complete billing for this guest?')) {
+                alert('Billing completed successfully!');
+                location.reload();
+            }
+        }
+
+        function viewBooking(bookingId) {
+            window.location.href = `booking-details.html?id=${bookingId}`;
+        }
+
+        function confirmCheckOut() {
+            const additionalCharges = calculateAdditionalCharges();
+            const totalAmount = 850 + additionalCharges;
+            
+            if (confirm(`Process check-out with total amount ${totalAmount.toFixed(2)}?`)) {
+                alert('Guest checked out successfully!');
+                closeModal('checkoutModal');
+                location.reload();
+            }
+        }
+
+        function calculateAdditionalCharges() {
+            const minibar = parseFloat(document.getElementById('minibar').value) || 0;
+            const roomservice = parseFloat(document.getElementById('roomservice').value) || 0;
+            const laundry = parseFloat(document.getElementById('laundry').value) || 0;
+            const telephone = parseFloat(document.getElementById('telephone').value) || 0;
+            const other = parseFloat(document.getElementById('other').value) || 0;
+            
+            return minibar + roomservice + laundry + telephone + other;
+        }
+
+        // Update total when additional charges change
+        document.querySelectorAll('#checkoutModal input[type="number"]').forEach(input => {
+            input.addEventListener('input', function() {
+                const additional = calculateAdditionalCharges();
+                const newTotal = 850 + additional;
+                // Update the total display if needed
+            });
+        });
+
+        // Form submissions
+        document.getElementById('searchGuestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchTerm = this.querySelector('.form-input').value;
+            alert(`Searching for: ${searchTerm}`);
+            closeModal('searchModal');
+        });
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-box input');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const selectedValue = this.value.toLowerCase();
+                const rows = document.querySelectorAll('tbody tr');
+                
+                if (this.selectedIndex === 0) {
+                    rows.forEach(row => row.style.display = '');
+                } else {
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(selectedValue) ? '' : 'none';
+                    });
+                }
+            });
+        });
+
+        console.log('Check-out page initialized');
+    </script>
+</body>
+</html>

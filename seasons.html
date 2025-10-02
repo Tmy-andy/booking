@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seasons - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .season-filters {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            font-size: 14px;
+        }
+
+        .season-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .season-period {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .period-dates {
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .period-days {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .repeat-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .repeat-no {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .repeat-annual {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-published {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-draft {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .status-private {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-edit {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-quick-edit {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            background: #fafafa;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-save-draft {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-publish {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .season-filters {
+                flex-direction: column;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-checkbox-group {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item active" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+             <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-rules"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="page-title">Seasons</h1>
+            <div class="breadcrumb">Room Management / Seasons</div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-primary" onclick="openSeasonModal()">
+                <i class="fas fa-plus"></i>
+                Add New Season
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Season Filters -->
+        <div class="season-filters">
+            <div class="search-box">
+                <input type="text" placeholder="Search seasons...">
+            </div>
+            <select class="filter-select">
+                <option>All Status</option>
+                <option>Published</option>
+                <option>Draft</option>
+                <option>Private</option>
+            </select>
+            <select class="filter-select">
+                <option>All Repeat Types</option>
+                <option>Does not repeat</option>
+                <option>Annually</option>
+            </select>
+        </div>
+
+        <!-- Seasons Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">Season Management</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Season Name</th>
+                        <th>Period</th>
+                        <th>Applied Days</th>
+                        <th>Repeat</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="season-name">Peak Season - Summer</span></td>
+                        <td>
+                            <div class="season-period">
+                                <div class="period-dates">Jun 1 - Aug 31, 2024</div>
+                                <div class="period-days">Monday to Sunday</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="period-days">All days</div>
+                        </td>
+                        <td><span class="repeat-badge repeat-annual">Annually</span></td>
+                        <td><span class="status-badge status-published">Published</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-edit" onclick="editSeason('SEASON001')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-quick-edit" onclick="quickEditSeason('SEASON001')">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteSeason('SEASON001')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="season-name">Low Season - Winter</span></td>
+                        <td>
+                            <div class="season-period">
+                                <div class="period-dates">Dec 1 - Feb 28, 2024</div>
+                                <div class="period-days">Sunday to Thursday</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="period-days">Weekdays</div>
+                        </td>
+                        <td><span class="repeat-badge repeat-annual">Annually</span></td>
+                        <td><span class="status-badge status-published">Published</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-edit" onclick="editSeason('SEASON002')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-quick-edit" onclick="quickEditSeason('SEASON002')">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteSeason('SEASON002')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="season-name">Holiday Special - New Year</span></td>
+                        <td>
+                            <div class="season-period">
+                                <div class="period-dates">Dec 31, 2024 - Jan 2, 2025</div>
+                                <div class="period-days">Friday to Sunday</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="period-days">Weekend only</div>
+                        </td>
+                        <td><span class="repeat-badge repeat-no">Does not repeat</span></td>
+                        <td><span class="status-badge status-draft">Draft</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-edit" onclick="editSeason('SEASON003')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-quick-edit" onclick="quickEditSeason('SEASON003')">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteSeason('SEASON003')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Season Modal -->
+    <div class="modal" id="seasonModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Season</h3>
+                <button class="close-btn" onclick="closeSeasonModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="seasonForm">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Season Information
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Season Name (Tên mùa)</label>
+                        <input type="text" class="form-input" id="seasonName" placeholder="e.g., Peak Season - Summer" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Start Date (Ngày bắt đầu)</label>
+                            <input type="date" class="form-input" id="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">End Date (Ngày kết thúc)</label>
+                            <input type="date" class="form-input" id="endDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Applied for days (Những ngày trong tuần áp dụng)</label>
+                        <div class="form-checkbox-group">
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="day_monday" value="monday">
+                                <label for="day_monday">Monday</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="day_tuesday" value="tuesday">
+                                <label for="day_tuesday">Tuesday</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="day_wednesday" value="wednesday">
+                                <label for="day_wednesday">Wednesday</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="day_thursday" value="thursday">
+                                <label for="day_thursday">Thursday</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="day_friday" value="friday">
+                                <label for="day_friday">Friday</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="day_saturday" value="saturday">
+                                <label for="day_saturday">Saturday</label>
+                            </div>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="day_sunday" value="sunday">
+                                <label for="day_sunday">Sunday</label>
+                            </div>
+                        </div>
+                        <div class="help-text">Giữ Ctrl hoặc Cmd để chọn nhiều ngày</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Repeat (Lặp lại)</label>
+                            <select class="form-select" id="repeatType">
+                                <option value="none">Does not repeat (Không lặp lại)</option>
+                                <option value="annually">Annually (Lặp lại hàng năm)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Repeat until date (Lặp lại đến ngày)</label>
+                            <input type="date" class="form-input" id="repeatUntil">
+                            <div class="help-text">Chỉ áp dụng khi chọn "Lặp lại hàng năm"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Publish Settings -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-globe"></i>
+                        Publish Settings
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Status (Trạng thái)</label>
+                            <select class="form-select" id="publishStatus">
+                                <option value="draft">Draft (Bản nháp)</option>
+                                <option value="pending">Pending Review (Đang chờ xem xét)</option>
+                                <option value="published">Published (Đã công khai)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Visibility (Hiển thị)</label>
+                            <select class="form-select" id="visibility">
+                                <option value="public">Public (Công khai)</option>
+                                <option value="password">Password Protected</option>
+                                <option value="hidden">Hidden (Ẩn)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="passwordGroup" style="display: none;">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="seasonPassword" placeholder="Enter password">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeSeasonModal()">Cancel</button>
+                    <button type="button" class="btn-save-draft" onclick="saveSeason('draft')">Save Draft</button>
+                    <button type="submit" class="btn-publish" onclick="saveSeason('publish')">Publish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quick Edit Modal -->
+    <div class="modal" id="quickEditModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Quick Edit Season</h3>
+                <button class="close-btn" onclick="closeQuickEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="quickEditForm">
+                <div class="form-group">
+                    <label class="form-label">Title (Tên mùa)</label>
+                    <input type="text" class="form-input" id="quickTitle" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date (Ngày đăng)</label>
+                    <input type="date" class="form-input" id="quickDate">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="quickPassword" placeholder="Leave empty for no password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="quickStatus">
+                            <option value="published">Published</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeQuickEditModal()">Cancel</button>
+                    <button type="submit" class="btn-publish">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let isEditing = false;
+        let currentSeasonId = null;
+
+        // Modal functions
+        function openSeasonModal(seasonId = null) {
+            isEditing = !!seasonId;
+            currentSeasonId = seasonId;
+            
+            if (isEditing) {
+                document.getElementById('modalTitle').textContent = 'Edit Season';
+                loadSeasonData(seasonId);
+            } else {
+                document.getElementById('modalTitle').textContent = 'Add New Season';
+                clearForm();
+            }
+            
+            document.getElementById('seasonModal').classList.add('show');
+        }
+
+        function closeSeasonModal() {
+            document.getElementById('seasonModal').classList.remove('show');
+            clearForm();
+        }
+
+        function openQuickEditModal(seasonId) {
+            currentSeasonId = seasonId;
+            loadQuickEditData(seasonId);
+            document.getElementById('quickEditModal').classList.add('show');
+        }
+
+        function closeQuickEditModal() {
+            document.getElementById('quickEditModal').classList.remove('show');
+        }
+
+        function clearForm() {
+            document.getElementById('seasonForm').reset();
+            document.getElementById('passwordGroup').style.display = 'none';
+            // Check all days by default
+            const dayCheckboxes = document.querySelectorAll('[id^="day_"]');
+            dayCheckboxes.forEach(cb => cb.checked = true);
+        }
+
+        function loadSeasonData(seasonId) {
+            // Sample season data - in real app, this would come from API
+            const seasonData = {
+                'SEASON001': {
+                    name: 'Peak Season - Summer',
+                    startDate: '2024-06-01',
+                    endDate: '2024-08-31',
+                    days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+                    repeatType: 'annually',
+                    repeatUntil: '2030-12-31',
+                    status: 'published',
+                    visibility: 'public'
+                }
+            };
+
+            const season = seasonData[seasonId];
+            if (season) {
+                document.getElementById('seasonName').value = season.name || '';
+                document.getElementById('startDate').value = season.startDate || '';
+                document.getElementById('endDate').value = season.endDate || '';
+                document.getElementById('repeatType').value = season.repeatType || 'none';
+                document.getElementById('repeatUntil').value = season.repeatUntil || '';
+                document.getElementById('publishStatus').value = season.status || 'draft';
+                document.getElementById('visibility').value = season.visibility || 'public';
+                
+                // Set day checkboxes
+                const dayCheckboxes = document.querySelectorAll('[id^="day_"]');
+                dayCheckboxes.forEach(cb => {
+                    cb.checked = season.days && season.days.includes(cb.value);
+                });
+            }
+        }
+
+        function loadQuickEditData(seasonId) {
+            const seasonData = {
+                'SEASON001': {
+                    title: 'Peak Season - Summer',
+                    date: '2024-06-01',
+                    status: 'published'
+                }
+            };
+
+            const season = seasonData[seasonId];
+            if (season) {
+                document.getElementById('quickTitle').value = season.title || '';
+                document.getElementById('quickDate').value = season.date || '';
+                document.getElementById('quickStatus').value = season.status || 'draft';
+            }
+        }
+
+        // Show/hide password field and repeat until date
+        document.getElementById('visibility').addEventListener('change', function() {
+            const passwordGroup = document.getElementById('passwordGroup');
+            if (this.value === 'password') {
+                passwordGroup.style.display = 'block';
+            } else {
+                passwordGroup.style.display = 'none';
+                document.getElementById('seasonPassword').value = '';
+            }
+        });
+
+        document.getElementById('repeatType').addEventListener('change', function() {
+            const repeatUntilField = document.getElementById('repeatUntil');
+            if (this.value === 'annually') {
+                repeatUntilField.disabled = false;
+            } else {
+                repeatUntilField.disabled = true;
+                repeatUntilField.value = '';
+            }
+        });
+
+        // Season functions
+        function editSeason(id) {
+            openSeasonModal(id);
+        }
+
+        function quickEditSeason(id) {
+            openQuickEditModal(id);
+        }
+
+        function deleteSeason(id) {
+            if (confirm('Are you sure you want to delete this season? This action cannot be undone.')) {
+                alert(`Season ${id} moved to trash!`);
+            }
+        }
+
+        function saveSeason(action) {
+            event.preventDefault();
+            
+            if (action === 'draft') {
+                document.getElementById('publishStatus').value = 'draft';
+            } else if (action === 'publish') {
+                document.getElementById('publishStatus').value = 'published';
+            }
+
+            // Validate at least one day is selected
+            const dayCheckboxes = document.querySelectorAll('[id^="day_"]:checked');
+            if (dayCheckboxes.length === 0) {
+                alert('Please select at least one day of the week.');
+                return;
+            }
+
+            if (isEditing) {
+                alert(`Season ${currentSeasonId} updated successfully!`);
+            } else {
+                alert('Season created successfully!');
+            }
+            
+            closeSeasonModal();
+        }
+
+        // Form submissions
+        document.getElementById('seasonForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveSeason('publish');
+        });
+
+        document.getElementById('quickEditForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert(`Quick edit completed for ${currentSeasonId}!`);
+            closeQuickEditModal();
+        });
+
+        // Close modals when clicking outside
+        document.getElementById('seasonModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSeasonModal();
+            }
+        });
+
+        document.getElementById('quickEditModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeQuickEditModal();
+            }
+        });
+
+        // Navigation item functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (!this.classList.contains('active') && !this.getAttribute('href')) {
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const text = this.textContent.trim();
+                    document.querySelector('.page-title').textContent = text;
+                    document.querySelector('.breadcrumb').textContent = 'Dashboard / Room Management / ' + text;
+                }
+            });
+        });
+
+        // Search and filter functionality
+        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value;
+                if (query.trim()) {
+                    console.log(`Searching seasons for: ${query}`);
+                }
+            }
+        });
+
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const filterValue = this.value;
+                console.log(`Filtering seasons by: ${filterValue}`);
+            });
+        });
+
+        console.log('Seasons page initialized');
+
+        const statusField = document.getElementById('publishStatus');
+        const visibilityGroup = document.getElementById('visibility').closest('.form-group');
+        const passwordGroup = document.getElementById('passwordGroup');
+        const seasonPassword = document.getElementById('seasonPassword');
+
+        function updateVisibilityByStatus() {
+            if (statusField.value === 'published') {
+                // Chỉ khi Published mới hiển thị Visibility
+                visibilityGroup.style.display = 'block';
+            } else {
+                // Draft hoặc Pending thì ẩn Visibility
+                visibilityGroup.style.display = 'none';
+                passwordGroup.style.display = 'none';
+                seasonPassword.value = '';
+            }
+        }
+
+        // Lắng nghe thay đổi Status
+        statusField.addEventListener('change', updateVisibilityByStatus);
+
+        // Chạy 1 lần khi mở modal
+        updateVisibilityByStatus();
+    </script>
+
+</body>
+</html>

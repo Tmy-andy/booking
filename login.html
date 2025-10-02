@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        .login-left {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-50px, -50px) rotate(360deg); }
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .welcome-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .welcome-description {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .login-right {
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .demo-accounts {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .demo-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-account {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .demo-account:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .demo-account:last-child {
+            margin-bottom: 0;
+        }
+
+        .demo-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .demo-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .demo-email {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .demo-role {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-owner {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .role-admin {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .role-manager {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember-me input {
+            margin: 0;
+        }
+
+        .remember-me label {
+            font-size: 14px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .forgot-password {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .divider {
+            margin: 24px 0;
+            text-align: center;
+            position: relative;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .login-left {
+                padding: 40px 30px;
+                min-height: 300px;
+            }
+
+            .welcome-title {
+                font-size: 24px;
+            }
+
+            .welcome-description {
+                font-size: 16px;
+            }
+
+            .login-right {
+                padding: 40px 30px;
+            }
+
+            .features {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side - Welcome -->
+        <div class="login-left">
+            <div class="welcome-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-hotel"></i>
+                    </div>
+                    <div class="logo-text">Hotel CRM</div>
+                </div>
+                
+                <h1 class="welcome-title">Welcome Back!</h1>
+                <p class="welcome-description">
+                    Manage your hotel operations with our comprehensive CRM system.
+                </p>
+                
+                <div class="features">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <span>Booking Management</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span>Customer Management</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <span>Analytics & Reports</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <span>Room Management</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="login-right">
+            <div class="login-form-container">
+                <div class="login-header">
+                    <h2 class="login-title">Sign In</h2>
+                    <p class="login-subtitle">Enter your credentials to access your account</p>
+                </div>
+
+                <!-- Demo Accounts -->
+                <div class="demo-accounts">
+                    <div class="demo-title">
+                        <i class="fas fa-info-circle"></i>
+                        Accounts (Click to use)
+                    </div>
+                    
+                    <div class="demo-account" onclick="fillCredentials('owner@demolinkhotel.com', 'owner123')">
+                        <div class="demo-info">
+                            <div class="demo-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">OW</div>
+                            <div class="demo-details">
+                                <div class="demo-name">System Owner</div>
+                                <div class="demo-email">owner@demolinkhotel.com</div>
+                            </div>
+                        </div>
+                        <div class="demo-role role-owner">Owner</div>
+                    </div>
+
+                    <div class="demo-account" onclick="fillCredentials('admin@demolinkhotel.com', 'admin123')">
+                        <div class="demo-info">
+                            <div class="demo-avatar" style="background: #10b981;">AD</div>
+                            <div class="demo-details">
+                                <div class="demo-name">John Admin</div>
+                                <div class="demo-email">admin@demolinkhotel.com</div>
+                            </div>
+                        </div>
+                        <div class="demo-role role-admin">Admin</div>
+                    </div>
+
+                    <div class="demo-account" onclick="fillCredentials('manager@demolinkhotel.com', 'manager123')">
+                        <div class="demo-info">
+                            <div class="demo-avatar" style="background: #3b82f6;">MG</div>
+                            <div class="demo-details">
+                                <div class="demo-name">Sarah Manager</div>
+                                <div class="demo-email">manager@demolinkhotel.com</div>
+                            </div>
+                        </div>
+                        <div class="demo-role role-manager">Manager</div>
+                    </div>
+                </div>
+
+                <div class="divider">
+                    <span>or sign in manually</span>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" id="email" placeholder="Enter your email" required>
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="password" placeholder="Enter your password" required>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+
+                    <div class="login-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="loginBtn">
+                        <span id="loginText">Sign In</span>
+                        <div class="loading-spinner" id="loadingSpinner"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo accounts for testing
+        const demoAccounts = {
+            'owner@demolinkhotel.com': {
+                password: 'owner123',
+                role: 'owner',
+                name: 'System Owner',
+                hasMultipleProperties: true
+            },
+            'admin@demolinkhotel.com': {
+                password: 'admin123',
+                role: 'admin',
+                name: 'John Admin',
+                hasMultipleProperties: false
+            },
+            'manager@demolinkhotel.com': {
+                password: 'manager123',
+                role: 'manager', 
+                name: 'Sarah Manager',
+                hasMultipleProperties: false
+            }
+        };
+
+        function fillCredentials(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            
+            // Add visual feedback
+            const demoAccount = event.currentTarget;
+            demoAccount.style.transform = 'scale(0.98)';
+            demoAccount.style.background = '#f0f9ff';
+            
+            setTimeout(() => {
+                demoAccount.style.transform = 'scale(1)';
+                demoAccount.style.background = 'white';
+            }, 150);
+        }
+
+        function showError(inputId, message) {
+            const input = document.getElementById(inputId);
+            const errorDiv = document.getElementById(inputId + 'Error');
+            
+            input.classList.add('error');
+            errorDiv.textContent = message;
+            
+            setTimeout(() => {
+                input.classList.remove('error');
+                errorDiv.textContent = '';
+            }, 3000);
+        }
+
+        function setLoading(isLoading) {
+            const btn = document.getElementById('loginBtn');
+            const text = document.getElementById('loginText');
+            const spinner = document.getElementById('loadingSpinner');
+            
+            btn.disabled = isLoading;
+            text.style.display = isLoading ? 'none' : 'block';
+            spinner.style.display = isLoading ? 'block' : 'none';
+        }
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                if (!email) showError('email', 'Email is required');
+                if (!password) showError('password', 'Password is required');
+                return;
+            }
+
+            setLoading(true);
+
+            // Simulate API call delay
+            setTimeout(() => {
+                const account = demoAccounts[email];
+                
+                if (!account || account.password !== password) {
+                    setLoading(false);
+                    showError('password', 'Invalid email or password');
+                    return;
+                }
+
+                // Store login session
+                localStorage.setItem('hotelCRM_user', JSON.stringify({
+                    email: email,
+                    name: account.name,
+                    role: account.role,
+                    loginTime: new Date().toISOString()
+                }));
+
+                // Redirect based on account type
+                if (account.role === 'owner' && account.hasMultipleProperties) {
+                    // Owner with multiple properties -> property selector
+                    window.location.href = 'property-selector.html';
+                } else {
+                    // Single property users -> dashboard
+                    localStorage.setItem('hotelCRM_selectedProperty', JSON.stringify({
+                        id: 'demo-hotel-1',
+                        name: 'Demo Link Hotel',
+                        address: '123 Demo Street, Demo City'
+                    }));
+                    window.location.href = 'index.html';
+                }
+            }, 1500);
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const user = localStorage.getItem('hotelCRM_user');
+            if (user) {
+                const userData = JSON.parse(user);
+                const loginTime = new Date(userData.loginTime);
+                const now = new Date();
+                const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+                
+                // Auto logout after 8 hours
+                if (hoursSinceLogin < 8) {
+                    if (userData.role === 'owner') {
+                        window.location.href = 'property-selector.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                } else {
+                    localStorage.removeItem('hotelCRM_user');
+                    localStorage.removeItem('hotelCRM_selectedProperty');
+                }
+            }
+        });
+
+        // Password visibility toggle (if needed)
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        }
+
+        console.log('Login page initialized');
+    </script>
+</body>
+</html>

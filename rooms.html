@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Rooms Management - Hotel CRM</title>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+        <script src="script.js" defer></script>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .overview-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .card-change {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-change.positive {
+            color: #059669;
+        }
+
+        .card-change.negative {
+            color: #dc2626;
+        }
+
+        .filters-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .filters-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            font-size: 14px;
+        }
+
+        .room-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .room-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .room-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .room-details p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .room-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .room-type-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-available {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-occupied {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-maintenance {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .status-out-of-order {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .guest-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .guest-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 10px;
+        }
+
+        .guest-name {
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-view {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .btn-edit {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-maintenance {
+            background: #f3e8ff;
+            color: #6b21a8;
+            border: 1px solid #e9d5ff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-generate {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .overview-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-row {
+                flex-direction: column;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .close-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .view-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .view-section {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-available {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-occupied {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-maintenance {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .maintenance-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .maintenance-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .maintenance-date {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .maintenance-desc {
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .maintenance-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .maintenance-status.completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .maintenance-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .linked-rooms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .linked-room-item {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        @media (max-width: 768px) {
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            
+            .maintenance-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+    </head>
+    <body>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-hotel"></i>
+                    </div>
+                    <div class="logo-text">Hotel CRM</div>
+                </div>
+            </div>
+
+            <div class="property-selector">
+                <div class="property-label">Current Property</div>
+                <div class="property-name">Demo Link Hotel</div>
+            </div>
+
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a class="nav-item" href="index.html">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Booking Management</div>
+                    <a class="nav-item" href="all-bookings.html">
+                        <i class="fas fa-calendar-check"></i>
+                        All Bookings
+                    </a>
+                    <a class="nav-item" href="payment.html">
+                        <i class="fas fa-credit-card"></i>
+                        Payment History
+                    </a>
+                    <a class="nav-item" href="calendar.html">
+                        <i class="fas fa-calendar"></i>
+                        Calendar View
+                    </a>
+                    <a class="nav-item" href="customer.html">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                    <a class="nav-item" href="coupons.html">
+                        <i class="fas fa-tags"></i>
+                        Coupons
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Room Management</div>
+                    <a class="nav-item" href="room-types.html">
+                        <i class="fas fa-door-open"></i>
+                        Room Types
+                    </a>
+                    <a class="nav-item active" href="rooms.html">
+                        <i class="fas fa-bed"></i>
+                        Rooms
+                    </a>
+                    <a class="nav-item" href="rate-pricing.html">
+                        <i class="fas fa-dollar-sign"></i>
+                        Rates & Pricing
+                    </a>
+                    <a class="nav-item" href="seasons.html">
+                        <i class="fas fa-calendar-plus"></i>
+                        Seasons
+                    </a>
+                    <a class="nav-item" href="services.html">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Operations</div>
+                    <a href="checkin.html" class="nav-item">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Check-in
+                    </a>
+                    <a href="checkout.html" class="nav-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Check-out
+                    </a>
+                    <a href="housekeeping.html" class="nav-item">
+                        <i class="fas fa-broom"></i>
+                        Housekeeping
+                    </a>
+                    <a href="maintenance.html" class="nav-item">
+                        <i class="fas fa-tools"></i>
+                        Maintenance
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports</div>
+                    <a href="analytics.html" class="nav-item">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </a>
+                    <a href="revenue.html" class="nav-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        Revenue
+                    </a>
+                    <a href="reports.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        Reports
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a class="nav-item" href="booking-rules.html">
+                        <i class="fas fa-rules"></i>
+                        Booking Rules
+                    </a>
+                    <a class="nav-item" href="taxes-fees.html">
+                        <i class="fas fa-percentage"></i>
+                        Taxes & Fees
+                    </a>
+                    <a class="nav-item" href="settings.html">
+                        <i class="fas fa-cog"></i>
+                        General Settings
+                    </a>
+                    <a href="login.html" class="nav-item"
+                        style="color: #ef4444;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="page-title">Rooms Management</h1>
+                <div class="breadcrumb">Room Management / Rooms</div>
+            </div>
+
+            <div class="header-right">
+                <button class="btn-generate" onclick="openGenerateModal()">
+                    <i class="fas fa-magic"></i>
+                    Generate Rooms
+                </button>
+                <button class="btn-primary" onclick="openRoomModal()">
+                    <i class="fas fa-plus"></i>
+                    Add New Room
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Cards -->
+            <section class="overview-cards">
+                <div class="overview-card">
+                    <div class="card-header">
+                        <div class="card-title">Total Rooms</div>
+                        <div class="card-icon" style="background: #3b82f6;">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">120</div>
+                    <div class="card-change">
+                        <i class="fas fa-building"></i>
+                        All rooms in hotel
+                    </div>
+                </div>
+
+                <div class="overview-card">
+                    <div class="card-header">
+                        <div class="card-title">Available Rooms</div>
+                        <div class="card-icon" style="background: #10b981;">
+                            <i class="fas fa-door-open"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">47</div>
+                    <div class="card-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        Ready for booking
+                    </div>
+                </div>
+
+                <div class="overview-card">
+                    <div class="card-header">
+                        <div class="card-title">Occupied Rooms</div>
+                        <div class="card-icon" style="background: #ef4444;">
+                            <i class="fas fa-door-closed"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">65</div>
+                    <div class="card-change">
+                        <i class="fas fa-user"></i>
+                        Currently occupied
+                    </div>
+                </div>
+
+                <div class="overview-card">
+                    <div class="card-header">
+                        <div class="card-title">Maintenance</div>
+                        <div class="card-icon" style="background: #f59e0b;">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">8</div>
+                    <div class="card-change negative">
+                        <i class="fas fa-wrench"></i>
+                        Under maintenance
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filters -->
+            <div class="filters-container">
+                <div class="filters-row">
+                    <div class="search-box">
+                        <input type="text"
+                            placeholder="Search rooms by number or type...">
+                    </div>
+                    <select class="filter-select">
+                        <option>All Floors</option>
+                        <option>1st Floor</option>
+                        <option>2nd Floor</option>
+                        <option>3rd Floor</option>
+                        <option>4th Floor</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Room Types</option>
+                        <option>Deluxe Suite</option>
+                        <option>Superior Ocean</option>
+                        <option>Standard Room</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Available</option>
+                        <option>Occupied</option>
+                        <option>Maintenance</option>
+                        <option>Out of Order</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Rooms Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Room List</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Room Number</th>
+                            <th>Room Type</th>
+                            <th>Floor</th>
+                            <th>Status</th>
+                            <th>Current Guest</th>
+                            <th>Check-out Date</th>
+                            <th>Next Check-in</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="room-info">
+                                    <div class="room-details">
+                                        <h4>Room 101</h4>
+                                        <p>Deluxe Ocean Suite</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="room-type">
+                                    Deluxe Ocean Suite
+                                </div>
+                            </td>
+                            <td>1st Floor</td>
+                            <td><span
+                                    class="status-badge status-occupied">Occupied</span></td>
+                            <td>
+                                <div class="guest-info">
+                                    <span class="guest-name">John Doe</span>
+                                </div>
+                            </td>
+                            <td>Dec 28, 2024</td>
+                            <td>Dec 29, 2024</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-small btn-view"
+                                        onclick="viewRoom('101')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-small btn-edit"
+                                        onclick="editRoom('101')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="room-info">
+                                    <div class="room-details">
+                                        <h4>Room 102</h4>
+                                        <p>Superior Ocean View</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="room-type">
+                                    Superior Ocean View
+                                </div>
+                            </td>
+                            <td>1st Floor</td>
+                            <td><span
+                                    class="status-badge status-available">Available</span></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>Dec 30, 2024</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-small btn-view"
+                                        onclick="viewRoom('102')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-small btn-edit"
+                                        onclick="editRoom('102')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="room-info">
+                                    <div class="room-details">
+                                        <h4>Room 103</h4>
+                                        <p>Standard Room</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="room-type">
+                                    Standard Room
+                                </div>
+                            </td>
+                            <td>1st Floor</td>
+                            <td><span
+                                    class="status-badge status-maintenance">Maintenance</span></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-small btn-view"
+                                        onclick="viewRoom('103')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-small btn-maintenance"
+                                        onclick="setMaintenance('103')">
+                                        <i class="fas fa-wrench"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="room-info">
+                                    <div class="room-details">
+                                        <h4>Room 201</h4>
+                                        <p>Deluxe Ocean Suite</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="room-type">
+                                    Deluxe Ocean Suite
+                                </div>
+                            </td>
+                            <td>2nd Floor</td>
+                            <td><span
+                                    class="status-badge status-occupied">Occupied</span></td>
+                            <td>
+                                <div class="guest-info">
+                                    <span class="guest-name">Mary Johnson</span>
+                                </div>
+                            </td>
+                            <td>Dec 30, 2024</td>
+                            <td>Jan 2, 2025</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-small btn-view"
+                                        onclick="viewRoom('201')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-small btn-edit"
+                                        onclick="editRoom('201')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="room-info">
+                                    <div class="room-details">
+                                        <h4>Room 202</h4>
+                                        <p>Superior Ocean View</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="room-type">
+                                    Superior Ocean View
+                                </div>
+                            </td>
+                            <td>2nd Floor</td>
+                            <td><span
+                                    class="status-badge status-out-of-order">Out
+                                    of Order</span></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-small btn-view"
+                                        onclick="viewRoom('202')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-small btn-maintenance"
+                                        onclick="setMaintenance('202')">
+                                        <i class="fas fa-tools"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Add/Edit Room Modal -->
+        <div class="modal" id="roomModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add New Room</h3>
+                    <button class="close-btn" onclick="closeRoomModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form id="roomForm">
+                    <div class="form-group">
+                        <label class="form-label">Room Number *</label>
+                        <input type="text" class="form-input"
+                            placeholder="e.g., 101, 205" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Room Type *</label>
+                        <select class="form-select" required>
+                            <option value>Select Room Type</option>
+                            <option value="deluxe-suite">Deluxe Ocean
+                                Suite</option>
+                            <option value="superior-ocean">Superior Ocean
+                                View</option>
+                            <option value="standard-room">Standard Room</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Floor</label>
+                            <select class="form-select">
+                                <option value>Select Floor</option>
+                                <option value="1">1st Floor</option>
+                                <option value="2">2nd Floor</option>
+                                <option value="3">3rd Floor</option>
+                                <option value="4">4th Floor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option value="available">Available</option>
+                                <option value="occupied">Occupied</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="out-of-order">Out of
+                                    Order</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-input" rows="3"
+                            placeholder="Optional room description or notes..."></textarea>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel"
+                            onclick="closeRoomModal()">Cancel</button>
+                        <button type="submit" class="btn-save">Save
+                            Room</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Generate Rooms Modal -->
+        <div class="modal" id="generateModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Generate Multiple Rooms</h3>
+                    <button class="close-btn" onclick="closeGenerateModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form id="generateForm">
+                    <div class="form-group">
+                        <label class="form-label">Room Type *</label>
+                        <select class="form-select" required>
+                            <option value>Select Room Type</option>
+                            <option value="deluxe-suite">Deluxe Ocean
+                                Suite</option>
+                            <option value="superior-ocean">Superior Ocean
+                                View</option>
+                            <option value="standard-room">Standard Room</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Number of Rooms *</label>
+                            <input type="number" class="form-input" min="1"
+                                max="50" required placeholder="e.g., 10">
+                            <small
+                                style="color: #64748b; font-size: 12px;">Maximum
+                                50 rooms per generation</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Starting Room
+                                Number</label>
+                            <input type="text" class="form-input"
+                                placeholder="e.g., 101">
+                            <small
+                                style="color: #64748b; font-size: 12px;">Leave
+                                empty to auto-generate</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Floor</label>
+                            <select class="form-select">
+                                <option value>Auto assign</option>
+                                <option value="1">1st Floor</option>
+                                <option value="2">2nd Floor</option>
+                                <option value="3">3rd Floor</option>
+                                <option value="4">4th Floor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Initial Status</label>
+                            <select class="form-select">
+                                <option value="available">Available</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="out-of-order">Out of
+                                    Order</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Title Pattern</label>
+                        <input type="text" class="form-input"
+                            placeholder="Leave empty to use room type title">
+                        <small style="color: #64748b; font-size: 12px;">Use
+                            {number} for room number placeholder</small>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel"
+                            onclick="closeGenerateModal()">Cancel</button>
+                        <button type="submit" class="btn-generate">Generate
+                            Rooms</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Rooms View Modal -->
+        <div class="modal" id="roomViewModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Room Details</h3>
+                    <button class="close-btn" onclick="closeRoomViewModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="view-content">
+                    <!-- Basic Information -->
+                    <div class="view-section">
+                        <h4 class="section-title">
+                            <i class="fas fa-info-circle"></i>
+                            Basic Information
+                        </h4>
+                        <div class="detail-row">
+                            <span class="detail-label">Room Number:</span>
+                            <span class="detail-value"
+                                id="viewRoomNumber">101</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Room Type:</span>
+                            <span class="detail-value" id="viewRoomType">Deluxe
+                                Ocean Suite</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value" id="viewRoomStatus">
+                                <span
+                                    class="status-badge status-available">Available</span>
+                            </span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Floor:</span>
+                            <span class="detail-value" id="viewRoomFloor">1st
+                                Floor</span>
+                        </div>
+                    </div>
+
+                    <!-- Current Booking -->
+                    <div class="view-section">
+                        <h4 class="section-title">
+                            <i class="fas fa-calendar-check"></i>
+                            Current Status
+                        </h4>
+                        <div class="detail-row">
+                            <span class="detail-label">Current Guest:</span>
+                            <span class="detail-value"
+                                id="viewCurrentGuest">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Check-in Date:</span>
+                            <span class="detail-value"
+                                id="viewCheckinDate">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Check-out Date:</span>
+                            <span class="detail-value"
+                                id="viewCheckoutDate">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Next Check-in:</span>
+                            <span class="detail-value" id="viewNextCheckin">Dec
+                                30, 2024</span>
+                        </div>
+                    </div>
+
+                    <!-- Room Features -->
+                    <div class="view-section">
+                        <h4 class="section-title">
+                            <i class="fas fa-bed"></i>
+                            Room Features
+                        </h4>
+                        <div class="detail-row">
+                            <span class="detail-label">Size:</span>
+                            <span class="detail-value" id="viewRoomSize">45
+                                m²</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">View:</span>
+                            <span class="detail-value" id="viewRoomView">Ocean
+                                View</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Bed Type:</span>
+                            <span class="detail-value" id="viewBedType">King
+                                Bed</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Max Capacity:</span>
+                            <span class="detail-value" id="viewMaxCapacity">4
+                                guests</span>
+                        </div>
+                    </div>
+
+                    <!-- Maintenance History -->
+                    <div class="view-section">
+                        <h4 class="section-title">
+                            <i class="fas fa-tools"></i>
+                            Maintenance History
+                        </h4>
+                        <div class="maintenance-list"
+                            id="viewMaintenanceHistory">
+                            <div class="maintenance-item">
+                                <div class="maintenance-date">Dec 15, 2024</div>
+                                <div class="maintenance-desc">Routine cleaning
+                                    and inspection</div>
+                                <div
+                                    class="maintenance-status completed">Completed</div>
+                            </div>
+                            <div class="maintenance-item">
+                                <div class="maintenance-date">Nov 28, 2024</div>
+                                <div class="maintenance-desc">Air conditioning
+                                    maintenance</div>
+                                <div
+                                    class="maintenance-status completed">Completed</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Linked Accommodations -->
+                    <div class="view-section">
+                        <h4 class="section-title">
+                            <i class="fas fa-link"></i>
+                            Linked Accommodations
+                        </h4>
+                        <div class="linked-rooms" id="viewLinkedRooms">
+                            <div class="linked-room-item">None</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary"
+                        onclick="closeRoomViewModal()">Close
+                    </button>
+                </div>
+            </div>
+        </div>
+        <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (!this.classList.contains('active')) {
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const text = this.textContent.trim();
+                    document.querySelector('.page-title').textContent = text + ' Management';
+                    document.querySelector('.breadcrumb').textContent = 'Dashboard / ' + text;
+                }
+            });
+        });
+
+        // Modal functions
+        function openRoomModal() {
+            document.getElementById('roomModal').classList.add('show');
+        }
+
+        function closeRoomModal() {
+            document.getElementById('roomModal').classList.remove('show');
+        }
+
+        function openGenerateModal() {
+            document.getElementById('generateModal').classList.add('show');
+        }
+
+        function closeGenerateModal() {
+            document.getElementById('generateModal').classList.remove('show');
+        }
+
+        // Room management functions
+        function viewRoom(roomNumber) {
+            alert(`Viewing details for Room ${roomNumber}`);
+        }
+
+        function editRoom(roomNumber) {
+            document.getElementById('roomModal').classList.add('show');
+            document.querySelector('.modal-title').textContent = `Edit Room ${roomNumber}`;
+            // Here you would populate the form with existing room data
+        }
+
+        function setMaintenance(roomNumber) {
+            if (confirm(`Set Room ${roomNumber} to maintenance mode?`)) {
+                alert(`Room ${roomNumber} set to maintenance`);
+                // Update room status in the system
+            }
+        }
+
+        // Form submissions
+        document.getElementById('roomForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Room saved successfully!');
+            closeRoomModal();
+        });
+
+        document.getElementById('generateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const numberOfRooms = document.querySelector('#generateForm input[type="number"]').value;
+            alert(`${numberOfRooms} rooms generated successfully!`);
+            closeGenerateModal();
+        });
+
+        // Close modals when clicking outside
+        document.getElementById('roomModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRoomModal();
+            }
+        });
+
+        document.getElementById('generateModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeGenerateModal();
+            }
+        });
+
+        // Search functionality
+        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value;
+                if (query.trim()) {
+                    console.log(`Searching for: ${query}`);
+                    // Implement search functionality
+                }
+            }
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const filterValue = this.value;
+                console.log(`Filtering by: ${filterValue}`);
+                // Implement filtering functionality
+            });
+        });
+
+        // Real-time status updates (simulated)
+        setInterval(() => {
+            // Update room availability counts
+            const availableCount = document.querySelector('.overview-card:nth-child(2) .card-value');
+            const occupiedCount = document.querySelector('.overview-card:nth-child(3) .card-value');
+            
+            if (availableCount && occupiedCount) {
+                const currentAvailable = parseInt(availableCount.textContent);
+                const currentOccupied = parseInt(occupiedCount.textContent);
+                
+                // Simulate room status changes
+                if (Math.random() > 0.8) {
+                    const change = Math.random() > 0.5 ? 1 : -1;
+                    const newAvailable = Math.max(0, Math.min(120, currentAvailable + change));
+                    const newOccupied = Math.max(0, Math.min(120, currentOccupied - change));
+                    
+                    availableCount.textContent = newAvailable;
+                    occupiedCount.textContent = newOccupied;
+                }
+            }
+        }, 15000);
+
+        console.log('Rooms Management initialized');
+    </script>
+
+        <script>
+function closeRoomViewModal() {
+    document.getElementById('roomViewModal').classList.remove('show');
+}
+
+function editRoomFromView() {
+    closeRoomViewModal();
+    alert('Redirecting to edit room...');
+}
+
+function viewRoom(roomId) {
+    // Sample data - in real app, this would come from API
+    const roomData = {
+        '101': {
+            number: '101',
+            type: 'Deluxe Ocean Suite',
+            status: 'Available',
+            floor: '1st Floor',
+            currentGuest: '-',
+            checkinDate: '-',
+            checkoutDate: '-',
+            nextCheckin: 'Dec 30, 2024',
+            size: '45 m²',
+            view: 'Ocean View',
+            bedType: 'King Bed',
+            maxCapacity: '4 guests',
+            maintenanceHistory: [
+                { date: 'Dec 15, 2024', desc: 'Routine cleaning and inspection', status: 'completed' },
+                { date: 'Nov 28, 2024', desc: 'Air conditioning maintenance', status: 'completed' }
+            ],
+            linkedRooms: []
+        },
+        '102': {
+            number: '102',
+            type: 'Superior Ocean View',
+            status: 'Occupied',
+            floor: '1st Floor',
+            currentGuest: 'John Doe',
+            checkinDate: 'Dec 25, 2024',
+            checkoutDate: 'Dec 28, 2024',
+            nextCheckin: 'Dec 29, 2024',
+            size: '35 m²',
+            view: 'Ocean View',
+            bedType: 'Queen Bed',
+            maxCapacity: '2 guests',
+            maintenanceHistory: [
+                { date: 'Dec 10, 2024', desc: 'Bathroom fixtures check', status: 'completed' }
+            ],
+            linkedRooms: []
+        }
+    };
+
+    const data = roomData[roomId] || roomData['101'];
+    
+    // Populate modal with data
+    document.getElementById('viewRoomNumber').textContent = data.number;
+    document.getElementById('viewRoomType').textContent = data.type;
+    document.getElementById('viewRoomFloor').textContent = data.floor;
+    document.getElementById('viewCurrentGuest').textContent = data.currentGuest;
+    document.getElementById('viewCheckinDate').textContent = data.checkinDate;
+    document.getElementById('viewCheckoutDate').textContent = data.checkoutDate;
+    document.getElementById('viewNextCheckin').textContent = data.nextCheckin;
+    document.getElementById('viewRoomSize').textContent = data.size;
+    document.getElementById('viewRoomView').textContent = data.view;
+    document.getElementById('viewBedType').textContent = data.bedType;
+    document.getElementById('viewMaxCapacity').textContent = data.maxCapacity;
+    
+    // Update status badge
+    const statusElement = document.getElementById('viewRoomStatus');
+    const statusClass = data.status.toLowerCase().replace(' ', '-');
+    statusElement.innerHTML = `<span class="status-badge status-${statusClass}">${data.status}</span>`;
+    
+    // Populate maintenance history
+    const maintenanceList = document.getElementById('viewMaintenanceHistory');
+    maintenanceList.innerHTML = data.maintenanceHistory.map(item => 
+        `<div class="maintenance-item">
+            <div class="maintenance-date">${item.date}</div>
+            <div class="maintenance-desc">${item.desc}</div>
+            <div class="maintenance-status ${item.status}">${item.status}</div>
+        </div>`
+    ).join('');
+    
+    // Populate linked rooms
+    const linkedRoomsList = document.getElementById('viewLinkedRooms');
+    if (data.linkedRooms.length === 0) {
+        linkedRoomsList.innerHTML = '<div class="linked-room-item">None</div>';
+    } else {
+        linkedRoomsList.innerHTML = data.linkedRooms.map(room => 
+            `<div class="linked-room-item">Room ${room}</div>`
+        ).join('');
+    }
+    
+    document.getElementById('roomViewModal').classList.add('show');
+}
+
+// Close modal when clicking outside
+document.getElementById('roomViewModal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeRoomViewModal();
+    }
+});
+</script>
+    </body>
+</html>

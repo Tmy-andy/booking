@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Services - Hotel CRM</title>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+        <script src="script.js" defer></script>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .service-filters {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            font-size: 14px;
+        }
+
+        .service-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .service-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .service-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .service-description {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .price-display {
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .periodicity-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .periodicity-once {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .periodicity-daily {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .periodicity-choice {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .charge-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .charge-accommodation {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .charge-guest {
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-published {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-draft {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .status-private {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-edit {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .conditional-fields {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .conditional-fields.show {
+            display: block;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-save-draft {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-publish {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .service-filters {
+                flex-direction: column;
+            }
+
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .icon-select {
+            position: relative;
+        }
+
+        .icon-select .selected {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #fff;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .icon-select .selected:hover {
+            border-color: #3b82f6;
+        }
+
+        .icon-select .options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .icon-select.open .options {
+            display: block;
+        }
+
+        .icon-select .options {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .icon-select .options li {
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .icon-select .options li:hover {
+            background: #f8fafc;
+        }
+
+        .icon-select .options li i {
+            font-size: 16px;
+            color: #374151;
+        }
+
+    </style>
+    </head>
+    <body>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-hotel"></i>
+                    </div>
+                    <div class="logo-text">Hotel CRM</div>
+                </div>
+            </div>
+
+            <div class="property-selector">
+                <div class="property-label">Current Property</div>
+                <div class="property-name">Demo Link Hotel</div>
+            </div>
+
+            <nav class="nav-menu">
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a class="nav-item" href="index.html">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Booking Management</div>
+                    <a class="nav-item" href="all-bookings.html">
+                        <i class="fas fa-calendar-check"></i>
+                        All Bookings
+                    </a>
+                    <a class="nav-item" href="payment.html">
+                        <i class="fas fa-credit-card"></i>
+                        Payment History
+                    </a>
+                    <a class="nav-item" href="calendar.html">
+                        <i class="fas fa-calendar"></i>
+                        Calendar View
+                    </a>
+                    <a class="nav-item" href="customer.html">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                    <a class="nav-item" href="coupons.html">
+                        <i class="fas fa-tags"></i>
+                        Coupons
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Room Management</div>
+                    <a class="nav-item" href="room-types.html">
+                        <i class="fas fa-door-open"></i>
+                        Room Types
+                    </a>
+                    <a class="nav-item" href="rooms.html">
+                        <i class="fas fa-bed"></i>
+                        Rooms
+                    </a>
+                    <a class="nav-item" href="rate-pricing.html">
+                        <i class="fas fa-dollar-sign"></i>
+                        Rates & Pricing
+                    </a>
+                    <a class="nav-item" href="seasons.html">
+                        <i class="fas fa-calendar-plus"></i>
+                        Seasons
+                    </a>
+                    <a class="nav-item active" href="services.html">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Operations</div>
+                    <a href="checkin.html" class="nav-item">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Check-in
+                    </a>
+                    <a href="checkout.html" class="nav-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Check-out
+                    </a>
+                    <a href="housekeeping.html" class="nav-item">
+                        <i class="fas fa-broom"></i>
+                        Housekeeping
+                    </a>
+                    <a href="maintenance.html" class="nav-item">
+                        <i class="fas fa-tools"></i>
+                        Maintenance
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports</div>
+                    <a href="analytics.html" class="nav-item">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </a>
+                    <a href="revenue.html" class="nav-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        Revenue
+                    </a>
+                    <a href="reports.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        Reports
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a class="nav-item" href="booking-rules.html">
+                        <i class="fas fa-rules"></i>
+                        Booking Rules
+                    </a>
+                    <a class="nav-item" href="taxes-fees.html">
+                        <i class="fas fa-percentage"></i>
+                        Taxes & Fees
+                    </a>
+                    <a class="nav-item" href="settings.html">
+                        <i class="fas fa-cog"></i>
+                        General Settings
+                    </a>
+                    <a href="login.html" class="nav-item"
+                        style="color: #ef4444;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="page-title">Services</h1>
+                <div class="breadcrumb">Room Management / Services</div>
+            </div>
+
+            <div class="header-right">
+                <button class="btn-primary" onclick="openServiceModal()">
+                    <i class="fas fa-plus"></i>
+                    Add New Service
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Service Filters -->
+            <div class="service-filters">
+                <div class="search-box">
+                    <input type="text" placeholder="Search services...">
+                </div>
+                <select class="filter-select">
+                    <option>All Status</option>
+                    <option>Published</option>
+                    <option>Draft</option>
+                    <option>Private</option>
+                </select>
+                <select class="filter-select">
+                    <option>All Periodicity</option>
+                    <option>Once</option>
+                    <option>Per Day</option>
+                    <option>Guest Choice</option>
+                </select>
+                <select class="filter-select">
+                    <option>All Charge Types</option>
+                    <option>Per Accommodation</option>
+                    <option>Per Guest</option>
+                </select>
+            </div>
+
+            <!-- Services Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Service Management</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Price</th>
+                            <th>Periodicity</th>
+                            <th>Charge</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="service-info">
+                                    <div class="service-icon"
+                                        style="background: #3b82f6;">
+                                        <i class="fas fa-car"></i>
+                                    </div>
+                                    <div class="service-details">
+                                        <h4>Airport Transfer</h4>
+                                        <div
+                                            class="service-description">Round-trip
+                                            airport shuttle service</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="price-display">$25.00</span></td>
+                            <td><span
+                                    class="periodicity-badge periodicity-once">Once</span></td>
+                            <td><span class="charge-badge charge-guest">Per
+                                    Guest</span></td>
+                            <td><span
+                                    class="status-badge status-published">Published</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-small btn-edit"
+                                        onclick="editService('SRV001')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete"
+                                        onclick="deleteService('SRV001')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="service-info">
+                                    <div class="service-icon"
+                                        style="background: #10b981;">
+                                        <i class="fas fa-spa"></i>
+                                    </div>
+                                    <div class="service-details">
+                                        <h4>Spa Package</h4>
+                                        <div class="service-description">Full
+                                            body massage and treatment</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="price-display">$80.00</span></td>
+                            <td><span
+                                    class="periodicity-badge periodicity-choice">Guest
+                                    Choice</span></td>
+                            <td><span class="charge-badge charge-guest">Per
+                                    Guest</span></td>
+                            <td><span
+                                    class="status-badge status-published">Published</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-small btn-edit"
+                                        onclick="editService('SRV002')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete"
+                                        onclick="deleteService('SRV002')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="service-info">
+                                    <div class="service-icon"
+                                        style="background: #f59e0b;">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <div class="service-details">
+                                        <h4>Breakfast</h4>
+                                        <div
+                                            class="service-description">Continental
+                                            breakfast buffet</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="price-display">$15.00</span></td>
+                            <td><span
+                                    class="periodicity-badge periodicity-daily">Per
+                                    Day</span></td>
+                            <td><span class="charge-badge charge-guest">Per
+                                    Guest</span></td>
+                            <td><span
+                                    class="status-badge status-published">Published</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-small btn-edit"
+                                        onclick="editService('SRV003')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete"
+                                        onclick="deleteService('SRV003')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="service-info">
+                                    <div class="service-icon"
+                                        style="background: #8b5cf6;">
+                                        <i class="fas fa-tshirt"></i>
+                                    </div>
+                                    <div class="service-details">
+                                        <h4>Laundry Service</h4>
+                                        <div class="service-description">24-hour
+                                            laundry and dry cleaning</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="price-display">$12.00</span></td>
+                            <td><span
+                                    class="periodicity-badge periodicity-choice">Guest
+                                    Choice</span></td>
+                            <td><span
+                                    class="charge-badge charge-accommodation">Per
+                                    Room</span></td>
+                            <td><span
+                                    class="status-badge status-draft">Draft</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-small btn-edit"
+                                        onclick="editService('SRV004')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete"
+                                        onclick="deleteService('SRV004')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Service Modal -->
+        <div class="modal" id="serviceModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">Add New Service</h3>
+                    <button class="close-btn" onclick="closeServiceModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form id="serviceForm">
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i class="fas fa-info-circle"></i>
+                            Service Information
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Service Name</label>
+                            <input type="text" class="form-input"
+                                id="serviceName"
+                                placeholder="e.g., Airport Transfer" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-input" id="serviceDescription"
+                                rows="3"
+                                placeholder="Brief description of the service..."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Category</label>
+                                <select class="form-select"
+                                    id="serviceCategory">
+                                    <option
+                                        value="transport">Transportation</option>
+                                    <option value="food">Food &
+                                        Beverage</option>
+                                    <option value="wellness">Wellness &
+                                        Spa</option>
+                                    <option value="business">Business
+                                        Services</option>
+                                    <option
+                                        value="recreation">Recreation</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Service Icon</label>
+                                <div class="icon-select" id="serviceIconSelect">
+                                    <div class="selected"><i
+                                            class="fas fa-car"></i></div>
+                                    <ul class="options">
+                                        <li data-value="car"><i
+                                                class="fas fa-car"></i></li>
+                                        <li data-value="spa"><i
+                                                class="fas fa-spa"></i></li>
+                                        <li data-value="utensils"><i
+                                                class="fas fa-utensils"></i></li>
+                                        <li data-value="tshirt"><i
+                                                class="fas fa-tshirt"></i></li>
+                                        <li data-value="swimming-pool"><i
+                                                class="fas fa-swimming-pool"></i></li>
+                                        <li data-value="dumbbell"><i
+                                                class="fas fa-dumbbell"></i></li>
+                                        <li data-value="wifi"><i
+                                                class="fas fa-wifi"></i></li>
+                                        <li data-value="concierge-bell"><i
+                                                class="fas fa-concierge-bell"></i></li>
+                                    </ul>
+                                    <input type="hidden" id="serviceIcon"
+                                        name="serviceIcon" value="car">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pricing -->
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i class="fas fa-dollar-sign"></i>
+                            Prices (Giá dịch vụ)
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Price (Giá dịch
+                                    vụ)</label>
+                                <input type="number" class="form-input"
+                                    id="servicePrice" placeholder="0.00"
+                                    step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Currency</label>
+                                <select class="form-select"
+                                    id="serviceCurrency">
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="VND">VND</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Periodicity (Chu kỳ
+                                    tính phí)</label>
+                                <select class="form-select" id="periodicity">
+                                    <option value="once">Once (Một lần)</option>
+                                    <option value="per_day">Per Day (Theo
+                                        ngày)</option>
+                                    <option value="guest_choice">Guest Choice
+                                        (Khách tự chọn)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Charge (Cách tính
+                                    phí)</label>
+                                <select class="form-select" id="chargeType">
+                                    <option value="per_accommodation">Per
+                                        Accommodation (Theo phòng)</option>
+                                    <option value="per_guest">Per Guest (Theo
+                                        khách)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Guest Choice Additional Fields -->
+                        <div class="conditional-fields" id="guestChoiceFields">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Minimum (Số lần
+                                        tối thiểu)</label>
+                                    <input type="number" class="form-input"
+                                        id="minimumTimes" placeholder="1"
+                                        min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Maximum (Số lần
+                                        tối đa)</label>
+                                    <input type="number" class="form-input"
+                                        id="maximumTimes"
+                                        placeholder="Leave empty for unlimited"
+                                        min="1">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label
+                                    style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="useStayLength">
+                                    <span>Use the length of stay as the maximum
+                                        value</span>
+                                </label>
+                                <div class="help-text">Dùng số đêm lưu trú làm
+                                    giá trị tối đa</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Availability -->
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i class="fas fa-calendar-check"></i>
+                            Availability & Restrictions
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Available From</label>
+                                <input type="date" class="form-input"
+                                    id="availableFrom">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Available
+                                    Until</label>
+                                <input type="date" class="form-input"
+                                    id="availableUntil">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Applicable Room
+                                Types</label>
+                            <div
+                                style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; max-height: 120px; overflow-y: auto; background: #fafafa;">
+                                <div
+                                    style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                    <input type="checkbox" id="room_all"
+                                        checked>
+                                    <label for="room_all">All Room Types</label>
+                                </div>
+                                <div
+                                    style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                    <input type="checkbox" id="room_deluxe_srv"
+                                        value="deluxe">
+                                    <label for="room_deluxe_srv">Deluxe
+                                        Suite</label>
+                                </div>
+                                <div
+                                    style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                    <input type="checkbox"
+                                        id="room_superior_srv" value="superior">
+                                    <label for="room_superior_srv">Superior
+                                        Ocean</label>
+                                </div>
+                                <div
+                                    style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox"
+                                        id="room_standard_srv" value="standard">
+                                    <label for="room_standard_srv">Standard
+                                        Room</label>
+                                </div>
+                            </div>
+                            <div class="help-text">Leave "All Room Types"
+                                checked to apply to all rooms</div>
+                        </div>
+                    </div>
+
+                    <!-- Publish Settings -->
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i class="fas fa-globe"></i>
+                            Publish Settings
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="publishStatus">
+                                    <option value="draft">Draft</option>
+                                    <option value="pending">Pending
+                                        Review</option>
+                                    <option value="published">Published</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Visibility</label>
+                                <select class="form-select" id="visibility">
+                                    <option value="public">Public</option>
+                                    <option value="password">Password
+                                        Protected</option>
+                                    <option value="private">Private</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="passwordGroup"
+                            style="display: none;">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-input"
+                                id="servicePassword"
+                                placeholder="Enter password">
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel"
+                            onclick="closeServiceModal()">Cancel</button>
+                        <button type="button" class="btn-save-draft"
+                            onclick="saveService('draft')">Save Draft</button>
+                        <button type="submit" class="btn-publish"
+                            onclick="saveService('publish')">Publish</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+        let isEditing = false;
+        let currentServiceId = null;
+
+        // Modal functions
+        function openServiceModal(serviceId = null) {
+            isEditing = !!serviceId;
+            currentServiceId = serviceId;
+            
+            if (isEditing) {
+                document.getElementById('modalTitle').textContent = 'Edit Service';
+                loadServiceData(serviceId);
+            } else {
+                document.getElementById('modalTitle').textContent = 'Add New Service';
+                clearForm();
+            }
+            
+            document.getElementById('serviceModal').classList.add('show');
+        }
+
+        function closeServiceModal() {
+            document.getElementById('serviceModal').classList.remove('show');
+            clearForm();
+        }
+
+        function clearForm() {
+            document.getElementById('serviceForm').reset();
+            document.getElementById('passwordGroup').style.display = 'none';
+            document.getElementById('guestChoiceFields').classList.remove('show');
+            document.getElementById('room_all').checked = true;
+
+            // reset icon UI + hidden value
+            document.getElementById('serviceIcon').value = 'car';
+            if (window.setServiceIcon) window.setServiceIcon('car');
+        }
+
+        function loadServiceData(serviceId) {
+            // Sample service data - in real app, this would come from API
+            const serviceData = {
+                'SRV001': {
+                    name: 'Airport Transfer',
+                    description: 'Round-trip airport shuttle service',
+                    icon: 'car',
+                    category: 'transport',
+                    price: 25,
+                    currency: 'USD',
+                    periodicity: 'once',
+                    chargeType: 'per_guest',
+                    status: 'published',
+                    visibility: 'public'
+                }
+            };
+
+            const service = serviceData[serviceId];
+            if (service) {
+                document.getElementById('serviceName').value = service.name || '';
+                document.getElementById('serviceDescription').value = service.description || '';
+                document.getElementById('serviceIcon').value = service.icon || 'concierge-bell';
+                    if (window.setServiceIcon) window.setServiceIcon(document.getElementById('serviceIcon').value);
+                document.getElementById('serviceCategory').value = service.category || 'other';
+                document.getElementById('servicePrice').value = service.price || '';
+                document.getElementById('serviceCurrency').value = service.currency || 'USD';
+                document.getElementById('periodicity').value = service.periodicity || 'once';
+                document.getElementById('chargeType').value = service.chargeType || 'per_guest';
+                document.getElementById('publishStatus').value = service.status || 'draft';
+                document.getElementById('visibility').value = service.visibility || 'public';
+                
+                if (service.periodicity === 'guest_choice') {
+                    document.getElementById('guestChoiceFields').classList.add('show');
+                }
+            }
+        }
+
+        // Show/hide conditional fields
+        document.getElementById('periodicity').addEventListener('change', function() {
+            const guestChoiceFields = document.getElementById('guestChoiceFields');
+            if (this.value === 'guest_choice') {
+                guestChoiceFields.classList.add('show');
+            } else {
+                guestChoiceFields.classList.remove('show');
+            }
+        });
+
+        document.getElementById('visibility').addEventListener('change', function() {
+            const passwordGroup = document.getElementById('passwordGroup');
+            if (this.value === 'password') {
+                passwordGroup.style.display = 'block';
+            } else {
+                passwordGroup.style.display = 'none';
+                document.getElementById('servicePassword').value = '';
+            }
+        });
+
+        // Handle "All Room Types" checkbox
+        document.getElementById('room_all').addEventListener('change', function() {
+            const roomCheckboxes = document.querySelectorAll('[id^="room_"][id$="_srv"]');
+            if (this.checked) {
+                roomCheckboxes.forEach(cb => cb.checked = false);
+            }
+        });
+
+        document.querySelectorAll('[id^="room_"][id$="_srv"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('room_all').checked = false;
+                }
+            });
+        });
+
+        // Service functions
+        function editService(id) {
+            openServiceModal(id);
+        }
+
+        function deleteService(id) {
+            if (confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
+                alert(`Service ${id} moved to trash!`);
+            }
+        }
+
+        function saveService(action) {
+            event.preventDefault();
+            
+            if (action === 'draft') {
+                document.getElementById('publishStatus').value = 'draft';
+            } else if (action === 'publish') {
+                document.getElementById('publishStatus').value = 'published';
+            }
+
+            if (isEditing) {
+                alert(`Service ${currentServiceId} updated successfully!`);
+            } else {
+                alert('Service created successfully!');
+            }
+            
+            closeServiceModal();
+        }
+
+        // Form submission
+        document.getElementById('serviceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveService('publish');
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('serviceModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeServiceModal();
+            }
+        });
+
+        // Navigation item functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (!this.classList.contains('active') && !this.getAttribute('href')) {
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const text = this.textContent.trim();
+                    document.querySelector('.page-title').textContent = text;
+                    document.querySelector('.breadcrumb').textContent = 'Dashboard / Room Management / ' + text;
+                }
+            });
+        });
+
+        // Search and filter functionality
+        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value;
+                if (query.trim()) {
+                    console.log(`Searching services for: ${query}`);
+                }
+            }
+        });
+
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const filterValue = this.value;
+                console.log(`Filtering services by: ${filterValue}`);
+            });
+        });
+
+        console.log('Services page initialized');
+    </script>
+
+        <script>
+        const statusField = document.getElementById('publishStatus');
+        const visibilityGroup = document.getElementById('visibility').closest('.form-group');
+        const passwordGroup = document.getElementById('passwordGroup');
+        const seasonPassword = document.getElementById('seasonPassword');
+
+        function updateVisibilityByStatus() {
+            if (statusField.value === 'published') {
+                // Chỉ khi Published mới hiển thị Visibility
+                visibilityGroup.style.display = 'block';
+            } else {
+                // Draft hoặc Pending thì ẩn Visibility
+                visibilityGroup.style.display = 'none';
+                passwordGroup.style.display = 'none';
+                seasonPassword.value = '';
+            }
+        }
+
+        // Lắng nghe thay đổi Status
+        statusField.addEventListener('change', updateVisibilityByStatus);
+
+        // Chạy 1 lần khi mở modal
+        updateVisibilityByStatus();
+    </script>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const iconSelect = document.getElementById('serviceIconSelect');
+            if (!iconSelect) return;
+            
+            const selected = iconSelect.querySelector('.selected');
+            const options = iconSelect.querySelector('.options');
+            const hiddenInput = document.getElementById('serviceIcon');
+
+            // Click to toggle dropdown
+            selected.addEventListener('click', function (e) {
+                e.stopPropagation();
+                toggleOptions(!iconSelect.classList.contains('open'));
+            });
+
+            function toggleOptions(show) {
+                iconSelect.classList.toggle('open', !!show);
+            }
+
+            // Select option
+            options.querySelectorAll('li').forEach(function (li) {
+                li.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const value = this.dataset.value;
+                    hiddenInput.value = value;
+                    selected.innerHTML = this.innerHTML;
+                    toggleOptions(false);
+                });
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', function () {
+                toggleOptions(false);
+            });
+
+            // Helper function to set icon programmatically
+            window.setServiceIcon = function(value) {
+                if (!iconSelect) return;
+                const match = options.querySelector('li[data-value="'+value+'"]');
+                if (match) {
+                    hiddenInput.value = value;
+                    selected.innerHTML = match.innerHTML;
+                }
+            };
+        });
+    </script>
+    </body>
+</html>

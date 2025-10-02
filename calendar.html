@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar View - HotelBooking CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .calendar-controls {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .calendar-filters {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .current-period {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .calendar-legend {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .calendar-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calendar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 120px repeat(7, 1fr);
+            min-height: 600px;
+        }
+
+        .room-header {
+            background: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .date-header {
+            background: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .date-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .date-day {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .room-row {
+            display: contents;
+        }
+
+        .room-label {
+            background: #fafafa;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 12px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .room-type-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            font-size: 12px;
+            color: white;
+        }
+
+        .calendar-cell {
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 4px;
+            position: relative;
+            min-height: 80px;
+            background: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .calendar-cell:hover {
+            background: #f8fafc;
+        }
+
+        .booking-block {
+            background: #3b82f6;
+            color: white;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .booking-block:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .booking-pending {
+            background: #f59e0b;
+        }
+
+        .booking-external {
+            background: #8b5cf6;
+        }
+
+        .booking-blocked {
+            background: #ef4444;
+        }
+
+        .today {
+            background: #fef3c7 !important;
+        }
+
+        .weekend {
+            background: #f9fafb;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        /* .booking-details {
+            space-y: 12px;
+        } */
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .detail-value {
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-confirmed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-external {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .status-blocked {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .calendar-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .calendar-filters {
+                justify-content: center;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: 100px repeat(7, minmax(80px, 1fr));
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+
+            <div class="nav-section">           
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item active" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+             <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-rules"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="page-title">Calendar View</h1>
+            <div class="breadcrumb">Booking Management / Calendar View</div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-primary" onclick="openBookingModal()">
+                <i class="fas fa-plus"></i>
+                New Booking
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Calendar Controls -->
+        <div class="calendar-controls">
+            <div class="calendar-filters">
+                <select class="filter-select" id="roomTypeFilter">
+                    <option>All Accommodation Types</option>
+                    <option>Deluxe Suite</option>
+                    <option>Superior Ocean</option>
+                    <option>Standard Room</option>
+                </select>
+                <select class="filter-select" id="statusFilter">
+                    <option>All Statuses</option>
+                    <option>Confirmed</option>
+                    <option>Pending</option>
+                    <option>External</option>
+                    <option>Blocked</option>
+                </select>
+                <select class="filter-select" id="periodFilter">
+                    <option>Month</option>
+                    <option>Quarter</option>
+                    <option>Year</option>
+                    <option>Custom</option>
+                </select>
+            </div>
+            
+            <div class="calendar-nav">
+                <button class="nav-btn" onclick="previousPeriod()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="current-period" id="currentPeriod">December 2024</div>
+                <button class="nav-btn" onclick="nextPeriod()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button class="nav-btn" onclick="goToToday()">Today</button>
+            </div>
+        </div>
+
+        <!-- Calendar Legend -->
+        <div class="calendar-legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #3b82f6;"></div>
+                <span>Booked</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f59e0b;"></div>
+                <span>Pending</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #8b5cf6;"></div>
+                <span>External</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ef4444;"></div>
+                <span>Blocked</span>
+            </div>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h3 class="calendar-title">Room Availability Calendar</h3>
+            </div>
+            
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Headers -->
+                <div class="room-header">Rooms</div>
+                <div class="date-header">
+                    <div class="date-number">25</div>
+                    <div class="date-day">MON</div>
+                </div>
+                <div class="date-header">
+                    <div class="date-number">26</div>
+                    <div class="date-day">TUE</div>
+                </div>
+                <div class="date-header">
+                    <div class="date-number">27</div>
+                    <div class="date-day">WED</div>
+                </div>
+                <div class="date-header">
+                    <div class="date-number">28</div>
+                    <div class="date-day">THU</div>
+                </div>
+                <div class="date-header">
+                    <div class="date-number">29</div>
+                    <div class="date-day">FRI</div>
+                </div>
+                <div class="date-header weekend">
+                    <div class="date-number">30</div>
+                    <div class="date-day">SAT</div>
+                </div>
+                <div class="date-header weekend">
+                    <div class="date-number">31</div>
+                    <div class="date-day">SUN</div>
+                </div>
+
+                <!-- Room 101 - Deluxe Suite -->
+                <div class="room-label">
+                    Room 101 - Deluxe
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '101', '2024-12-25')">
+                    <div class="booking-block" onclick="viewBooking('BK001')">John Doe</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '101', '2024-12-26')">
+                    <div class="booking-block" onclick="viewBooking('BK001')">John Doe</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '101', '2024-12-27')">
+                    <div class="booking-block" onclick="viewBooking('BK001')">John Doe</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '101', '2024-12-28')"></div>
+                <div class="calendar-cell" onclick="selectCell(this, '101', '2024-12-29')"></div>
+                <div class="calendar-cell weekend" onclick="selectCell(this, '101', '2024-12-30')">
+                    <div class="booking-block booking-pending" onclick="viewBooking('BK006')">Sarah Wilson</div>
+                </div>
+                <div class="calendar-cell weekend" onclick="selectCell(this, '101', '2024-12-31')">
+                    <div class="booking-block booking-pending" onclick="viewBooking('BK006')">Sarah Wilson</div>
+                </div>
+
+                <!-- Room 102 - Superior Ocean -->
+                <div class="room-label">
+                    Room 102 - Superior
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '102', '2024-12-25')"></div>
+                <div class="calendar-cell" onclick="selectCell(this, '102', '2024-12-26')">
+                    <div class="booking-block" onclick="viewBooking('BK002')">Mary Johnson</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '102', '2024-12-27')">
+                    <div class="booking-block" onclick="viewBooking('BK002')">Mary Johnson</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '102', '2024-12-28')">
+                    <div class="booking-block" onclick="viewBooking('BK002')">Mary Johnson</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '102', '2024-12-29')">
+                    <div class="booking-block" onclick="viewBooking('BK002')">Mary Johnson</div>
+                </div>
+                <div class="calendar-cell weekend" onclick="selectCell(this, '102', '2024-12-30')">
+                    <div class="booking-block" onclick="viewBooking('BK002')">Mary Johnson</div>
+                </div>
+                <div class="calendar-cell weekend" onclick="selectCell(this, '102', '2024-12-31')"></div>
+
+                <!-- Room 103 - Standard Room -->
+                <div class="room-label">
+                    Room 103 - Standard
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '103', '2024-12-25')">
+                    <div class="booking-block booking-blocked" onclick="viewBooking('MAINT')">Maintenance</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '103', '2024-12-26')">
+                    <div class="booking-block booking-blocked" onclick="viewBooking('MAINT')">Maintenance</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '103', '2024-12-27')"></div>
+                <div class="calendar-cell" onclick="selectCell(this, '103', '2024-12-28')">
+                    <div class="booking-block booking-external" onclick="viewBooking('EXT001')">Booking.com</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '103', '2024-12-29')">
+                    <div class="booking-block booking-external" onclick="viewBooking('EXT001')">Booking.com</div>
+                </div>
+                <div class="calendar-cell weekend" onclick="selectCell(this, '103', '2024-12-30')"></div>
+                <div class="calendar-cell weekend" onclick="selectCell(this, '103', '2024-12-31')"></div>
+
+                <!-- Room 201 - Deluxe Suite -->
+                <div class="room-label">
+                    Room 201 - Deluxe
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '201', '2024-12-25')"></div>
+                <div class="calendar-cell" onclick="selectCell(this, '201', '2024-12-26')"></div>
+                <div class="calendar-cell" onclick="selectCell(this, '201', '2024-12-27')">
+                    <div class="booking-block" onclick="viewBooking('BK007')">Tom Anderson</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '201', '2024-12-28')">
+                    <div class="booking-block" onclick="viewBooking('BK007')">Tom Anderson</div>
+                </div>
+                <div class="calendar-cell" onclick="selectCell(this, '201', '2024-12-29')">
+                    <div class="booking-block" onclick="viewBooking('BK007')">Tom Anderson</div>
+                </div>
+                <div class="calendar-cell weekend" onclick="selectCell(this, '201', '2024-12-30')"></div>
+                <div class="calendar-cell weekend" onclick="selectCell(this, '201', '2024-12-31')"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Booking Detail Modal -->
+    <div class="modal" id="bookingDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Booking Details</h3>
+                <button class="close-btn" onclick="closeBookingModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="booking-details" id="bookingDetails">
+                <div class="detail-row">
+                    <span class="detail-label">Booking ID:</span>
+                    <span class="detail-value">#BK001</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Guest:</span>
+                    <span class="detail-value">John Doe</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Room:</span>
+                    <span class="detail-value">Room 101 - Deluxe Suite</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Check-in:</span>
+                    <span class="detail-value">Dec 25, 2024</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Check-out:</span>
+                    <span class="detail-value">Dec 28, 2024</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Guests:</span>
+                    <span class="detail-value">2 Adults, 1 Child</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total:</span>
+                    <span class="detail-value">$450</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value"><span class="status-badge status-confirmed">Confirmed</span></span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                <button class="btn-primary" onclick="editBooking()">Edit Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        
+        function previousPeriod() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            updatePeriodDisplay();
+        }
+
+        function nextPeriod() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updatePeriodDisplay();
+        }
+
+        function goToToday() {
+            currentMonth = new Date().getMonth();
+            currentYear = new Date().getFullYear();
+            updatePeriodDisplay();
+        }
+
+        function updatePeriodDisplay() {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            document.getElementById('currentPeriod').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+        }
+
+        function selectCell(cell, roomId, date) {
+            // Check if cell is empty (available for booking)
+            if (cell.children.length === 0) {
+                const result = confirm(`Create new booking for Room ${roomId} on ${date}?`);
+                if (result) {
+                    openBookingModal();
+                }
+            }
+        }
+
+        function viewBooking(bookingId) {
+            event.stopPropagation();
+            
+            // Sample booking data - in real app, this would come from API
+            const bookingData = {
+                'BK001': {
+                    id: '#BK001',
+                    guest: 'John Doe',
+                    room: 'Room 101 - Deluxe Suite',
+                    checkin: 'Dec 25, 2024',
+                    checkout: 'Dec 28, 2024',
+                    guests: '2 Adults, 1 Child',
+                    total: '$450',
+                    status: 'Confirmed'
+                },
+                'BK002': {
+                    id: '#BK002',
+                    guest: 'Mary Johnson',
+                    room: 'Room 102 - Superior Ocean',
+                    checkin: 'Dec 26, 2024',
+                    checkout: 'Dec 30, 2024',
+                    guests: '2 Adults',
+                    total: '$320',
+                    status: 'Confirmed'
+                },
+                'BK006': {
+                    id: '#BK006',
+                    guest: 'Sarah Wilson',
+                    room: 'Room 101 - Deluxe Suite',
+                    checkin: 'Dec 30, 2024',
+                    checkout: 'Jan 2, 2025',
+                    guests: '1 Adult',
+                    total: '$375',
+                    status: 'Pending'
+                },
+                'BK007': {
+                    id: '#BK007',
+                    guest: 'Tom Anderson',
+                    room: 'Room 201 - Deluxe Suite',
+                    checkin: 'Dec 27, 2024',
+                    checkout: 'Dec 29, 2024',
+                    guests: '2 Adults',
+                    total: '$300',
+                    status: 'Confirmed'
+                },
+                'MAINT': {
+                    id: 'MAINT-001',
+                    guest: 'Maintenance',
+                    room: 'Room 103 - Standard Room',
+                    checkin: 'Dec 25, 2024',
+                    checkout: 'Dec 27, 2024',
+                    guests: 'N/A',
+                    total: 'N/A',
+                    status: 'Blocked'
+                },
+                'EXT001': {
+                    id: 'EXT001',
+                    guest: 'External Booking',
+                    room: 'Room 103 - Standard Room',
+                    checkin: 'Dec 28, 2024',
+                    checkout: 'Dec 30, 2024',
+                    guests: '2 Adults',
+                    total: '$180',
+                    status: 'External'
+                }
+            };
+
+            const booking = bookingData[bookingId];
+            if (booking) {
+                updateBookingModal(booking);
+                document.getElementById('bookingDetailModal').classList.add('show');
+            }
+        }
+
+        function updateBookingModal(booking) {
+            const statusClass = {
+                'Confirmed': 'status-confirmed',
+                'Pending': 'status-pending',
+                'External': 'status-external',
+                'Blocked': 'status-blocked'
+            };
+
+            document.getElementById('bookingDetails').innerHTML = `
+                <div class="detail-row">
+                    <span class="detail-label">Booking ID:</span>
+                    <span class="detail-value">${booking.id}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Guest:</span>
+                    <span class="detail-value">${booking.guest}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Room:</span>
+                    <span class="detail-value">${booking.room}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Check-in:</span>
+                    <span class="detail-value">${booking.checkin}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Check-out:</span>
+                    <span class="detail-value">${booking.checkout}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Guests:</span>
+                    <span class="detail-value">${booking.guests}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total:</span>
+                    <span class="detail-value">${booking.total}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value"><span class="status-badge ${statusClass[booking.status]}">${booking.status}</span></span>
+                </div>
+            `;
+        }
+
+        function openBookingModal() {
+            alert('New Booking form will be shown here, same as in all-booking.html.');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingDetailModal').classList.remove('show');
+        }
+
+        function editBooking() {
+            closeBookingModal();
+            window.location.href = `edit-booking.html?id=${id}`;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('bookingDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBookingModal();
+            }
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const filterValue = this.value;
+                console.log(`Filtering calendar by: ${filterValue}`);
+                // Here you would implement actual filtering logic
+            });
+        });
+
+        // Navigation item functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (!this.classList.contains('active') && !this.getAttribute('href')) {
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const text = this.textContent.trim();
+                    document.querySelector('.page-title').textContent = text;
+                    document.querySelector('.breadcrumb').textContent = 'Dashboard / ' + text;
+                }
+            });
+        });
+
+        console.log('Calendar View initialized');
+    </script>
+</body>
+</html>

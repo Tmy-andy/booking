@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Property - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px 32px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .logout-btn {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 32px;
+        }
+
+        .search-bar {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            placeholder-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 18px;
+        }
+
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .property-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .property-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .property-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .property-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .property-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .property-info {
+            flex: 1;
+        }
+
+        .property-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .property-address {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .property-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-maintenance {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .property-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .property-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px 0;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .property-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            color: #374151;
+        }
+
+        .add-property-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .add-property-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .add-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .add-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .add-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .quick-stats {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .quick-stat {
+            text-align: center;
+        }
+
+        .quick-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            margin: 0 auto 12px;
+        }
+
+        .quick-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .quick-stat-label {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .properties-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .property-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .property-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-hotel"></i>
+            </div>
+            <div class="logo-text">Hotel CRM</div>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar">OW</div>
+            <div class="user-details">
+                <div class="user-name">System Owner</div>
+                <div class="user-role">
+                    <i class="fas fa-crown"></i>
+                    Owner Account
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Select Property</h1>
+            <p class="page-subtitle">Choose a hotel property to manage</p>
+            
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search properties..." id="searchInput">
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="quick-stat">
+                <div class="quick-stat-icon" style="background: #3b82f6;">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="quick-stat-value">12</div>
+                <div class="quick-stat-label">Total Properties</div>
+            </div>
+            <div class="quick-stat">
+                <div class="quick-stat-icon" style="background: #10b981;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="quick-stat-value">10</div>
+                <div class="quick-stat-label">Active</div>
+            </div>
+            <div class="quick-stat">
+                <div class="quick-stat-icon" style="background: #f59e0b;">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="quick-stat-value">2</div>
+                <div class="quick-stat-label">Maintenance</div>
+            </div>
+            <div class="quick-stat">
+                <div class="quick-stat-icon" style="background: #ef4444;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="quick-stat-value">87%</div>
+                <div class="quick-stat-label">Avg Occupancy</div>
+            </div>
+        </div>
+
+        <!-- Properties Grid -->
+        <div class="properties-grid" id="propertiesGrid">
+            <!-- Demo Link Hotel -->
+            <div class="property-card" data-property-id="demo-hotel-1">
+                <div class="property-header">
+                    <div class="property-info">
+                        <div class="property-name">Demo Link Hotel</div>
+                        <div class="property-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            123 Demo Street, Demo City, DC 12345
+                        </div>
+                        <div class="property-status status-active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </div>
+                    </div>
+                    <div class="property-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                        <i class="fas fa-hotel"></i>
+                    </div>
+                </div>
+                
+                <div class="property-stats">
+                    <div class="stat">
+                        <div class="stat-value">120</div>
+                        <div class="stat-label">Rooms</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">87%</div>
+                        <div class="stat-label">Occupancy</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4.8</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+
+                <div class="property-actions">
+                    <button class="btn-primary" onclick="selectProperty('demo-hotel-1', 'Demo Link Hotel')">
+                        <i class="fas fa-arrow-right"></i>
+                        Manage
+                    </button>
+                    <button class="btn-secondary" onclick="viewProperty('demo-hotel-1')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grand Plaza Hotel -->
+            <div class="property-card" data-property-id="grand-plaza-2">
+                <div class="property-header">
+                    <div class="property-info">
+                        <div class="property-name">Grand Plaza Hotel</div>
+                        <div class="property-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            456 Plaza Avenue, Metro City, MC 54321
+                        </div>
+                        <div class="property-status status-active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </div>
+                    </div>
+                    <div class="property-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-building"></i>
+                    </div>
+                </div>
+                
+                <div class="property-stats">
+                    <div class="stat">
+                        <div class="stat-value">200</div>
+                        <div class="stat-label">Rooms</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">92%</div>
+                        <div class="stat-label">Occupancy</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4.9</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+
+                <div class="property-actions">
+                    <button class="btn-primary" onclick="selectProperty('grand-plaza-2', 'Grand Plaza Hotel')">
+                        <i class="fas fa-arrow-right"></i>
+                        Manage
+                    </button>
+                    <button class="btn-secondary" onclick="viewProperty('grand-plaza-2')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ocean View Resort -->
+            <div class="property-card" data-property-id="ocean-resort-3">
+                <div class="property-header">
+                    <div class="property-info">
+                        <div class="property-name">Ocean View Resort</div>
+                        <div class="property-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            789 Beach Road, Coastal City, CC 98765
+                        </div>
+                        <div class="property-status status-maintenance">
+                            <i class="fas fa-tools"></i>
+                            Maintenance
+                        </div>
+                    </div>
+                    <div class="property-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-umbrella-beach"></i>
+                    </div>
+                </div>
+                
+                <div class="property-stats">
+                    <div class="stat">
+                        <div class="stat-value">80</div>
+                        <div class="stat-label">Rooms</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">45%</div>
+                        <div class="stat-label">Occupancy</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4.6</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+
+                <div class="property-actions">
+                    <button class="btn-primary" onclick="selectProperty('ocean-resort-3', 'Ocean View Resort')">
+                        <i class="fas fa-arrow-right"></i>
+                        Manage
+                    </button>
+                    <button class="btn-secondary" onclick="viewProperty('ocean-resort-3')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- City Center Suites -->
+            <div class="property-card" data-property-id="city-suites-4">
+                <div class="property-header">
+                    <div class="property-info">
+                        <div class="property-name">City Center Suites</div>
+                        <div class="property-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            321 Central Square, Downtown, DT 13579
+                        </div>
+                        <div class="property-status status-active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </div>
+                    </div>
+                    <div class="property-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <i class="fas fa-city"></i>
+                    </div>
+                </div>
+                
+                <div class="property-stats">
+                    <div class="stat">
+                        <div class="stat-value">150</div>
+                        <div class="stat-label">Rooms</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">78%</div>
+                        <div class="stat-label">Occupancy</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4.7</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+
+                <div class="property-actions">
+                    <button class="btn-primary" onclick="selectProperty('city-suites-4', 'City Center Suites')">
+                        <i class="fas fa-arrow-right"></i>
+                        Manage
+                    </button>
+                    <button class="btn-secondary" onclick="viewProperty('city-suites-4')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add New Property Card -->
+            <div class="add-property-card" onclick="addNewProperty()">
+                <div class="add-icon">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="add-text">Add New Property</div>
+                <div class="add-description">Register a new hotel property</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in and has owner role
+        window.addEventListener('load', function() {
+            const user = localStorage.getItem('hotelCRM_user');
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const userData = JSON.parse(user);
+            if (userData.role !== 'owner') {
+                // Non-owner users shouldn't be here
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Update user info in header
+            document.querySelector('.user-name').textContent = userData.name;
+        });
+
+        function selectProperty(propertyId, propertyName) {
+            // Store selected property
+            const propertyData = {
+                id: propertyId,
+                name: propertyName,
+                selectedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('hotelCRM_selectedProperty', JSON.stringify(propertyData));
+            
+            // Add loading effect
+            const button = event.target.closest('.btn-primary');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+            button.disabled = true;
+            
+            // Simulate loading and redirect
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        function viewProperty(propertyId) {
+            // Show property details modal or navigate to property overview
+            alert(`Viewing details for property: ${propertyId}`);
+            // In a real implementation, this would show a modal with property details
+        }
+
+        function addNewProperty() {
+            // Navigate to add property form
+            alert('Add new property functionality would be implemented here');
+            // In a real implementation, this would open a modal or navigate to a form
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('hotelCRM_user');
+                localStorage.removeItem('hotelCRM_selectedProperty');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const propertyCards = document.querySelectorAll('.property-card[data-property-id]');
+            
+            propertyCards.forEach(card => {
+                const propertyName = card.querySelector('.property-name').textContent.toLowerCase();
+                const propertyAddress = card.querySelector('.property-address').textContent.toLowerCase();
+                
+                if (propertyName.includes(searchTerm) || propertyAddress.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Add hover effects and animations
+        document.querySelectorAll('.property-card[data-property-id]').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        console.log('Property Selector page initialized');
+    </script>
+</body>
+</html>

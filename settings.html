@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Settings - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .settings-container {
+            display: grid;
+            gap: 24px;
+        }
+
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
+        .section-description {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .section-content {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-help {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-height: 100px;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #10b981;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .toggle-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .toggle-description {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .image-upload {
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .image-upload:hover {
+            border-color: #3b82f6;
+            background: #f8fafc;
+        }
+
+        .image-upload i {
+            font-size: 32px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .upload-text {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .color-picker {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .color-input {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            z-index: 1001;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .color-picker-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .modal-content form {
+            padding: 24px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            padding: 10px 20px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-save {
+            padding: 10px 20px;
+            border: none;
+            background: #3b82f6;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-save:hover {
+            background: #2563eb;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .btn-edit:hover {
+            background: #dbeafe;
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+
+        .btn-delete:hover {
+            background: #fee2e2;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: #374151;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .color-picker-group {
+                grid-template-columns: 1fr;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 95vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+             <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-gavel"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item active" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="page-title">General Settings</h1>
+            <div class="breadcrumb">Settings / General Settings</div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-success" onclick="saveAllSettings()">
+                <i class="fas fa-save"></i>
+                Save Settings
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="settings-container">
+            <!-- Hotel Information -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon" style="background: #3b82f6;">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                        Hotel Information
+                    </div>
+                    <div class="section-description">Basic information about your hotel property</div>
+                </div>
+                <div class="section-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Hotel Name *</label>
+                            <input type="text" class="form-input" value="Demo Link Hotel" placeholder="Enter hotel name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Property Code</label>
+                            <input type="text" class="form-input" value="DLH001" placeholder="Enter property code">
+                            <div class="form-help">Unique identifier for your property</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" placeholder="Enter hotel description...">Welcome to Demo Link Hotel, a premier destination offering luxury accommodations with modern amenities and exceptional service. Located in the heart of the city, we provide comfortable rooms and suites for both business and leisure travelers.</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-input" value="123 Demo Street" placeholder="Street address">
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-input" value="Demo City" placeholder="City">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">State/Province</label>
+                            <input type="text" class="form-input" value="Demo State" placeholder="State/Province">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Postal Code</label>
+                            <input type="text" class="form-input" value="12345" placeholder="Postal code">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Country</label>
+                            <select class="form-select">
+                                <option value="US" selected>United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="VN">Vietnam</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Time Zone</label>
+                            <select class="form-select">
+                                <option value="UTC-8">Pacific Time (UTC-8)</option>
+                                <option value="UTC-7">Mountain Time (UTC-7)</option>
+                                <option value="UTC-6">Central Time (UTC-6)</option>
+                                <option value="UTC-5" selected>Eastern Time (UTC-5)</option>
+                                <option value="UTC+7">Vietnam Time (UTC+7)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" value="+1 (555) 123-4567" placeholder="Phone number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" value="info@demolinkhotel.com" placeholder="Email address">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Website URL</label>
+                        <input type="url" class="form-input" value="https://demolinkhotel.com" placeholder="https://yourhotel.com">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Settings -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon" style="background: #10b981;">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        Booking Settings
+                    </div>
+                    <div class="section-description">Configure booking behavior and defaults</div>
+                </div>
+                <div class="section-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Default Check-in Time</label>
+                            <input type="time" class="form-input" value="15:00">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Default Check-out Time</label>
+                            <input type="time" class="form-input" value="11:00">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Currency</label>
+                            <select class="form-select">
+                                <option value="USD" selected>USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="VND">VND - Vietnamese Dong</option>
+                                <option value="CAD">CAD - Canadian Dollar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date Format</label>
+                            <select class="form-select">
+                                <option value="MM/DD/YYYY" selected>MM/DD/YYYY</option>
+                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Maximum Advance Booking (days)</label>
+                            <input type="number" class="form-input" value="365" min="1">
+                            <div class="form-help">How far in advance guests can book</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Minimum Advance Booking (hours)</label>
+                            <input type="number" class="form-input" value="2" min="0">
+                            <div class="form-help">Minimum time before check-in to allow booking</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Allow same-day bookings</div>
+                            <div class="toggle-description">Permit bookings for today's date</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Auto-approve bookings</div>
+                            <div class="toggle-description">Automatically confirm bookings when received</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Require payment on booking</div>
+                            <div class="toggle-description">Require immediate payment when booking is made</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email & Notifications -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon" style="background: #f59e0b;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        Email & Notifications
+                    </div>
+                    <div class="section-description">Configure email settings and notification preferences</div>
+                </div>
+                <div class="section-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">From Email Address</label>
+                            <input type="email" class="form-input" value="noreply@demolinkhotel.com" placeholder="Email address">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">From Name</label>
+                            <input type="text" class="form-input" value="Demo Link Hotel" placeholder="From name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Admin Notification Email</label>
+                        <input type="email" class="form-input" value="admin@demolinkhotel.com" placeholder="Admin email for notifications">
+                        <div class="form-help">Email address to receive booking notifications and alerts</div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Send booking confirmation emails</div>
+                            <div class="toggle-description">Email confirmation to guests when booking is made</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Send reminder emails</div>
+                            <div class="toggle-description">Send check-in reminders 24 hours before arrival</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Admin booking notifications</div>
+                            <div class="toggle-description">Notify admin when new bookings are received</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Daily summary reports</div>
+                            <div class="toggle-description">Email daily booking summary to admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Settings -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon" style="background: #8b5cf6;">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        Payment Settings
+                    </div>
+                    <div class="section-description">Configure payment gateways and options</div>
+                </div>
+                <div class="section-content">
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Enable Stripe payments</div>
+                            <div class="toggle-description">Accept credit card payments via Stripe</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Enable PayPal payments</div>
+                            <div class="toggle-description">Accept payments via PayPal</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Enable bank transfer</div>
+                            <div class="toggle-description">Allow direct bank transfer payments</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Allow pay on arrival</div>
+                            <div class="toggle-description">Permit guests to pay at the hotel upon arrival</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Deposit Percentage (%)</label>
+                        <input type="number" class="form-input" value="50" min="0" max="100">
+                        <div class="form-help">Percentage of total amount to collect as deposit</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Preferences -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon" style="background: #ef4444;">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        System Preferences
+                    </div>
+                    <div class="section-description">General system configuration and preferences</div>
+                </div>
+                <div class="section-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Language</label>
+                            <select class="form-select">
+                                <option value="en" selected>English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="vi">Vietnamese</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Items per page</label>
+                            <select class="form-select">
+                                <option value="10">10</option>
+                                <option value="25" selected>25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Enable maintenance mode</div>
+                            <div class="toggle-description">Temporarily disable public booking system</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Enable activity logging</div>
+                            <div class="toggle-description">Log user activities and system events</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Enable debug mode</div>
+                            <div class="toggle-description">Show detailed error information (development only)</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Session timeout (minutes)</label>
+                        <input type="number" class="form-input" value="60" min="15" max="480">
+                        <div class="form-help">Automatic logout after period of inactivity</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon" style="background: #7c3aed;">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        User Management
+                    </div>
+                    <div class="section-description">Manage user accounts, roles and permissions</div>
+                </div>
+                <div class="section-content">
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <label class="form-label" style="margin-bottom: 0;">System Users</label>
+                            <button class="btn-primary" onclick="openUserModal()" style="padding: 8px 16px; font-size: 12px;">
+                                <i class="fas fa-plus"></i>
+                                Add User
+                            </button>
+                        </div>
+                        
+                        <!-- Users List -->
+                        <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                            <!-- Owner User (You) -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #e2e8f0; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; border: 2px solid #fff;">
+                                        OW
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                                            Owner Account
+                                            <i class="fas fa-crown" style="color: #f59e0b; font-size: 12px;"></i>
+                                        </div>
+                                        <div style="font-size: 12px; color: #64748b;">owner@demolinkhotel.com</div>
+                                        <div style="font-size: 11px; color: #f59e0b; background: #fff; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 2px; font-weight: 600; border: 1px solid #f59e0b;">
+                                            System Owner
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn-small btn-edit" onclick="editUser('owner')" title="Edit profile only">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <div style="opacity: 0.3; cursor: not-allowed;" title="Owner account cannot be deleted">
+                                        <button class="btn-small btn-delete" disabled style="opacity: 1;">
+                                            <i class="fas fa-shield-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- User Item 1 -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #e2e8f0;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #3b82f6; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                        JD
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: #0f172a;">John Doe</div>
+                                        <div style="font-size: 12px; color: #64748b;">john.doe@demolinkhotel.com</div>
+                                        <div style="font-size: 11px; color: #059669; background: #dcfce7; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 2px;">
+                                            Administrator
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn-small btn-edit" onclick="editUser('john-doe')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete" onclick="deleteUser('john-doe')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- User Item 2 -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #e2e8f0;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #10b981; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                        SM
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: #0f172a;">Sarah Miller</div>
+                                        <div style="font-size: 12px; color: #64748b;">sarah.miller@demolinkhotel.com</div>
+                                        <div style="font-size: 11px; color: #2563eb; background: #eff6ff; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 2px;">
+                                            Manager
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn-small btn-edit" onclick="editUser('sarah-miller')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete" onclick="deleteUser('sarah-miller')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- User Item 3 -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #f59e0b; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                        MJ
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: #0f172a;">Mike Johnson</div>
+                                        <div style="font-size: 12px; color: #64748b;">mike.johnson@demolinkhotel.com</div>
+                                        <div style="font-size: 11px; color: #92400e; background: #fef3c7; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 2px;">
+                                            Staff
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn-small btn-edit" onclick="editUser('mike-johnson')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-small btn-delete" onclick="deleteUser('mike-johnson')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">User Registration</label>
+                        <div class="toggle-group">
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div>
+                                <div class="toggle-label">Allow new user registration</div>
+                                <div class="toggle-description">Permit new staff to create accounts</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Default User Role</label>
+                            <select class="form-select">
+                                <option value="staff" selected>Staff</option>
+                                <option value="manager">Manager</option>
+                                <option value="admin">Administrator</option>
+                            </select>
+                            <div class="form-help">Default role assigned to new users</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password Requirements</label>
+                            <select class="form-select">
+                                <option value="basic">Basic (8+ characters)</option>
+                                <option value="medium" selected>Medium (8+ chars, mixed case)</option>
+                                <option value="strong">Strong (8+ chars, mixed case, numbers, symbols)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Require email verification</div>
+                            <div class="toggle-description">New users must verify email before activation</div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Enable two-factor authentication</div>
+                            <div class="toggle-description">Require 2FA for enhanced security</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brand & Appearance -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon" style="background: #06b6d4;">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        Brand & Appearance
+                    </div>
+                    <div class="section-description">Customize the look and feel of your system</div>
+                </div>
+                <div class="section-content">
+                    <div class="form-group">
+                        <label class="form-label">Logo Upload</label>
+                        <div class="image-upload" onclick="document.getElementById('logoUpload').click()">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <div class="upload-text">Click to upload logo</div>
+                            <div class="upload-hint">PNG, JPG up to 2MB (recommended: 200x60px)</div>
+                        </div>
+                        <input type="file" id="logoUpload" style="display: none;" accept="image/*">
+                    </div>
+
+                    <div class="color-picker-group">
+                        <div class="form-group">
+                            <label class="form-label">Primary Color</label>
+                            <div class="color-picker">
+                                <input type="color" class="color-input" value="#3b82f6">
+                                <span>#3b82f6</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Secondary Color</label>
+                            <div class="color-picker">
+                                <input type="color" class="color-input" value="#10b981">
+                                <span>#10b981</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Accent Color</label>
+                            <div class="color-picker">
+                                <input type="color" class="color-input" value="#f59e0b">
+                                <span>#f59e0b</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- User Modal -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New User</h3>
+                <button class="close-btn" onclick="closeUserModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="userForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name *</label>
+                        <input type="text" class="form-input" id="userFirstName" placeholder="Enter first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name *</label>
+                        <input type="text" class="form-input" id="userLastName" placeholder="Enter last name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input type="email" class="form-input" id="userEmail" placeholder="user@demolinkhotel.com" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-input" id="userPhone" placeholder="+1 (555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role *</label>
+                        <select class="form-select" id="userRole" required>
+                            <option value="">Select role</option>
+                            <option value="admin">Administrator</option>
+                            <option value="manager">Manager</option>
+                            <option value="staff">Staff</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="passwordFields">
+                    <label class="form-label">Password *</label>
+                    <input type="password" class="form-input" id="userPassword" placeholder="Enter password" required>
+                    <div class="form-help">Password must meet the security requirements set above</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Permissions</label>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="perm-bookings" value="bookings" checked>
+                            <label for="perm-bookings">Manage Bookings</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="perm-payments" value="payments">
+                            <label for="perm-payments">View Payments</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="perm-customers" value="customers" checked>
+                            <label for="perm-customers">Manage Customers</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="perm-rooms" value="rooms">
+                            <label for="perm-rooms">Manage Rooms</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="perm-reports" value="reports">
+                            <label for="perm-reports">View Reports</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="perm-settings" value="settings">
+                            <label for="perm-settings">System Settings</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="userActive" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div>
+                            <div class="toggle-label">Account Active</div>
+                            <div class="toggle-description">User can log in and access the system</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeUserModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function saveAllSettings() {
+            // Show notification
+            showNotification('All settings have been saved successfully!', 'success');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // User Management Functions
+        function openUserModal() {
+            document.getElementById('userModal').classList.add('show');
+            document.querySelector('.modal-title').textContent = 'Add New User';
+            document.getElementById('passwordFields').style.display = 'block';
+        }
+
+        function closeUserModal() {
+            document.getElementById('userModal').classList.remove('show');
+            document.getElementById('userForm').reset();
+            // Reset permission checkboxes
+            document.querySelectorAll('#userModal .checkbox-item input[type="checkbox"]').forEach(cb => {
+                cb.checked = cb.id === 'perm-bookings' || cb.id === 'perm-customers';
+            });
+        }
+
+        function editUser(userId) {
+            document.getElementById('userModal').classList.add('show');
+            document.querySelector('.modal-title').textContent = 'Edit User';
+            document.getElementById('passwordFields').style.display = 'none';
+            
+            // In a real implementation, populate form with user data
+            const users = {
+                'john-doe': {
+                    firstName: 'John',
+                    lastName: 'Doe', 
+                    email: 'john.doe@demolinkhotel.com',
+                    phone: '+1 (555) 123-4567',
+                    role: 'admin'
+                },
+                'sarah-miller': {
+                    firstName: 'Sarah',
+                    lastName: 'Miller',
+                    email: 'sarah.miller@demolinkhotel.com', 
+                    phone: '+1 (555) 234-5678',
+                    role: 'manager'
+                },
+                'mike-johnson': {
+                    firstName: 'Mike',
+                    lastName: 'Johnson',
+                    email: 'mike.johnson@demolinkhotel.com',
+                    phone: '+1 (555) 345-6789', 
+                    role: 'staff'
+                }
+            };
+            
+            if (users[userId]) {
+                const user = users[userId];
+                document.getElementById('userFirstName').value = user.firstName;
+                document.getElementById('userLastName').value = user.lastName;
+                document.getElementById('userEmail').value = user.email;
+                document.getElementById('userPhone').value = user.phone;
+                document.getElementById('userRole').value = user.role;
+            }
+        }
+
+        function deleteUser(userId) {
+            if (userId === 'john-doe') {
+                alert('Cannot delete the primary administrator account');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                showNotification('User has been deleted successfully!', 'success');
+            }
+        }
+
+        // Role-based permission presets
+        document.getElementById('userRole').addEventListener('change', function() {
+            const role = this.value;
+            const checkboxes = {
+                'perm-bookings': document.getElementById('perm-bookings'),
+                'perm-payments': document.getElementById('perm-payments'),
+                'perm-customers': document.getElementById('perm-customers'),
+                'perm-rooms': document.getElementById('perm-rooms'),
+                'perm-reports': document.getElementById('perm-reports'),
+                'perm-settings': document.getElementById('perm-settings')
+            };
+
+            // Reset all
+            Object.values(checkboxes).forEach(cb => cb.checked = false);
+
+            // Set based on role
+            switch(role) {
+                case 'admin':
+                    Object.values(checkboxes).forEach(cb => cb.checked = true);
+                    break;
+                case 'manager':
+                    checkboxes['perm-bookings'].checked = true;
+                    checkboxes['perm-payments'].checked = true;
+                    checkboxes['perm-customers'].checked = true;
+                    checkboxes['perm-rooms'].checked = true;
+                    checkboxes['perm-reports'].checked = true;
+                    break;
+                case 'staff':
+                    checkboxes['perm-bookings'].checked = true;
+                    checkboxes['perm-customers'].checked = true;
+                    break;
+            }
+        });
+
+        // User form submission
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('userFirstName').value;
+            const lastName = document.getElementById('userLastName').value;
+            const isEdit = document.querySelector('.modal-title').textContent === 'Edit User';
+            
+            if (!firstName || !lastName) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            const action = isEdit ? 'updated' : 'created';
+            showNotification(`User ${firstName} ${lastName} has been ${action} successfully!`, 'success');
+            closeUserModal();
+        });
+
+        // Handle file upload
+        document.getElementById('logoUpload').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const fileName = e.target.files[0].name;
+                const uploadDiv = e.target.previousElementSibling;
+                uploadDiv.querySelector('.upload-text').textContent = `Selected: ${fileName}`;
+                uploadDiv.style.borderColor = '#10b981';
+                uploadDiv.style.backgroundColor = '#f0fdf4';
+            }
+        });
+
+        // Handle color picker changes
+        document.querySelectorAll('.color-input').forEach(input => {
+            input.addEventListener('change', function() {
+                this.nextElementSibling.textContent = this.value;
+            });
+        });
+
+        // Toggle switch interactions
+        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                console.log(`${this.closest('.toggle-group').querySelector('.toggle-label').textContent}: ${this.checked ? 'enabled' : 'disabled'}`);
+            });
+        });
+
+        // Form validation and change detection
+        document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(field => {
+            field.addEventListener('change', function() {
+                console.log(`Setting changed: ${this.name || this.id} = ${this.value}`);
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('userModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeUserModal();
+            }
+        });
+
+        console.log('General Settings page initialized successfully');
+    </script>
+</body>
+</html>

@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .maintenance-filters {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            font-size: 14px;
+        }
+
+        .request-id {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .issue-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .issue-title {
+            font-weight: 500;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .issue-description {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .location-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .room-number {
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .room-type {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-in-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-cancelled {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .status-on-hold {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .priority-badge {
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-urgent {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .priority-high {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .priority-medium {
+            background: #f0f9ff;
+            color: #0369a1;
+        }
+
+        .priority-low {
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .btn-warning {
+            background: #fefbf3;
+            color: #92400e;
+            border: 1px solid #fed7aa;
+        }
+
+        .btn-info {
+            background: #f0f9ff;
+            color: #0369a1;
+            border: 1px solid #7dd3fc;
+        }
+
+        .btn-view {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .staff-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .staff-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .staff-name {
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .time-info {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .close-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .request-details {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .request-details h4 {
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .request-details p {
+            margin-bottom: 8px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .request-details p strong {
+            color: #0f172a;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .maintenance-filters {
+                flex-direction: column;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+
+            <div class="nav-section">           
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item active">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-rules"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="page-title">Maintenance</h1>
+            <div class="breadcrumb">Operations / Maintenance</div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-primary" onclick="openRequestModal()">
+                <i class="fas fa-plus"></i>
+                New Request
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Maintenance Filters -->
+        <div class="maintenance-filters">
+            <div class="search-box">
+                <input type="text" placeholder="Search by request ID, room, or issue...">
+            </div>
+            <select class="filter-select">
+                <option>All Status</option>
+                <option>Pending</option>
+                <option>In Progress</option>
+                <option>Completed</option>
+                <option>On Hold</option>
+                <option>Cancelled</option>
+            </select>
+            <select class="filter-select">
+                <option>All Priorities</option>
+                <option>Urgent</option>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+            </select>
+            <select class="filter-select">
+                <option>All Technicians</option>
+                <option>John Martinez</option>
+                <option>Mike Thompson</option>
+                <option>Carlos Rivera</option>
+                <option>David Wilson</option>
+            </select>
+            <input type="date" class="filter-select" value="2024-12-25">
+        </div>
+
+        <!-- Maintenance Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">Maintenance Requests</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Issue</th>
+                        <th>Location</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="request-id">#MNT001</div>
+                        </td>
+                        <td>
+                            <div class="issue-info">
+                                <div class="issue-title">Air Conditioning Not Working</div>
+                                <div class="issue-description">AC unit not cooling, making loud noise</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-info">
+                                <div class="room-number">Room 412</div>
+                                <div class="room-type">Deluxe Room</div>
+                            </div>
+                        </td>
+                        <td><span class="priority-badge priority-urgent">Urgent</span></td>
+                        <td><span class="status-badge status-in-progress">In Progress</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div class="staff-avatar">JM</div>
+                                <div>
+                                    <div class="staff-name">John Martinez</div>
+                                    <div class="time-info">Started 2 hours ago</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Dec 25, 8:00 AM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-success" onclick="updateStatus('MNT2024001', 'completed')">
+                                    <i class="fas fa-check"></i>
+                                    Complete
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewRequest('MNT2024001')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="request-id">#MNT002</div>
+                        </td>
+                        <td>
+                            <div class="issue-info">
+                                <div class="issue-title">Bathroom Faucet Leaking</div>
+                                <div class="issue-description">Water dripping continuously from bathroom sink</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-info">
+                                <div class="room-number">Room 203</div>
+                                <div class="room-type">Standard Room</div>
+                            </div>
+                        </td>
+                        <td><span class="priority-badge priority-high">High</span></td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #64748b; border: 1px solid #e2e8f0; border-radius: 50%;">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div>
+                                    <div class="staff-name">Unassigned</div>
+                                    <div class="time-info">Awaiting assignment</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Dec 25, 9:30 AM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-info" onclick="assignTechnician('MNT2024002')">
+                                    <i class="fas fa-user-plus"></i>
+                                    Assign
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewRequest('MNT2024002')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="request-id">#MNT003</div>
+                        </td>
+                        <td>
+                            <div class="issue-info">
+                                <div class="issue-title">TV Remote Not Working</div>
+                                <div class="issue-description">Remote control unresponsive, batteries replaced</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-info">
+                                <div class="room-number">Room 156</div>
+                                <div class="room-type">Standard Room</div>
+                            </div>
+                        </td>
+                        <td><span class="priority-badge priority-low">Low</span></td>
+                        <td><span class="status-badge status-completed">Completed</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div class="staff-avatar">MT</div>
+                                <div>
+                                    <div class="staff-name">Mike Thompson</div>
+                                    <div class="time-info">Completed 3 hours ago</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Dec 24, 2:00 PM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <span style="color: #64748b; font-size: 12px;">Completed</span>
+                                <button class="btn-small btn-view" onclick="viewRequest('MNT2024003')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="request-id">#MNT004</div>
+                        </td>
+                        <td>
+                            <div class="issue-info">
+                                <div class="issue-title">Elevator Making Strange Noise</div>
+                                <div class="issue-description">Grinding sound when moving between floors</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-info">
+                                <div class="room-number">Elevator A</div>
+                                <div class="room-type">Common Area</div>
+                            </div>
+                        </td>
+                        <td><span class="priority-badge priority-urgent">Urgent</span></td>
+                        <td><span class="status-badge status-on-hold">On Hold</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div class="staff-avatar">CR</div>
+                                <div>
+                                    <div class="staff-name">Carlos Rivera</div>
+                                    <div class="time-info">Waiting for parts</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Dec 24, 10:00 AM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-warning" onclick="updateStatus('MNT2024004', 'in-progress')">
+                                    <i class="fas fa-play"></i>
+                                    Resume
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewRequest('MNT2024004')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="request-id">#MNT005</div>
+                        </td>
+                        <td>
+                            <div class="issue-info">
+                                <div class="issue-title">Light Bulb Replacement</div>
+                                <div class="issue-description">Bathroom light bulb burned out</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-info">
+                                <div class="room-number">Room 301</div>
+                                <div class="room-type">Deluxe Room</div>
+                            </div>
+                        </td>
+                        <td><span class="priority-badge priority-low">Low</span></td>
+                        <td><span class="status-badge status-in-progress">In Progress</span></td>
+                        <td>
+                            <div class="staff-info">
+                                <div class="staff-avatar">DW</div>
+                                <div>
+                                    <div class="staff-name">David Wilson</div>
+                                    <div class="time-info">Started 30 min ago</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Dec 25, 10:30 AM</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-success" onclick="updateStatus('MNT2024005', 'completed')">
+                                    <i class="fas fa-check"></i>
+                                    Complete
+                                </button>
+                                <button class="btn-small btn-view" onclick="viewRequest('MNT2024005')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- New Request Modal -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">New Maintenance Request</h3>
+                <button class="close-btn" onclick="closeModal('requestModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="newRequestForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" id="location" placeholder="e.g., Room 201, Lobby, Pool Area" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="category" required>
+                            <option value="">Select category</option>
+                            <option value="plumbing">Plumbing</option>
+                            <option value="electrical">Electrical</option>
+                            <option value="hvac">HVAC</option>
+                            <option value="furniture">Furniture</option>
+                            <option value="appliances">Appliances</option>
+                            <option value="safety">Safety & Security</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Issue Title</label>
+                    <input type="text" class="form-input" id="issueTitle" placeholder="Brief description of the issue" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Detailed Description</label>
+                    <textarea class="form-input" id="description" rows="4" placeholder="Provide detailed information about the issue..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" id="priority" required>
+                            <option value="low">Low Priority</option>
+                            <option value="medium" selected>Medium Priority</option>
+                            <option value="high">High Priority</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Assign to Technician</label>
+                        <select class="form-select" id="assignedTechnician">
+                            <option value="">Auto-assign</option>
+                            <option value="john-martinez">John Martinez</option>
+                            <option value="mike-thompson">Mike Thompson</option>
+                            <option value="carlos-rivera">Carlos Rivera</option>
+                            <option value="david-wilson">David Wilson</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Reported by</label>
+                        <input type="text" class="form-input" id="reportedBy" placeholder="Staff name or guest" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contact Info</label>
+                        <input type="text" class="form-input" id="contactInfo" placeholder="Phone or email">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('requestModal')">Cancel</button>
+                    <button type="submit" class="btn-submit">Create Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Request Details Modal -->
+    <div class="modal" id="requestDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Maintenance Request Details</h3>
+                <button class="close-btn" onclick="closeModal('requestDetailsModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="request-details">
+                <h4>Request Information</h4>
+                <p><strong>Request ID:</strong> <span id="detailRequestId">#MNT001</span></p>
+                <p><strong>Location:</strong> <span id="detailLocation">Room 412</span></p>
+                <p><strong>Category:</strong> <span id="detailCategory">HVAC</span></p>
+                <p><strong>Priority:</strong> <span id="detailPriority">Urgent</span></p>
+                <p><strong>Status:</strong> <span id="detailStatus">In Progress</span></p>
+                <p><strong>Created:</strong> <span id="detailCreated">Dec 25, 8:00 AM</span></p>
+                <p><strong>Reported by:</strong> <span id="detailReportedBy">Front Desk Staff</span></p>
+            </div>
+
+            <div class="request-details">
+                <h4>Issue Details</h4>
+                <p><strong>Title:</strong> <span id="detailIssueTitle">Air Conditioning Not Working</span></p>
+                <p><strong>Description:</strong> <span id="detailDescription">AC unit not cooling properly, making loud grinding noise. Guest complained about room temperature.</span></p>
+            </div>
+
+            <div class="request-details">
+                <h4>Assignment</h4>
+                <p><strong>Assigned to:</strong> <span id="detailAssignedTo">John Martinez</span></p>
+                <p><strong>Started:</strong> <span id="detailStarted">Dec 25, 8:30 AM</span></p>
+                <p><strong>Estimated Completion:</strong> <span id="detailEstimated">Dec 25, 12:00 PM</span></p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Work Notes</label>
+                <textarea class="form-input" rows="3" placeholder="Add notes about work performed, parts used, etc..."></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Update Status</label>
+                    <select class="form-select" id="updateStatus">
+                        <option value="pending">Pending</option>
+                        <option value="in-progress" selected>In Progress</option>
+                        <option value="on-hold">On Hold</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reassign to</label>
+                    <select class="form-select" id="reassignTo">
+                        <option value="">Keep current assignment</option>
+                        <option value="john-martinez">John Martinez</option>
+                        <option value="mike-thompson">Mike Thompson</option>
+                        <option value="carlos-rivera">Carlos Rivera</option>
+                        <option value="david-wilson">David Wilson</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal('requestDetailsModal')">Close</button>
+                <button type="button" class="btn-submit" onclick="updateRequest()">Update Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openRequestModal() {
+            document.getElementById('requestModal').classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Maintenance functions
+        function updateStatus(requestId, newStatus) {
+            const statusText = {
+                'completed': 'completed',
+                'in-progress': 'in progress',
+                'on-hold': 'on hold',
+                'cancelled': 'cancelled'
+            };
+            
+            if (confirm(`Mark request ${requestId} as ${statusText[newStatus]}?`)) {
+                alert(`Request ${requestId} status updated to ${statusText[newStatus]}!`);
+                location.reload();
+            }
+        }
+
+        function assignTechnician(requestId) {
+            if (confirm(`Assign technician to request ${requestId}?`)) {
+                alert(`Technician assigned to request ${requestId}!`);
+                location.reload();
+            }
+        }
+
+        function viewRequest(requestId) {
+            // Load request details here
+            document.getElementById('requestDetailsModal').classList.add('show');
+        }
+
+        function updateRequest() {
+            alert('Request updated successfully!');
+            closeModal('requestDetailsModal');
+            location.reload();
+        }
+
+        // Form submissions
+        document.getElementById('newRequestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const location = document.getElementById('location').value;
+            const issueTitle = document.getElementById('issueTitle').value;
+            
+            alert(`Maintenance request created for ${location}: ${issueTitle}`);
+            closeModal('requestModal');
+            location.reload();
+        });
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-box input');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const selectedValue = this.value.toLowerCase();
+                const rows = document.querySelectorAll('tbody tr');
+                
+                if (this.selectedIndex === 0) {
+                    rows.forEach(row => row.style.display = '');
+                } else {
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(selectedValue) ? '' : 'none';
+                    });
+                }
+            });
+        });
+
+        console.log('Maintenance page initialized');
+    </script>
+</body>
+</html>

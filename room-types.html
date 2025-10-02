@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Types - Hotel CRM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 200;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .property-selector {
+            margin: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .property-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .nav-menu {
+            padding: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 64px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .content-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .filters-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .filters-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 24px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        thead th input[type="checkbox"] {
+            margin: 0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        .room-type-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .room-type-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .room-type-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .room-type-details p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-draft {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .capacity-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .capacity-item {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .amenities-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: 200px;
+        }
+
+        .amenity-tag {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .price-info {
+            text-align: right;
+        }
+
+        .price-main {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .price-sub {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        tbody tr:hover .action-buttons {
+            opacity: 1;
+        }
+
+        .btn-small {
+            padding: 6px 8px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-view {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .btn-edit {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input {
+            margin: 0;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: #374151;
+            margin: 0;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-cancel {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .sidebar-right {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .publish-section {
+            margin-bottom: 24px;
+        }
+
+        .publish-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-row {
+                flex-direction: column;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .close-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .view-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .view-section {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-published {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+        }
+
+        .amenity-tag {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .services-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .service-item i {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3b82f6;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .service-item span {
+            font-size: 14px;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        @media (max-width: 768px) {
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            
+            .amenities-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <div class="logo-text">Hotel CRM</div>
+            </div>
+        </div>
+
+        <div class="property-selector">
+            <div class="property-label">Current Property</div>
+            <div class="property-name">Demo Link Hotel</div>
+        </div>
+
+        <nav class="nav-menu">
+
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a class="nav-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Booking Management</div>
+                <a class="nav-item" href="all-bookings.html">
+                    <i class="fas fa-calendar-check"></i>
+                    All Bookings
+                </a>
+                <a class="nav-item" href="payment.html">
+                    <i class="fas fa-credit-card"></i>
+                    Payment History
+                </a>
+                <a class="nav-item" href="calendar.html">
+                    <i class="fas fa-calendar"></i>
+                    Calendar View
+                </a>
+                <a class="nav-item" href="customer.html">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+                <a class="nav-item" href="coupons.html">
+                    <i class="fas fa-tags"></i>
+                    Coupons
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Room Management</div>
+                <a class="nav-item active" href="room-types.html">
+                    <i class="fas fa-door-open"></i>
+                    Room Types
+                </a>
+                <a class="nav-item" href="rooms.html">
+                    <i class="fas fa-bed"></i>
+                    Rooms
+                </a>
+                <a class="nav-item" href="rate-pricing.html">
+                    <i class="fas fa-dollar-sign"></i>
+                    Rates & Pricing
+                </a>
+                <a class="nav-item" href="seasons.html">
+                    <i class="fas fa-calendar-plus"></i>
+                    Seasons
+                </a>
+                <a class="nav-item" href="services.html">
+                    <i class="fas fa-concierge-bell"></i>
+                    Services
+                </a>
+            </div>
+
+             <div class="nav-section">
+                <div class="nav-section-title">Operations</div>
+                <a href="checkin.html" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Check-in
+                </a>
+                <a href="checkout.html" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Check-out
+                </a>
+                <a href="housekeeping.html" class="nav-item">
+                    <i class="fas fa-broom"></i>
+                    Housekeeping
+                </a>
+                <a href="maintenance.html" class="nav-item">
+                    <i class="fas fa-tools"></i>
+                    Maintenance
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <a href="revenue.html" class="nav-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    Revenue
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Settings</div>
+                <a class="nav-item" href="booking-rules.html">
+                    <i class="fas fa-rules"></i>
+                    Booking Rules
+                </a>
+                <a class="nav-item" href="taxes-fees.html">
+                    <i class="fas fa-percentage"></i>
+                    Taxes & Fees
+                </a>
+                <a class="nav-item" href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    General Settings
+                </a>
+                <a href="javascript:void(0)" class="nav-item" style="color: #ef4444;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="page-title">Room Types Management</h1>
+            <div class="breadcrumb">Room Management / Room Types</div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-primary" onclick="openRoomTypeModal()">
+                <i class="fas fa-plus"></i>
+                Add New Room Type
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="filters-row">
+                <div class="search-box">
+                    <input type="text" placeholder="Search room types...">
+                </div>
+                <select class="filter-select">
+                    <option>All Status</option>
+                    <option>Published</option>
+                    <option>Draft</option>
+                    <option>Pending Review</option>
+                </select>
+                <select class="filter-select">
+                    <option>All Categories</option>
+                    <option>Luxury</option>
+                    <option>Standard</option>
+                    <option>Economy</option>
+                </select>
+                <div class="bulk-actions">
+                    <select class="filter-select">
+                        <option>Bulk Actions</option>
+                        <option>Move to Trash</option>
+                        <option>Change Status</option>
+                    </select>
+                    <button class="btn-primary" style="background: #64748b;">Apply</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Room Types Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">Room Types</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox"></th>
+                        <th>Room Type</th>
+                        <th>Category</th>
+                        <th>Capacity</th>
+                        <th>Amenities</th>
+                        <th>Base Price</th>
+                        <th>Total Rooms</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>
+                            <div class="room-type-info">
+                                <div class="room-type-details">
+                                    <h4>Deluxe Ocean Suite</h4>
+                                    <p>Luxury suite with ocean view</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Luxury</td>
+                        <td>
+                            <div class="capacity-info">
+                                <span class="capacity-item">Adults: 4</span>
+                                <span class="capacity-item">Children: 2</span>
+                                <span class="capacity-item">Total: 6</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="amenities-list">
+                                <span class="amenity-tag">WiFi</span>
+                                <span class="amenity-tag">AC</span>
+                                <span class="amenity-tag">TV</span>
+                                <span class="amenity-tag">+5 more</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-info">
+                                <div class="price-main">$250</div>
+                                <div class="price-sub">per night</div>
+                            </div>
+                        </td>
+                        <td>8</td>
+                        <td><span class="status-badge status-active">Published</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-view" onclick="viewRoomType('deluxe-suite')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-small btn-edit" onclick="editRoomType('deluxe-suite')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteRoomType('deluxe-suite')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>
+                            <div class="room-type-info">
+                                <div class="room-type-details">
+                                    <h4>Superior Garden View</h4>
+                                    <p>Comfortable room with garden view</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Standard</td>
+                        <td>
+                            <div class="capacity-info">
+                                <span class="capacity-item">Adults: 2</span>
+                                <span class="capacity-item">Children: 1</span>
+                                <span class="capacity-item">Total: 3</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="amenities-list">
+                                <span class="amenity-tag">WiFi</span>
+                                <span class="amenity-tag">AC</span>
+                                <span class="amenity-tag">TV</span>
+                                <span class="amenity-tag">+3 more</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-info">
+                                <div class="price-main">$150</div>
+                                <div class="price-sub">per night</div>
+                            </div>
+                        </td>
+                        <td>12</td>
+                        <td><span class="status-badge status-active">Published</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-view" onclick="viewRoomType('superior-garden')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-small btn-edit" onclick="editRoomType('superior-garden')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteRoomType('superior-garden')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>
+                            <div class="room-type-info">
+                                <div class="room-type-details">
+                                    <h4>Economy Classic</h4>
+                                    <p>Budget-friendly comfortable room</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Economy</td>
+                        <td>
+                            <div class="capacity-info">
+                                <span class="capacity-item">Adults: 2</span>
+                                <span class="capacity-item">Children: 0</span>
+                                <span class="capacity-item">Total: 2</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="amenities-list">
+                                <span class="amenity-tag">WiFi</span>
+                                <span class="amenity-tag">AC</span>
+                                <span class="amenity-tag">TV</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-info">
+                                <div class="price-main">$80</div>
+                                <div class="price-sub">per night</div>
+                            </div>
+                        </td>
+                        <td>15</td>
+                        <td><span class="status-badge status-draft">Draft</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-view" onclick="viewRoomType('economy-classic')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-small btn-edit" onclick="editRoomType('economy-classic')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-small btn-delete" onclick="deleteRoomType('economy-classic')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Add/Edit Room Type Modal -->
+    <div class="modal" id="roomTypeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Room Type</h3>
+                <button class="close-btn" onclick="closeRoomTypeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="roomTypeForm">
+                <div class="form-grid">
+                    <div>
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Basic Information</h4>
+                            <div class="form-group">
+                                <label class="form-label">Room Type Name *</label>
+                                <input type="text" class="form-input" placeholder="e.g., Deluxe Ocean Suite" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-textarea" placeholder="Describe the room type features and amenities..."></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select">
+                                        <option value="">Select Category</option>
+                                        <option value="luxury">Luxury</option>
+                                        <option value="standard">Standard</option>
+                                        <option value="economy">Economy</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Base Price per Night</label>
+                                    <input type="number" class="form-input" placeholder="0.00" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Capacity Settings -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Capacity</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Max Adults</label>
+                                    <input type="number" class="form-input" value="2" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Max Children</label>
+                                    <input type="number" class="form-input" value="1" min="0">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Total Capacity</label>
+                                    <input type="number" class="form-input" value="3" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Base Adults Occupancy</label>
+                                    <input type="number" class="form-input" value="2" min="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Room Details -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Room Details</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Size (sq ft)</label>
+                                    <input type="number" class="form-input" placeholder="e.g., 350">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Bed Type</label>
+                                    <select class="form-select">
+                                        <option value="">Select Bed Type</option>
+                                        <option value="single">Single Bed</option>
+                                        <option value="double">Double Bed</option>
+                                        <option value="queen">Queen Bed</option>
+                                        <option value="king">King Bed</option>
+                                        <option value="twin">Twin Beds</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">View</label>
+                                <select class="form-select">
+                                    <option value="">Select View</option>
+                                    <option value="ocean">Ocean View</option>
+                                    <option value="garden">Garden View</option>
+                                    <option value="city">City View</option>
+                                    <option value="pool">Pool View</option>
+                                    <option value="mountain">Mountain View</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Amenities -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Amenities</h4>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="wifi" checked>
+                                    <label for="wifi">Free WiFi</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ac" checked>
+                                    <label for="ac">Air Conditioning</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="tv" checked>
+                                    <label for="tv">Smart TV</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="minibar">
+                                    <label for="minibar">Mini Bar</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="balcony">
+                                    <label for="balcony">Private Balcony</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="safe">
+                                    <label for="safe">Safe Box</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bathtub">
+                                    <label for="bathtub">Bathtub</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hairdryer">
+                                    <label for="hairdryer">Hair Dryer</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="coffee">
+                                    <label for="coffee">Coffee Maker</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="phone">
+                                    <label for="phone">Telephone</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Available Services -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Available Services</h4>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="breakfast">
+                                    <label for="breakfast">Breakfast</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="spa">
+                                    <label for="spa">Spa Services</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="laundry">
+                                    <label for="laundry">Laundry Service</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="airport">
+                                    <label for="airport">Airport Transfer</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="roomservice">
+                                    <label for="roomservice">Room Service</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="sidebar-right">
+                        <!-- Publish Section -->
+                        <div class="publish-section">
+                            <h4 class="form-section-title">Publish</h4>
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-select">
+                                    <option value="draft">Draft</option>
+                                    <option value="pending">Pending Review</option>
+                                    <option value="published">Published</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Visibility</label>
+                                <select class="form-select">
+                                    <option value="public">Public</option>
+                                    <option value="private">Private</option>
+                                    <option value="password">Password Protected</option>
+                                </select>
+                            </div>
+                            <div class="publish-actions">
+                                <button type="button" class="btn-cancel">Draft</button>
+                                <button type="submit" class="btn-save">Publish</button>
+                            </div>
+                        </div>
+
+                        <!-- Room Count -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Room Management</h4>
+                            <div class="form-group">
+                                <label class="form-label">Total Rooms</label>
+                                <input type="number" class="form-input" value="1" min="1">
+                                <small style="color: #64748b; font-size: 12px;">Number of actual rooms of this type</small>
+                            </div>
+                        </div>
+
+                        <!-- Featured Image -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Featured Image</h4>
+                            <div style="border: 2px dashed #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer;" onclick="selectImage()">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 24px; color: #64748b; margin-bottom: 8px;"></i>
+                                <p style="color: #64748b; margin: 0;">Click to upload image</p>
+                            </div>
+                        </div>
+
+                        <!-- Gallery -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">Photo Gallery</h4>
+                            <div style="border: 2px dashed #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer;" onclick="selectGallery()">
+                                <i class="fas fa-images" style="font-size: 24px; color: #64748b; margin-bottom: 8px;"></i>
+                                <p style="color: #64748b; margin: 0;">Add gallery images</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeRoomTypeModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Room Type</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Room Types View Modal -->
+    <div class="modal" id="roomTypeViewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Room Type Details</h3>
+                <button class="close-btn" onclick="closeRoomTypeViewModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="view-content">
+                <!-- Basic Information -->
+                <div class="view-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Basic Information
+                    </h4>
+                    <div class="detail-row">
+                        <span class="detail-label">Room Type Name:</span>
+                        <span class="detail-value" id="viewRoomTypeName">Deluxe Ocean Suite</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Description:</span>
+                        <span class="detail-value" id="viewRoomTypeDesc">Spacious ocean-view suite with premium amenities</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value" id="viewRoomTypeStatus">
+                            <span class="status-badge status-published">Published</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Capacity Information -->
+                <div class="view-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-users"></i>
+                        Capacity
+                    </h4>
+                    <div class="detail-row">
+                        <span class="detail-label">Adults:</span>
+                        <span class="detail-value" id="viewAdults">2</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Children:</span>
+                        <span class="detail-value" id="viewChildren">2</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Total Capacity:</span>
+                        <span class="detail-value" id="viewCapacity">4</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Base Adult Occupancy:</span>
+                        <span class="detail-value" id="viewBaseAdults">2</span>
+                    </div>
+                </div>
+
+                <!-- Room Details -->
+                <div class="view-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-bed"></i>
+                        Room Details
+                    </h4>
+                    <div class="detail-row">
+                        <span class="detail-label">Size:</span>
+                        <span class="detail-value" id="viewSize">45 m²</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">View:</span>
+                        <span class="detail-value" id="viewRoomView">Ocean View</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Bed Type:</span>
+                        <span class="detail-value" id="viewBedType">King Bed</span>
+                    </div>
+                </div>
+
+                <!-- Accommodations -->
+                <div class="view-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-door-open"></i>
+                        Accommodations
+                    </h4>
+                    <div class="detail-row">
+                        <span class="detail-label">Total Accommodations:</span>
+                        <span class="detail-value" id="viewTotalAccommodations">5</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Active Accommodations:</span>
+                        <span class="detail-value" id="viewActiveAccommodations">4</span>
+                    </div>
+                </div>
+
+                <!-- Amenities -->
+                <div class="view-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-star"></i>
+                        Amenities
+                    </h4>
+                    <div class="amenities-grid" id="viewAmenities">
+                        <span class="amenity-tag">Free Wi-Fi</span>
+                        <span class="amenity-tag">Air Conditioning</span>
+                        <span class="amenity-tag">Smart TV</span>
+                        <span class="amenity-tag">Mini Bar</span>
+                        <span class="amenity-tag">Room Service</span>
+                        <span class="amenity-tag">Ocean View</span>
+                    </div>
+                </div>
+
+                <!-- Available Services -->
+                <div class="view-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-concierge-bell"></i>
+                        Available Services
+                    </h4>
+                    <div class="services-list" id="viewServices">
+                        <div class="service-item">
+                            <i class="fas fa-car"></i>
+                            <span>Airport Transfer</span>
+                        </div>
+                        <div class="service-item">
+                            <i class="fas fa-utensils"></i>
+                            <span>Breakfast</span>
+                        </div>
+                        <div class="service-item">
+                            <i class="fas fa-spa"></i>
+                            <span>Spa Package</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeRoomTypeViewModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (!this.classList.contains('active')) {
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const text = this.textContent.trim();
+                    document.querySelector('.page-title').textContent = text + ' Management';
+                    document.querySelector('.breadcrumb').textContent = 'Dashboard / ' + text;
+                }
+            });
+        });
+
+        // Modal functions
+        function openRoomTypeModal() {
+            document.getElementById('roomTypeModal').classList.add('show');
+        }
+
+        function closeRoomTypeModal() {
+            document.getElementById('roomTypeModal').classList.remove('show');
+        }
+
+        // Room type functions
+        function viewRoomType(id) {
+            alert(`Viewing room type details for ${id}`);
+        }
+
+        function editRoomType(id) {
+            document.getElementById('roomTypeModal').classList.add('show');
+            document.querySelector('.modal-title').textContent = 'Edit Room Type';
+            // Here you would populate the form with existing data
+        }
+
+        function deleteRoomType(id) {
+            if (confirm(`Are you sure you want to delete this room type?`)) {
+                alert(`Room type ${id} deleted`);
+            }
+        }
+
+        // Image upload functions
+        function selectImage() {
+            alert('Image upload functionality would be implemented here');
+        }
+
+        function selectGallery() {
+            alert('Gallery upload functionality would be implemented here');
+        }
+
+        // Form submission
+        document.getElementById('roomTypeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Room type saved successfully!');
+            closeRoomTypeModal();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('roomTypeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRoomTypeModal();
+            }
+        });
+
+        // Search functionality
+        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value;
+                if (query.trim()) {
+                    console.log(`Searching for: ${query}`);
+                    // Implement search functionality
+                }
+            }
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const filterValue = this.value;
+                console.log(`Filtering by: ${filterValue}`);
+                // Implement filtering functionality
+            });
+        });
+
+        // Bulk actions
+        const selectAllCheckbox = document.querySelector('thead input[type="checkbox"]');
+        const rowCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+
+        selectAllCheckbox.addEventListener('change', function() {
+            rowCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+        console.log('Room Types Management initialized');
+    </script>
+
+    <script>
+        function closeRoomTypeViewModal() {
+            document.getElementById('roomTypeViewModal').classList.remove('show');
+        }
+
+        function editRoomTypeFromView() {
+            closeRoomTypeViewModal();
+            // Redirect to edit page or open edit modal
+            alert('Redirecting to edit room type...');
+        }
+
+        function viewRoomType(roomTypeId) {
+            // Sample data - in real app, this would come from API
+            const roomTypeData = {
+                'deluxe-suite': {
+                    name: 'Deluxe Ocean Suite',
+                    description: 'Spacious ocean-view suite with premium amenities',
+                    status: 'Published',
+                    adults: 2,
+                    children: 2,
+                    capacity: 4,
+                    baseAdults: 2,
+                    size: '45 m²',
+                    view: 'Ocean View',
+                    bedType: 'King Bed',
+                    totalAccommodations: 5,
+                    activeAccommodations: 4,
+                    amenities: ['Free Wi-Fi', 'Air Conditioning', 'Smart TV', 'Mini Bar', 'Room Service', 'Ocean View'],
+                    services: [
+                        { icon: 'car', name: 'Airport Transfer' },
+                        { icon: 'utensils', name: 'Breakfast' },
+                        { icon: 'spa', name: 'Spa Package' }
+                    ]
+                }
+            };
+
+            const data = roomTypeData[roomTypeId] || roomTypeData['deluxe-suite'];
+            
+            // Populate modal with data
+            document.getElementById('viewRoomTypeName').textContent = data.name;
+            document.getElementById('viewRoomTypeDesc').textContent = data.description;
+            document.getElementById('viewAdults').textContent = data.adults;
+            document.getElementById('viewChildren').textContent = data.children;
+            document.getElementById('viewCapacity').textContent = data.capacity;
+            document.getElementById('viewBaseAdults').textContent = data.baseAdults;
+            document.getElementById('viewSize').textContent = data.size;
+            document.getElementById('viewRoomView').textContent = data.view;
+            document.getElementById('viewBedType').textContent = data.bedType;
+            document.getElementById('viewTotalAccommodations').textContent = data.totalAccommodations;
+            document.getElementById('viewActiveAccommodations').textContent = data.activeAccommodations;
+            
+            // Populate amenities
+            const amenitiesGrid = document.getElementById('viewAmenities');
+            amenitiesGrid.innerHTML = data.amenities.map(amenity => 
+                `<span class="amenity-tag">${amenity}</span>`
+            ).join('');
+            
+            // Populate services
+            const servicesList = document.getElementById('viewServices');
+            servicesList.innerHTML = data.services.map(service => 
+                `<div class="service-item">
+                    <i class="fas fa-${service.icon}"></i>
+                    <span>${service.name}</span>
+                </div>`
+            ).join('');
+            
+            document.getElementById('roomTypeViewModal').classList.add('show');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('roomTypeViewModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRoomTypeViewModal();
+            }
+        });
+    </script>
+</body>
+</html>
