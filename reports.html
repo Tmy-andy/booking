@@ -486,6 +486,11 @@
         }
 
         @media print {
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            
             body {
                 background: white;
                 margin: 0;
@@ -506,46 +511,56 @@
             }
             
             .main-content {
-                margin: 0;
-                padding: 0;
+                display: none !important;
             }
             
             .modal {
-                position: static;
+                position: static !important;
                 display: block !important;
-                background: white;
+                background: white !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 0 !important;
+                margin: 0 !important;
             }
             
             .modal-content {
-                max-width: 100%;
-                width: 100%;
-                padding: 0;
-                box-shadow: none;
-                max-height: none;
-                overflow: visible;
+                position: static !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                max-height: none !important;
+                overflow: visible !important;
+                border-radius: 0 !important;
             }
             
             .print-preview {
-                border: none;
-                padding: 30px;
-                margin: 0;
-                background: white;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: white !important;
             }
             
             /* Cải thiện header báo cáo */
             .report-header-print {
                 page-break-after: avoid;
-                margin-bottom: 30px;
-                padding-bottom: 15px;
+                margin-bottom: 25px;
+                padding-bottom: 12px;
+                margin-top: 0;
+                padding-top: 0;
             }
             
             .report-header-print h2 {
-                font-size: 24px;
-                margin-bottom: 8px;
+                font-size: 22px;
+                margin-bottom: 6px;
+                margin-top: 0;
             }
             
             .report-header-print .subtitle {
-                font-size: 13px;
+                font-size: 12px;
+                margin: 2px 0;
             }
             
             /* Cải thiện phần thống kê - hiển thị ngang 1 hàng */
@@ -560,21 +575,21 @@
             .stat-box {
                 display: table-cell;
                 background: white;
-                border: 1px solid #e2e8f0;
-                padding: 15px;
+                border: 1px solid #d1d5db;
+                padding: 12px;
                 text-align: center;
                 vertical-align: middle;
             }
             
             .stat-value {
-                font-size: 20px;
+                font-size: 18px;
                 font-weight: 700;
                 color: #0f172a;
                 margin-bottom: 4px;
             }
             
             .stat-label {
-                font-size: 11px;
+                font-size: 10px;
                 color: #64748b;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -583,28 +598,28 @@
             /* Cải thiện bảng */
             .section {
                 page-break-inside: avoid;
-                margin: 25px 0;
+                margin: 20px 0;
             }
             
             .section-title {
-                font-size: 16px;
-                margin-bottom: 12px;
-                padding-bottom: 6px;
+                font-size: 15px;
+                margin-bottom: 10px;
+                padding-bottom: 5px;
             }
             
             .bookings-table {
                 page-break-inside: auto;
-                font-size: 11px;
+                font-size: 10px;
             }
             
             .bookings-table th,
             .bookings-table td {
-                padding: 8px;
-                font-size: 10px;
+                padding: 6px 8px;
+                font-size: 9px;
             }
             
             .bookings-table th {
-                font-size: 9px;
+                font-size: 8px;
             }
             
             .bookings-table tr {
@@ -618,12 +633,18 @@
             .bookings-table th {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                color-adjust: exact;
             }
             
             /* Định dạng trang A4 */
             @page {
-                margin: 1.5cm;
+                margin: 15mm 15mm 15mm 15mm;
                 size: A4 portrait;
+            }
+            
+            /* Force first page to start at top */
+            @page :first {
+                margin-top: 15mm;
             }
         }
 
